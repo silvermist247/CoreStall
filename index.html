@@ -2498,7 +2498,7 @@
             <div class="product-title-row">
               <h3 class="typewriter-title" data-text="Paarl Granite Roost"></h3>
               <span class="product-price">R 250</span>
-            </div>
+                   </div>
             <p class="typewriter-desc" data-text="WC XCO #3 Spice Route • High-Speed Dust Explosion Capture"></p>
             <button class="add-to-cart-btn" onclick="addToCart('Paarl Granite Roost (WC XCO #3)', 250)">+ Add to Cart</button>
           </div>
@@ -3456,51 +3456,7 @@
   </div>
 
   <script>
-    // =========================================================================
-    // CATALOG INITIALIZATION & HYDRATION (FROM catalog.js)
-    // =========================================================================
-    function initGalleryFromCatalog() {
-      const grid = document.getElementById('mediaGrid');
-      if (!grid || typeof INITIAL_CATALOG === 'undefined') return;
-
-      // Only hydrate if empty (prevents duplicate rendering)
-      if (grid.children.length > 0 && grid.querySelectorAll('.product-card').length > 0) return;
-
-      grid.innerHTML = INITIAL_CATALOG.map((item, idx) => `
-        <article class="product-card" id="card_${idx}" data-category="${item.category}">
-          <div class="product-image-wrap">
-            <img src="${item.src}" alt="${item.alt || item.title}" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="${item.title}"></h3>
-              <span class="product-price">R ${item.price}</span>
-            </div>
-            <p class="typewriter-desc" data-text="${item.desc}"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('${item.title.replace(/'/g, "\\'")}', ${item.price})">+ Add to Cart</button>
-          </div>
-        </article>
-      `).join('');
-
-      // Initialize 3D physics & typewriter listeners for all hydrated cards
-      grid.querySelectorAll('.product-card').forEach(card => {
-        if (typeof initCard3DPhysics === 'function') initCard3DPhysics(card);
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initGalleryFromCatalog);
-    } else {
-      initGalleryFromCatalog();
-    }
-
-let cart = [];
+    let cart = [];
     let mousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
     window.addEventListener('mousemove', (e) => {
@@ -5161,7 +5117,6 @@ let cart = [];
         msgEl.innerHTML = '&#10024; you made the ants happy &#10024;';
       }
     }
-
   </script>
 </body>
 </html>
