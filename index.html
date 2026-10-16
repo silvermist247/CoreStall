@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seth Barton / Photography</title>
+  <title>Seth Barton / Photography & Print Shop</title>
   <style>
     /* Reset & Base Variables */
     *, *::before, *::after {
@@ -19,6 +19,7 @@
       --text-muted: #9e9e9e;
       --accent: #d4a373;
       --accent-hover: #e0b487;
+      --like-active: #e63946;
       --border-color: #262626;
       --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
@@ -33,6 +34,7 @@
       font-family: var(--font-stack);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      padding-bottom: 2rem;
     }
 
     img {
@@ -52,9 +54,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background-color: rgba(17, 17, 17, 0.92);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background-color: rgba(17, 17, 17, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
     }
 
@@ -75,9 +77,15 @@
       color: var(--text-main);
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 1.75rem;
       list-style: none;
     }
 
@@ -92,9 +100,42 @@
       color: var(--accent);
     }
 
+    /* Header Cart Button */
+    .cart-trigger-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .cart-trigger-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .cart-count-badge {
+      background-color: var(--accent);
+      color: #111;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+      min-width: 1.3rem;
+      text-align: center;
+    }
+
     /* Common Section Layout */
     section {
-      padding: 6rem 1.5rem;
+      padding: 5rem 1.5rem;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -104,9 +145,17 @@
       font-weight: 400;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 2.5rem;
+      margin-bottom: 0.5rem;
       text-align: center;
       color: var(--text-main);
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
     }
 
     /* Buttons */
@@ -121,8 +170,9 @@
       text-transform: uppercase;
       border: 1px solid var(--accent);
       border-radius: 2px;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease;
       cursor: pointer;
+      text-align: center;
     }
 
     .btn:hover {
@@ -130,29 +180,17 @@
       border-color: var(--accent-hover);
     }
 
-    .btn-outline {
-      background-color: transparent;
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
     /* Hero Section */
     .hero {
       position: relative;
-      min-height: 90vh;
+      min-height: 85vh;
       max-width: 100%;
       padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      /* Background photo with overlay */
-      background: linear-gradient(rgba(17, 17, 17, 0.6), rgba(17, 17, 17, 0.7)),
+      background: linear-gradient(rgba(17, 17, 17, 0.65), rgba(17, 17, 17, 0.75)),
                   url('https://picsum.photos/seed/hero-bg/1920/1080') center/cover no-repeat;
     }
 
@@ -178,32 +216,255 @@
       font-weight: 300;
     }
 
-    /* Gallery Grid */
-    .gallery-grid {
+    /* Print Shop / Gallery Grid */
+    .shop-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
-    .gallery-item {
-      overflow: hidden;
+    .product-card {
       background-color: var(--card-bg);
-      border-radius: 2px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       position: relative;
+      transition: border-color 0.2s ease;
     }
 
-    .gallery-item img {
+    .product-card:hover {
+      border-color: #383838;
+    }
+
+    .product-image-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      background-color: #222;
+    }
+
+    .product-image-wrap img {
       width: 100%;
       height: 100%;
-      aspect-ratio: 4 / 5;
       object-fit: cover;
       transition: transform 0.4s ease, filter 0.4s ease;
-      filter: brightness(0.95);
     }
 
-    .gallery-item:hover img {
-      transform: scale(1.04);
-      filter: brightness(0.8);
+    .product-card:hover .product-image-wrap img {
+      transform: scale(1.03);
+    }
+
+    /* Like Button on Image */
+    .like-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background-color: rgba(17, 17, 17, 0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.1rem;
+      transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+      z-index: 2;
+    }
+
+    .like-btn:hover {
+      transform: scale(1.1);
+      background-color: rgba(17, 17, 17, 0.95);
+    }
+
+    .like-btn.liked {
+      color: var(--like-active);
+      border-color: var(--like-active);
+    }
+
+    .product-info {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.75rem;
+    }
+
+    .product-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .product-title {
+      font-size: 1.05rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .product-price {
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .add-to-cart-btn {
+      background-color: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.65rem 1rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 0.5rem;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: var(--accent);
+      color: #111;
+    }
+
+    /* Cart Slideover Drawer */
+    .cart-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .cart-drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      background-color: #151515;
+      border-left: 1px solid var(--border-color);
+      z-index: 200;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.active {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-header h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cart-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .cart-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .cart-items-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cart-empty-message {
+      text-align: center;
+      color: var(--text-muted);
+      margin-top: 4rem;
+      font-size: 0.95rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.9rem;
+    }
+
+    .cart-item-title {
+      font-weight: 500;
+    }
+
+    .cart-item-price {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cart-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .cart-checkout-btn {
+      width: 100%;
     }
 
     /* About Section */
@@ -217,7 +478,7 @@
     }
 
     .about-image {
-      flex: 0 0 280px;
+      flex: 0 0 260px;
       overflow: hidden;
       border-radius: 2px;
       background-color: var(--card-bg);
@@ -293,6 +554,7 @@
       border-top: 1px solid var(--border-color);
       padding: 3rem 1.5rem;
       text-align: center;
+      margin-top: 3rem;
     }
 
     .footer-content {
@@ -328,9 +590,9 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      .gallery-grid {
+      .shop-grid {
         grid-template-columns: 1fr;
-        gap: 1.25rem;
+        gap: 1.5rem;
       }
 
       .about-content {
@@ -340,12 +602,12 @@
       }
 
       .about-image {
-        max-width: 240px;
+        max-width: 220px;
         margin: 0 auto;
       }
 
       .nav-links {
-        gap: 1.25rem;
+        gap: 1rem;
       }
     }
   </style>
@@ -356,67 +618,160 @@
   <header>
     <div class="nav-container">
       <a href="#" class="logo">Seth Barton</a>
-      <ul class="nav-links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <!-- Cart Trigger Button -->
+        <button class="cart-trigger-btn" onclick="toggleCart(true)" aria-label="Open cart">
+          <span>Cart</span>
+          <span class="cart-count-badge" id="cartCount">0</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <!-- TO REPLACE HERO BACKGROUND: Update the url() in the .hero CSS rule above (e.g. url('images/hero.jpg')) -->
+  <!-- TO REPLACE HERO BACKGROUND: Update url in style or images/hero.jpg -->
   <section class="hero">
     <div class="hero-content">
       <h1>Seth Barton / Photography</h1>
-      <p>Capturing raw moments, quiet spaces, and light in motion.</p>
-      <a href="#work" class="btn">View My Work</a>
+      <p>Limited archival print collections and visual narratives.</p>
+      <a href="#shop" class="btn">Explore Print Shop</a>
     </div>
   </section>
 
-  <!-- Gallery Section -->
-  <section id="work">
-    <h2 class="section-title">Selected Work</h2>
-    <div class="gallery-grid">
+  <!-- Shop & Prints Gallery Section -->
+  <section id="shop">
+    <h2 class="section-title">Limited Edition Prints</h2>
+    <p class="section-subtitle">Museum-grade fine art prints on archival cotton paper.</p>
+    <div class="shop-grid">
 
-      <!-- Photo 1: Swap placeholder URL with your local image, e.g. src="images/photo1.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot1/800/1000" alt="Portfolio photograph 1" loading="lazy">
-      </div>
+      <!-- Product 1: Swap placeholder URL with local image, e.g. src="images/print1.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot1/800/1000" alt="Dusk Solitude print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Dusk Solitude</h3>
+            <span class="product-price">R 850</span>
+          </div>
+          <p class="product-desc">A3 Archival Pigment Print &bull; Edition of 25</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Dusk Solitude', 850)">Add to Cart</button>
+        </div>
+      </article>
 
-      <!-- Photo 2: Swap placeholder URL with your local image, e.g. src="images/photo2.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot2/800/1000" alt="Portfolio photograph 2" loading="lazy">
-      </div>
+      <!-- Product 2: Swap placeholder URL with local image, e.g. src="images/print2.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot2/800/1000" alt="Morning Mist print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Morning Mist</h3>
+            <span class="product-price">R 950</span>
+          </div>
+          <p class="product-desc">A3 Archival Pigment Print &bull; Edition of 20</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Morning Mist', 950)">Add to Cart</button>
+        </div>
+      </article>
 
-      <!-- Photo 3: Swap placeholder URL with your local image, e.g. src="images/photo3.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot3/800/1000" alt="Portfolio photograph 3" loading="lazy">
-      </div>
+      <!-- Product 3: Swap placeholder URL with local image, e.g. src="images/print3.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot3/800/1000" alt="Shadows & Concrete print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Shadows & Concrete</h3>
+            <span class="product-price">R 750</span>
+          </div>
+          <p class="product-desc">A3 Archival Pigment Print &bull; Edition of 30</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Shadows & Concrete', 750)">Add to Cart</button>
+        </div>
+      </article>
 
-      <!-- Photo 4: Swap placeholder URL with your local image, e.g. src="images/photo4.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot4/800/1000" alt="Portfolio photograph 4" loading="lazy">
-      </div>
+      <!-- Product 4: Swap placeholder URL with local image, e.g. src="images/print4.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot4/800/1000" alt="Coastal Horizon print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Coastal Horizon</h3>
+            <span class="product-price">R 1,100</span>
+          </div>
+          <p class="product-desc">A2 Large Format Print &bull; Edition of 15</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Coastal Horizon', 1100)">Add to Cart</button>
+        </div>
+      </article>
 
-      <!-- Photo 5: Swap placeholder URL with your local image, e.g. src="images/photo5.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot5/800/1000" alt="Portfolio photograph 5" loading="lazy">
-      </div>
+      <!-- Product 5: Swap placeholder URL with local image, e.g. src="images/print5.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot5/800/1000" alt="Silent Ascent print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Silent Ascent</h3>
+            <span class="product-price">R 850</span>
+          </div>
+          <p class="product-desc">A3 Archival Pigment Print &bull; Edition of 25</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Silent Ascent', 850)">Add to Cart</button>
+        </div>
+      </article>
 
-      <!-- Photo 6: Swap placeholder URL with your local image, e.g. src="images/photo6.jpg" -->
-      <div class="gallery-item">
-        <img src="https://picsum.photos/seed/shot6/800/1000" alt="Portfolio photograph 6" loading="lazy">
-      </div>
+      <!-- Product 6: Swap placeholder URL with local image, e.g. src="images/print6.jpg" -->
+      <article class="product-card">
+        <div class="product-image-wrap">
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to favorites" aria-label="Like photo">&#9825;</button>
+          <img src="https://picsum.photos/seed/shot6/800/1000" alt="Echoes in Amber print" loading="lazy">
+        </div>
+        <div class="product-info">
+          <div class="product-title-row">
+            <h3 class="product-title">Echoes in Amber</h3>
+            <span class="product-price">R 900</span>
+          </div>
+          <p class="product-desc">A3 Archival Pigment Print &bull; Edition of 20</p>
+          <button class="add-to-cart-btn" onclick="addToCart('Echoes in Amber', 900)">Add to Cart</button>
+        </div>
+      </article>
 
     </div>
   </section>
+
+  <!-- Cart Drawer Component -->
+  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCart(false)"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close-btn" onclick="toggleCart(false)" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-items-list" id="cartItemsContainer">
+      <p class="cart-empty-message">Your cart is currently empty.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span id="cartTotal">R 0</span>
+      </div>
+      <button class="btn cart-checkout-btn" onclick="checkout()">Proceed to Order</button>
+    </div>
+  </aside>
 
   <!-- About Section -->
   <section id="about">
-    <h2 class="section-title">About</h2>
+    <h2 class="section-title">About the Artist</h2>
     <div class="about-content">
-      <!-- Headshot: Swap placeholder URL with your local file, e.g. src="images/headshot.jpg" -->
+      <!-- Headshot: Swap placeholder URL with local file, e.g. src="images/headshot.jpg" -->
       <div class="about-image">
         <img src="https://picsum.photos/seed/sethheadshot/600/600" alt="Seth Barton portrait" loading="lazy">
       </div>
@@ -437,7 +792,7 @@
   <section id="contact">
     <h2 class="section-title">Contact</h2>
     <div class="contact-container">
-      <p class="contact-intro">For bookings, commissions, or inquiries, reach out directly below.</p>
+      <p class="contact-intro">For custom print sizes, framing inquiries, or bookings, get in touch directly.</p>
       <div class="contact-details">
         <div class="contact-item">
           <span>Email</span>
@@ -464,5 +819,54 @@
     </div>
   </footer>
 
+  <!-- Shop Logic -->
+  <script>
+    let cart = [];
+    function toggleLike(btn) {
+      btn.classList.toggle('liked');
+      btn.innerHTML = btn.classList.contains('liked') ? '&#9829;' : '&#9825;';
+    }
+    function toggleCart(open) {
+      document.getElementById('cartDrawer').classList.toggle('active', open);
+      document.getElementById('cartOverlay').classList.toggle('active', open);
+    }
+    function addToCart(title, price) {
+      cart.push({ title, price });
+      renderCart();
+      toggleCart(true);
+    }
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+    function renderCart() {
+      const container = document.getElementById('cartItemsContainer');
+      const countBadge = document.getElementById('cartCount');
+      const totalEl = document.getElementById('cartTotal');
+      countBadge.textContent = cart.length;
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="cart-empty-message">Your cart is currently empty.</p>';
+        totalEl.textContent = 'R 0';
+        return;
+      }
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      totalEl.textContent = 'R ' + total.toLocaleString();
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-price">R ${item.price.toLocaleString()}</div>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${idx})">Remove</button>
+        </div>
+      `).join('');
+    }
+    function checkout() {
+      if (cart.length === 0) return alert('Your cart is empty.');
+      const items = cart.map(i => `${i.title} (R ${i.price})`).join('%0D%0A- ');
+      const total = cart.reduce((s, i) => s + i.price, 0);
+      window.location.href = `mailto:lionbarton@gmail.com?subject=Print%20Order%20Inquiry&body=Hi%20Seth,%0D%0A%0D%0AI would like to order the following prints:%0D%0A- ${items}%0D%0A%0D%0ATotal: R ${total}%0D%0A%0D%0APlease let me know the payment and delivery details.`;
+    }
+  </script>
 </body>
 </html>
