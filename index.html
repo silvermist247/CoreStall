@@ -59,12 +59,11 @@
       -webkit-font-smoothing: antialiased;
       /* Brushed Gunmetal Steel Texture with Precision Machined Grid */
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(130, 155, 185, 0.12) 0%, transparent 55%),
-        radial-gradient(circle at 85% 100%, rgba(255, 106, 0, 0.04) 0%, transparent 45%),
-        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 4px),
+        radial-gradient(circle at 50% 15vh, #0d1424 0%, #060910 50%, transparent 85%),
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.01) 0px, rgba(255, 255, 255, 0.01) 1px, transparent 1px, transparent 4px),
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 8px 8px, 36px 36px, 36px 36px;
+      background-size: 100% 100%, 8px 8px, 36px 36px, 36px 36px;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -621,6 +620,28 @@
       border-color: var(--panel-border-hover);
     }
 
+    
+    .studio-queue-thumb {
+      width: 64px !important;
+      height: 64px !important;
+      min-width: 64px !important;
+      min-height: 64px !important;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #111822;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+      flex-shrink: 0;
+    }
+
+    .studio-queue-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
     .studio-item-thumb {
       width: 48px;
       height: 48px;
@@ -782,31 +803,107 @@
       box-shadow: 0 0 8px var(--hazard-glow);
     }
 
-    /* Hero Section */
+    /* Hero Section with Live Deep Space Canvas & Floating Stars/Cosmic Dust */
     .hero {
       position: relative;
-      min-height: 85vh;
+      min-height: 88vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 4rem 1.5rem;
-      overflow: hidden;
-      border-bottom: 1px solid var(--panel-border);
-      background: 
-        radial-gradient(circle at center, rgba(20, 24, 32, 0.72) 0%, rgba(12, 14, 18, 0.96) 85%),
-        url('https://picsum.photos/seed/hero-action/1920/1080') center/cover no-repeat;
+      padding: 4rem 1.5rem 8rem 1.5rem;
+      border-bottom: none !important;
+      background: transparent;
+      perspective: 1200px; /* 3D perspective field */
+    }
+
+    /* Seamless gradient feather mask so deep space blends naturally into the grid below */
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -40px;
+      left: 0;
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(to bottom, 
+        rgba(12, 14, 18, 0) 0%, 
+        rgba(12, 14, 18, 0.45) 40%, 
+        rgba(12, 14, 18, 0.85) 75%, 
+        #0c0e12 100%
+      );
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    #spaceCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto; /* Clickable directly so clicking stars registers 100%! */
+      z-index: 4;
+      cursor: crosshair;
     }
 
     .hero-hud-frame {
       position: relative;
+      z-index: 15; /* Buttons & links stay clickable */
+      pointer-events: auto;
+    }
+
+    /* Ambient Nebular Clouds in Space */
+    .space-nebula-glow {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.09) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(255, 107, 0, 0.06) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Ensure #media section fades smoothly up into the hero */
+    #media {
+      position: relative;
+      background: transparent;
+      padding-top: 4.5rem;
+    }
+
+    /* 3D Holographic Floating HUD Frame that pulls upward on hover */
+    .hero-hud-frame {
+      position: relative;
+      z-index: 5;
       padding: 3.5rem 3rem;
       max-width: 900px;
       background: linear-gradient(145deg, rgba(25, 29, 38, 0.82) 0%, rgba(16, 19, 25, 0.88) 100%);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--panel-border);
-      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 0 35px rgba(255, 255, 255, 0.02);
-      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 240, 255, 0.06);
+      border-radius: 18px;
+      transform-style: preserve-3d;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+      will-change: transform, box-shadow;
+      cursor: default;
+    }
+
+    /* Subtle, refined hover elevation */
+    .hero-hud-frame:hover {
+      border-color: rgba(0, 240, 255, 0.35);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.85), 
+        0 8px 25px rgba(0, 240, 255, 0.12), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* Gentle depth layer for typography */
+    .hero-hud-frame h1, 
+    .hero-hud-frame p, 
+    .hero-hud-frame .hero-tag, 
+    .hero-hud-frame .btn {
+      transform: translateZ(10px);
+      transition: transform 0.22s ease;
     }
 
     .hero-tag {
@@ -843,30 +940,94 @@
       margin-right: auto;
     }
 
+    /* =========================================================================
+       CASED BUTTON (matches the Instagram pipe button style):
+       dark glossy core, encased in a thin textured pastel casing band,
+       with a spring press on click that holds for ~1.6s and pops back up at 2s.
+       ========================================================================= */
     .btn {
+      position: relative;
       display: inline-block;
-      padding: 0.9rem 2.2rem;
-      background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-      color: #f0f4f8;
+      padding: 0.95rem 2.4rem;
+      background: radial-gradient(circle at center, #161b24 0%, #0d1017 100%);
+      color: #e2e8f0;
       font-family: var(--font-mono);
-      font-size: 0.88rem;
-      font-weight: 800;
+      font-size: 0.9rem;
+      font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      border: 1.5px solid var(--steel-border);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.25s ease;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    /* Textured casing band: striped pastel ring encasing the button */
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      padding: 3px;
+      border-radius: 34px;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(165, 216, 255, 0.55) 0px,
+        rgba(165, 216, 255, 0.55) 2px,
+        rgba(187, 247, 208, 0.25) 2px,
+        rgba(187, 247, 208, 0.25) 4px
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    /* Thin outer seam line that completes the encased look */
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: -11px;
+      border-radius: 40px;
+      border: 1px solid rgba(165, 216, 255, 0.18);
+      pointer-events: none;
     }
 
     .btn:hover {
-      background: linear-gradient(135deg, #4b5563 0%, #2e3746 100%);
-      border-color: rgba(220, 230, 245, 0.5);
       color: #ffffff;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.08);
       transform: translateY(-2px);
+      box-shadow: 0 9px 20px rgba(0, 0, 0, 0.6), 0 0 14px rgba(165, 216, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    /* Spring press: sinks in, holds for ~1.6s, then springs up and settles at 2s */
+    @keyframes btnSpringPop2s {
+      0% {
+        transform: translateY(4px) scale(0.98);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 3px 6px rgba(0, 0, 0, 0.6);
+      }
+      80% {
+        transform: translateY(4px) scale(0.98);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 3px 6px rgba(0, 0, 0, 0.6);
+      }
+      90% {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 22px rgba(0, 0, 0, 0.6), 0 0 14px rgba(165, 216, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+      96% {
+        transform: translateY(1px) scale(1);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .btn.spring-pressed {
+      animation: btnSpringPop2s 2s ease-out forwards !important;
+      pointer-events: none;
     }
 
     /* Main Sections */
@@ -2071,10 +2232,11 @@
       letter-spacing: 0.08em;
     }
 
-    /* Responsive */
+    /* Responsive: keep 3 columns so photos stay compact */
     @media (max-width: 900px) {
       .shop-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.15rem;
       }
       .about-frame {
         flex-direction: column;
@@ -2088,417 +2250,255 @@
         grid-template-columns: 1fr;
       }
     }
-  </style>
-</head>
-<body>
+  
+    /* Slower & Ultra-Smooth 3D Kickflip Animation for Bio Portrait (1.25s) */
+    @keyframes portraitKickflipSmooth {
+      0% {
+        transform: perspective(1100px) translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale3d(1, 1, 1);
+      }
+      15% {
+        /* Deep, smooth ollie crouch & tail snap */
+        transform: perspective(1100px) translateY(12px) rotateX(15deg) rotateY(-10deg) rotateZ(-6deg) scale3d(0.96, 0.96, 0.96);
+      }
+      32% {
+        /* Smooth ascent with initial roll */
+        transform: perspective(1100px) translateY(-50px) rotateX(-12deg) rotateY(95deg) rotateZ(10deg) scale3d(1.12, 1.12, 1.12);
+      }
+      55% {
+        /* Float apex with 200deg rotation */
+        transform: perspective(1100px) translateY(-72px) rotateX(4deg) rotateY(200deg) rotateZ(-6deg) scale3d(1.16, 1.16, 1.16);
+      }
+      78% {
+        /* Smooth descending rotation catching at 300deg */
+        transform: perspective(1100px) translateY(-25px) rotateX(-6deg) rotateY(310deg) rotateZ(4deg) scale3d(1.06, 1.06, 1.06);
+      }
+      92% {
+        /* Clean 360 catch & soft landing compression */
+        transform: perspective(1100px) translateY(6px) rotateX(6deg) rotateY(360deg) rotateZ(0deg) scale3d(0.97, 0.97, 0.97);
+      }
+      100% {
+        /* Smooth settling back to resting equilibrium */
+        transform: perspective(1100px) translateY(0) rotateX(0deg) rotateY(360deg) rotateZ(0deg) scale3d(1, 1, 1);
+      }
+    }
 
-  <!-- Falling Glass Diamond Container & Floor Impact Zone -->
-  <div id="fallingDiamondContainer">
-    <div class="falling-gem" id="fallingGem"></div>
-    <div class="floor-puddle" id="floorPuddle"></div>
-  </div>
+    .about-image.kickflipping {
+      animation: portraitKickflipSmooth 1.25s cubic-bezier(0.2, 0.8, 0.25, 1) forwards !important;
+      will-change: transform;
+    }
 
-  <!-- Swimming Welder Sparks Canvas -->
-  <canvas id="sparksCanvas"></canvas>
+    /* Dramatic Shattered & Broken State on 4th Click */
+    @keyframes snapBreakPortrait {
+      0% {
+        transform: perspective(1000px) translateY(-30px) rotateX(15deg) rotateY(180deg) rotateZ(-12deg) scale(1.08);
+      }
+      40% {
+        transform: perspective(1000px) translateY(18px) rotateX(-20deg) rotateY(270deg) rotateZ(18deg) scale(0.94);
+      }
+      100% {
+        transform: perspective(1000px) translateY(32px) rotateX(12deg) rotateY(16deg) rotateZ(-14deg) scale(0.92);
+      }
+    }
 
-  <div id="pageContent">
-    <!-- Navigation -->
-    <header>
-      <div class="nav-container">
-        <div class="logo-badge">
-          <div class="logo-rune-wrap" onclick="breakDiamond(event)" title="Click to knock off">
-            <div class="logo-rune" id="logoRune"></div>
-          </div>
-          <div class="logo">
-            <span class="logo-name">
-              <span class="secret-letter" data-secret="S" onclick="handleSecretLetter('S', event)">S</span>eth 
-              <span class="secret-letter" data-secret="B" onclick="handleSecretLetter('B', event)">B</span>arton
-            </span>
-            <span class="logo-sub">
-              <span class="secret-letter" data-secret="C" onclick="handleSecretLetter('C', event)">C</span>oreStall
-            </span>
-          </div>
-        </div>
-        <div class="nav-right">
-          <ul class="nav-links">
-            <li><a href="#media">Media</a></li>
-            <li><a href="#about">Bio</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-          <button class="cart-trigger-btn" onclick="toggleCart(true, determineCartPosition(event.clientX))" aria-label="Open cart">
-            <span>Cart</span>
-            <span class="cart-count-badge" id="cartCount">0</span>
-          </button>
-        </div>
-      </div>
-    </header>
+    .about-image.broken-snapped {
+      animation: snapBreakPortrait 0.85s cubic-bezier(0.2, 0.9, 0.3, 1) forwards !important;
+      filter: grayscale(0.6) contrast(1.3) !important;
+      border-color: rgba(255, 60, 60, 0.7) !important;
+      box-shadow: 0 10px 30px rgba(255, 40, 40, 0.3), 0 20px 45px rgba(0, 0, 0, 0.9) !important;
+      cursor: grab !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      touch-action: none !important;
+    }
 
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-      <div class="hero-hud-frame">
-        <div class="hero-tag">[ DIGITAL LICENSING // 4K & RAW MEDIA ]</div>
-        <h1>Seth Barton</h1>
-        <div style="font-family: var(--font-mono); color: var(--hazard-orange); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; margin-top: -0.5rem; margin-bottom: 1.25rem; text-shadow: 0 0 12px rgba(255,106,0,0.5);">// CoreStall</div>
-        <p>High-resolution action imagery, cinematic drone footage, wildlife captures, and 2027 Western Cape XCO mountain biking calendar coverage.</p>
-        <a href="#media" class="btn">Explore Digital Library</a>
-      </div>
-    </section>
+    .about-image.broken-snapped * {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      pointer-events: none !important;
+    }
 
-    <!-- Digital Media & Category Filter Section -->
-    <section id="media">
-      <div class="section-header">
-        <span class="section-tag">[ DIGITAL ASSET VAULT ]</span>
-        <h2 class="section-title">Categories & Race Calendar</h2>
-      </div>
+    /* Realistic spiderweb glass crack overlay across the photo */
+    .about-image.broken-snapped::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 45% 42%, transparent 0%, rgba(255, 255, 255, 0.3) 1px, transparent 2px),
+        linear-gradient(42deg, transparent 48%, rgba(255, 255, 255, 0.7) 49.5%, rgba(0, 0, 0, 0.85) 51%, transparent 52%),
+        linear-gradient(-55deg, transparent 46%, rgba(255, 255, 255, 0.6) 48.5%, rgba(0, 0, 0, 0.8) 50%, transparent 52%),
+        linear-gradient(112deg, transparent 38%, rgba(255, 255, 255, 0.5) 40%, rgba(0, 0, 0, 0.75) 41.5%, transparent 43%),
+        linear-gradient(-138deg, transparent 52%, rgba(255, 255, 255, 0.55) 53.5%, rgba(0, 0, 0, 0.8) 55%, transparent 56%);
+      backdrop-filter: blur(1px);
+    }
 
-      <!-- Grouped & Stacked Filter Section -->
-      <div class="filter-wrapper">
-        
-        <!-- Primary MediaType Filters -->
-        <div class="primary-filters">
-          <button class="filter-btn active" onclick="filterCategory('all', this)">All Media</button>
-          <button class="filter-btn" onclick="filterCategory('action', this)">Action</button>
-          <button class="filter-btn" onclick="filterCategory('wildlife', this)">Wildlife</button>
-          <button class="filter-btn" onclick="filterCategory('landscape', this)">Landscape</button>
-          <button class="filter-btn" onclick="filterCategory('drone', this)">Drone Footage</button>
-        </div>
+    /* Snapped diagonal split crack overlay */
+    .about-image.broken-snapped::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: 21;
+      pointer-events: none;
+      border: 2px dashed rgba(255, 80, 80, 0.5);
+      border-radius: 14px;
+    }
 
-        <!-- STACKED WP XCO EXPANDER HUB (WITH CUSTOM COLOR SPARKS) -->
-        <div class="wp-hub-container" id="wpHub">
-          
-          <div class="wp-stack-btn-wrap" onclick="toggleWpGroup(event)">
-            <div class="wp-stack-layer-1"></div>
-            <div class="wp-stack-layer-2"></div>
-            <button class="wp-group-master-btn" id="wpMasterBtn" aria-expanded="false">
-              <span>2027 Western Cape XCO Series</span>
-              <span class="badge">6 Rounds</span>
-              <span class="arrow-indicator">&#9660;</span>
-            </button>
-          </div>
+  
+    /* Secret Underlayer Revealed Behind the Broken Photo */
+    .about-3d-wrapper {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      min-width: 280px;
+      min-height: 280px;
+      perspective: 1000px;
+    }
 
-          <!-- Expanded Locations / Dates Grid (Each with its OWN Unique Color Theme!) -->
-          <div class="wp-expanded-locations" id="wpLocationsList">
-            <!-- Round 1: Molten Terran Orange & Gold -->
-            <button class="location-pill" onclick="filterWpSub('wc-xco-1', this, event, 'orange')">
-              <span class="date-tag">13 Feb</span>
-              <span>WC XCO #1 Bloemendal</span>
-            </button>
-            
-            <!-- SA Cup: Championship Royal Gold & Amber Spark -->
-            <button class="location-pill" onclick="filterWpSub('sa-cup', this, event, 'gold')">
-              <span class="date-tag">27-28 Feb</span>
-              <span>SA Cup (Cat 1) Bloemendal</span>
-            </button>
-            
-            <!-- Round 2: Electric Cyan & Ice Bioluminescence -->
-            <button class="location-pill" onclick="filterWpSub('wc-xco-2', this, event, 'cyan')">
-              <span class="date-tag">13 Mar</span>
-              <span>WC XCO #2 Doolhof</span>
-            </button>
-            
-            <!-- Round 3: High-Voltage Acid Neon Emerald Green -->
-            <button class="location-pill" onclick="filterWpSub('wc-xco-3', this, event, 'emerald')">
-              <span class="date-tag">25 Apr</span>
-              <span>WC XCO #3 Spice Route</span>
-            </button>
-            
-            <!-- Round 4: Intense Crimson & Soul Ruby Plasma -->
-            <button class="location-pill" onclick="filterWpSub('wc-xco-4', this, event, 'ruby')">
-              <span class="date-tag">16 May</span>
-              <span>WC XCO #4 Rhebokskloof</span>
-            </button>
-            
-            <!-- Champs: Hextech Violet & Electric Amethyst -->
-            <button class="location-pill" onclick="filterWpSub('xco-champs', this, event, 'violet')">
-              <span class="date-tag">12-13 Jun</span>
-              <span>XCO & XCC Champs Bloemendal</span>
-            </button>
-          </div>
+    .about-secret-underlayer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.2);
+      z-index: 5;
+      background: #090e15;
+      opacity: 0;
+      pointer-events: none !important;
+      cursor: default;
+      transition: opacity 0.8s ease;
+      will-change: opacity;
+    }
 
-        </div>
+    /* Clean, smooth simple fade-in effect when panel is thrown away */
+    .about-secret-underlayer.thrown-revealed {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
 
-      </div>
+    .about-secret-underlayer.thrown-revealed:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.3);
+    }
 
-      <!-- Framed Full-Picture Media Grid (Only Soul Heart visible, Typewriter on hover) -->
-      <div class="shop-grid" id="mediaGrid">
+    .about-secret-badge {
+      display: none; /* Hidden until panel is thrown away! */
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(8, 14, 22, 0.94);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.25s ease;
+      z-index: 10;
+      cursor: pointer;
+    }
 
-        <!-- Item: WC XCO #1 -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco1/800/1000" alt="WC XCO #1 Bloemendal Action" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Rock Garden Descent"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="Full Res Digital RAW + JPEG • Commercial / Rider License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Rock Garden Descent (WC XCO #1)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-secret-underlayer.thrown-revealed .about-secret-badge {
+      display: flex !important; /* Visible only when thrown away! */
+    }
 
-        <!-- Item: SA CUP (CAT 1) -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacup/800/1000" alt="SA Cup Cat 1 Bloemendal" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Pro Lead Sprint"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="Full Res Digital RAW + JPEG • Cat 1 Coverage"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Pro Lead Sprint (SA Cup)', 300)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-secret-underlayer img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      filter: contrast(1.15) saturate(1.2);
+      display: block;
+    }
 
-        <!-- Item: WC XCO #2 -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco2/800/1000" alt="WC XCO #2 Doolhof" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Doolhof Switchbacks"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="High-Speed Singletrack Focus • Full Res Download"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Doolhof Switchbacks (WC XCO #2)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-secret-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(8, 14, 22, 0.88);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-align: center;
+      padding: 0.25rem 0.4rem;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+    }
 
-        <!-- Item: WC XCO #3 -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco3/800/1000" alt="WC XCO #3 Spice Route" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Dust & Berm Attack"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="Full Res Digital Action Capture • Instant Delivery"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Dust & Berm Attack (WC XCO #3)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-image {
+      z-index: 2; /* Sits above secret layer until broken & moved */
+    }
 
-        <!-- Item: WC XCO #4 -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco4/800/1000" alt="WC XCO #4 Rhebokskloof" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Granite Climb Surge"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="Rhebokskloof Technical Ascent • Full Res Download"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Granite Climb Surge (WC XCO #4)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-image.broken-snapped {
+      cursor: grab !important;
+    }
 
-        <!-- Item: XCO & XCC Championships -->
-        <article class="product-card" data-category="xco-champs action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/champs/800/1000" alt="XCO & XCC Championships Bloemendal" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Championship Podium Finish"></h3>
-              <span class="product-price">R 350</span>
-            </div>
-            <p class="typewriter-desc" data-text="Provincial Championship Final • Full Res RAW/JPEG"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Championship Podium Finish', 350)">+ Add to Cart</button>
-          </div>
-        </article>
+    .about-image.broken-snapped.is-dragging {
+      cursor: grabbing !important;
+      z-index: 999999 !important;
+      opacity: 0.92;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 60, 60, 0.5) !important;
+      transform-origin: center center;
+    }
 
-        <!-- Item: Wildlife -->
-        <article class="product-card" data-category="wildlife">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/wildlife1/800/1000" alt="Apex Hunter Wildlife" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Dawn Stalker"></h3>
-              <span class="product-price">R 450</span>
-            </div>
-            <p class="typewriter-desc" data-text="Uncompressed 45MP RAW • Personal & Editorial License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Dawn Stalker (Wildlife)', 450)">+ Add to Cart</button>
-          </div>
-        </article>
+  
+    /* Floating Trash Can Dropzone for Broken Panel */
+    .trash-dropzone {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e2430 0%, #121620 100%);
+      border: 2px dashed rgba(255, 60, 60, 0.6);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 50, 50, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999998;
+      opacity: 0;
+      transform: scale(0.6) translateY(20px);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
 
-        <!-- Item: Landscape -->
-        <article class="product-card" data-category="landscape">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/landscape1/800/1000" alt="Cape Ridgeline Mist Landscape" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Cape Ridgeline Mist"></h3>
-              <span class="product-price">R 400</span>
-            </div>
-            <p class="typewriter-desc" data-text="Ultra High-Res Landscape Digital Master • 16-Bit TIFF/RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Cape Ridgeline Mist (Landscape)', 400)">+ Add to Cart</button>
-          </div>
-        </article>
+    .trash-dropzone.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
 
-        <!-- Item: Drone Footage -->
-        <article class="product-card" data-category="drone">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/drone1/800/1000" alt="Mountain Pass Drone Aerial" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Summit Ridge 4K"></h3>
-              <span class="product-price">R 800</span>
-            </div>
-            <p class="typewriter-desc" data-text="ProRes 422 4K 60fps Drone Clip • Full Commercial Sync"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Summit Ridge 4K (Drone Footage)', 800)">+ Add to Cart</button>
-          </div>
-        </article>
+    .trash-dropzone.dragover {
+      border-color: #ff3344;
+      background: rgba(255, 51, 68, 0.2);
+      box-shadow: 0 0 35px rgba(255, 51, 68, 0.6);
+      transform: scale(1.15) translateY(-4px);
+    }
 
-        <!-- Item 10: WC XCO #1 Drop-In -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco1drop/800/1000" alt="Bloemendal Drop-In WC XCO 1" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="B-Line G-Out Drop"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #1 Bloemendal • Full RAW Master + Rider License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('B-Line G-Out Drop (WC XCO #1)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-
-        <!-- Item 11: SA Cup Holeshot Battle -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacupholeshot/800/1000" alt="Holeshot Battle SA Cup" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Start Straight Holeshot"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="SA Cup Cat 1 • High-Speed Group Shutter • Commercial License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Start Straight Holeshot (SA Cup)', 300)">+ Add to Cart</button>
-          </div>
-        </article>
-
-        <!-- Item 12: WC XCO #2 Root Section -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco2roots/800/1000" alt="Doolhof Pine Forest Roots" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Pine Forest Off-Camber"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #2 Doolhof • Technical Wet Root Line • Digital RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Pine Forest Off-Camber (WC XCO #2)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-
-        <!-- Item 13: WC XCO #3 Berm Explosion -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco3roost/800/1000" alt="Spice Route Berm Roost" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Paarl Granite Roost"></h3>
-              <span class="product-price">R 250</span>
-                   </div>
+    .trash-dropzone-icon {
+      width: 28px;
+      height: 28px;
+      color: #ff4757;
+      transition: transform 0.2s ease;
+       </div>
             <p class="typewriter-desc" data-text="WC XCO #3 Spice Route • High-Speed Dust Explosion Capture"></p>
             <button class="add-to-cart-btn" onclick="addToCart('Paarl Granite Roost (WC XCO #3)', 250)">+ Add to Cart</button>
           </div>
@@ -4998,6 +4998,1100 @@
               ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
               ctx.fill();
             }
+         }
+      }
+
+      function marchAntsAwayWithTrash() {
+        if (!trashCrew) return;
+        if (crewSpeech) {
+          crewSpeech.textContent = 'THANKS! HAULING AWAY...';
+          crewSpeech.style.color = '#39ff14';
+          crewSpeech.style.borderColor = '#39ff14';
+        }
+        if (trashBin) trashBin.classList.add('panel-dropped-in');
+
+        setTimeout(() => {
+          trashCrew.classList.remove('marching-in');
+          trashCrew.classList.add('marching-out');
+        }, 550);
+      }
+
+      // Clicking trashcan directly also instantly dumps and marches away
+      if (trashBin) {
+        trashBin.addEventListener('click', () => {
+          disposeBrokenPanel();
+        });
+      }
+
+      function isOverTrash(clientX, clientY) {
+        if (!trashBin) return false;
+        const rect = trashBin.getBoundingClientRect();
+        return (
+          clientX >= rect.left - 30 &&
+          clientX <= rect.right + 30 &&
+          clientY >= rect.top - 30 &&
+          clientY <= rect.bottom + 30
+        );
+      }
+
+      function disposeBrokenPanel() {
+        if (!tiltPortrait) return;
+        const trashRect = trashBin ? trashBin.getBoundingClientRect() : { left: window.innerWidth - 80, top: window.innerHeight - 80 };
+        const trashCenterX = trashRect.left + 34;
+        const trashCenterY = trashRect.top + 34;
+
+        // Animate suck & compress straight into the ants' carried trash can!
+        tiltPortrait.style.transition = 'all 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+        tiltPortrait.style.left = `${trashCenterX - 70}px`;
+        tiltPortrait.style.top = `${trashCenterY - 70}px`;
+        tiltPortrait.classList.add('thrown-away');
+
+        setTimeout(() => {
+          tiltPortrait.remove();
+          window.isPanelThrownAway = true;
+          window.isCardBroken = true;
+
+          // Clean, simple fade-in of the favorite photo
+          const underlayer = document.getElementById('aboutSecretUnderlayer');
+          if (underlayer) {
+            underlayer.classList.add('thrown-revealed');
+          }
+
+          // The ants march away off the screen carrying the trash!
+          marchAntsAwayWithTrash();
+        }, 450);
+      }
+
+      function startScreenDrag(e) {
+        if (!isCardBroken) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        isDraggingBroken = true;
+        attachBrokenPanelToBody(e);
+        summonAntTrashCrew(); // Ants march out carrying trashcan!
+
+        tiltPortrait.classList.add('is-dragging');
+        tiltPortrait.style.cursor = 'grabbing';
+        tiltPortrait.setPointerCapture(e.pointerId);
+
+        const rect = tiltPortrait.getBoundingClientRect();
+        dragOffset.x = e.clientX - rect.left;
+        dragOffset.y = e.clientY - rect.top;
+
+        function onPointerMove(moveEvent) {
+          if (!isDraggingBroken) return;
+          const left = moveEvent.clientX - dragOffset.x;
+          const top = moveEvent.clientY - dragOffset.y;
+
+          tiltPortrait.style.left = `${left}px`;
+          tiltPortrait.style.top = `${top}px`;
+          tiltPortrait.style.transform = 'perspective(1000px) rotateZ(-12deg) rotateX(10deg) scale(1.05)';
+
+          // Check if hovering over trash can
+          if (isOverTrash(moveEvent.clientX, moveEvent.clientY)) {
+            if (trashBin) trashBin.classList.add('dragover');
+          } else {
+            if (trashBin) trashBin.classList.remove('dragover');
+          }
+        }
+
+        function onPointerUp(upEvent) {
+          isDraggingBroken = false;
+          tiltPortrait.classList.remove('is-dragging');
+          tiltPortrait.style.cursor = 'grab';
+
+          try {
+            tiltPortrait.releasePointerCapture(upEvent.pointerId);
+          } catch (err) {}
+
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+          window.removeEventListener('pointercancel', onPointerUp);
+
+          // If dropped over trash can -> THROW AWAY!
+          if (isOverTrash(upEvent.clientX, upEvent.clientY)) {
+            disposeBrokenPanel();
+          } else {
+            tiltPortrait.style.transform = 'perspective(1000px) rotateZ(-14deg) rotateX(6deg) scale(1)';
+          }
+        }
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
+      }
+
+      tiltCard.addEventListener('mousemove', (e) => {
+        if (isKickflipping || window.isCardBroken) return;
+
+        const rect = tiltCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -18;
+        const rotateY = ((x - centerX) / centerX) * 18;
+
+        tiltPortrait.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+
+        if (tiltGlare) {
+          tiltGlare.style.opacity = '1';
+          const glareX = (x / rect.width) * 100;
+          const glareY = (y / rect.height) * 100;
+          tiltGlare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(0, 240, 255, 0.2) 40%, transparent 75%)`;
+        }
+      });
+
+      tiltCard.addEventListener('mouseleave', () => {
+        if (isKickflipping || window.isCardBroken) return;
+        tiltPortrait.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        if (tiltGlare) {
+          tiltGlare.style.opacity = '0';
+        }
+      });
+    }
+
+    // =========================================================================
+    // TYPEWRITER ENGINE FOR SLIDE-UP CARDS ON HOVER
+    // =========================================================================
+    function startCardTypewriter(card) {
+      const titleEl = card.querySelector('.typewriter-title');
+      const descEl = card.querySelector('.typewriter-desc');
+
+      if (!titleEl || !descEl) return;
+
+      const fullTitle = titleEl.getAttribute('data-text') || '';
+      const fullDesc = descEl.getAttribute('data-text') || '';
+
+      if (card._typewriterTimeouts) {
+        card._typewriterTimeouts.forEach(t => clearTimeout(t));
+      }
+      card._typewriterTimeouts = [];
+
+      titleEl.innerHTML = '<span class="type-caret"></span>';
+      descEl.innerHTML = '';
+
+      let titleIdx = 0;
+      function typeTitle() {
+        if (titleIdx <= fullTitle.length) {
+          titleEl.innerHTML = fullTitle.substring(0, titleIdx) + '<span class="type-caret"></span>';
+          titleIdx++;
+          const t = setTimeout(typeTitle, 22);
+          card._typewriterTimeouts.push(t);
+        } else {
+          titleEl.innerHTML = fullTitle;
+          descEl.innerHTML = '<span class="type-caret"></span>';
+          typeDesc();
+        }
+      }
+
+      let descIdx = 0;
+      function typeDesc() {
+        if (descIdx <= fullDesc.length) {
+          descEl.innerHTML = fullDesc.substring(0, descIdx) + '<span class="type-caret"></span>';
+          descIdx++;
+          const t = setTimeout(typeDesc, 14);
+          card._typewriterTimeouts.push(t);
+        } else {
+          descEl.innerHTML = fullDesc;
+        }
+      }
+
+      typeTitle();
+    }
+
+    function resetCardTypewriter(card) {
+      if (card._typewriterTimeouts) {
+        card._typewriterTimeouts.forEach(t => clearTimeout(t));
+      }
+      card._typewriterTimeouts = [];
+
+      const titleEl = card.querySelector('.typewriter-title');
+      const descEl = card.querySelector('.typewriter-desc');
+      if (titleEl) titleEl.innerHTML = '';
+      if (descEl) descEl.innerHTML = '';
+    }
+
+    // =========================================================================
+    // ULTRA-SUBTLE, TASTEFUL 3D DEPTH (MICRO-TILT & WHISPER SHEEN)
+    // =========================================================================
+    function initCard3DPhysics(card) {
+      if (card._has3DInit) return;
+      card._has3DInit = true;
+
+      const img = card.querySelector('.product-image-wrap img');
+      let glare = card.querySelector('.card-3d-glare');
+      if (!glare) {
+        glare = document.createElement('div');
+        glare.className = 'card-3d-glare';
+        card.appendChild(glare);
+      }
+
+      let rafId = null;
+
+      function onMouseMove(e) {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Ultra-subtle, organic tilt angles (max +/- 1.8 degrees)
+        const rotX = ((y - centerY) / centerY) * -1.8;
+        const rotY = ((x - centerX) / centerX) * 1.8;
+
+        // Microscopic parallax shift (+/- 1.2px)
+        const transX = ((x - centerX) / centerX) * 1.2;
+        const transY = ((y - centerY) / centerY) * 1.2;
+
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          card.style.transform = `perspective(1600px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.008, 1.008, 1.008)`;
+          if (img) {
+            img.style.transform = `translate3d(${transX.toFixed(1)}px, ${transY.toFixed(1)}px, 5px) scale(1.015)`;
+          }
+          if (glare) {
+            const pctX = (x / rect.width) * 100;
+            const pctY = (y / rect.height) * 100;
+            glare.style.opacity = '1';
+            glare.style.background = `radial-gradient(circle at ${pctX.toFixed(1)}% ${pctY.toFixed(1)}%, rgba(255, 255, 255, 0.12) 0%, rgba(200, 220, 245, 0.03) 40%, transparent 70%)`;
+          }
+        });
+      }
+
+      function onMouseLeave() {
+        if (rafId) cancelAnimationFrame(rafId);
+        card.style.transform = 'perspective(1600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        if (img) {
+          img.style.transform = 'translate3d(0px, 0px, 5px) scale(1.012)';
+        }
+        if (glare) {
+          glare.style.opacity = '0';
+        }
+      }
+
+      card.addEventListener('mousemove', onMouseMove);
+      card.addEventListener('mouseleave', onMouseLeave);
+      card.addEventListener('mouseenter', () => startCardTypewriter(card));
+      card.addEventListener('mouseleave', () => resetCardTypewriter(card));
+    }
+
+    document.querySelectorAll('.product-card').forEach(initCard3DPhysics);
+
+    // =========================================================================
+    // THEMED COLOR PALETTES FOR EACH 2027 WC XCO EVENT
+    // =========================================================================
+    const COLOR_THEMES = {
+      orange: [
+        { head: '#ffffff', tail: '#ffeedd', glow: '#ffaa00' },
+        { head: '#fff3aa', tail: '#ffaa00', glow: '#ff6600' },
+        { head: '#ffbb33', tail: '#ff5500', glow: '#ff3300' },
+        { head: '#ff7700', tail: '#cc2200', glow: '#ff4400' }
+      ],
+      gold: [
+        { head: '#ffffff', tail: '#fff9cc', glow: '#ffd700' },
+        { head: '#fff388', tail: '#ffc400', glow: '#ffaa00' },
+        { head: '#ffd000', tail: '#e69500', glow: '#ffb700' },
+        { head: '#ffea70', tail: '#cc8800', glow: '#ffbb00' }
+      ],
+      cyan: [
+        { head: '#ffffff', tail: '#d4ffff', glow: '#00f0ff' },
+        { head: '#a6faff', tail: '#00e1ff', glow: '#00a6ff' },
+        { head: '#00f0ff', tail: '#0088ff', glow: '#0066ff' },
+        { head: '#52e5ff', tail: '#0055ff', glow: '#0099ff' }
+      ],
+      emerald: [
+        { head: '#ffffff', tail: '#e6ffea', glow: '#00ff66' },
+        { head: '#afffc0', tail: '#10e854', glow: '#00cc44' },
+        { head: '#39ff14', tail: '#00aa33', glow: '#00ff88' },
+        { head: '#85ff5e', tail: '#057d25', glow: '#26ff00' }
+      ],
+      ruby: [
+        { head: '#ffffff', tail: '#ffdae4', glow: '#ff2a55' },
+        { head: '#ff88a3', tail: '#ff1744', glow: '#e00034' },
+        { head: '#ff2a55', tail: '#c5002a', glow: '#ff4081' },
+        { head: '#ff5252', tail: '#990020', glow: '#ff1744' }
+      ],
+      violet: [
+        { head: '#ffffff', tail: '#f7e6ff', glow: '#d946ef' },
+        { head: '#f0abfc', tail: '#c026d3', glow: '#a855f7' },
+        { head: '#c084fc', tail: '#7e22ce', glow: '#9333ea' },
+        { head: '#e879f9', tail: '#6b21a8', glow: '#d946ef' }
+      ]
+    };
+
+    // =========================================================================
+    // TIGHT-RADIUS (6px - 22px) "SWIMMING" SPARKS ENGINE
+    // - Hugs the cursor tip tightly without flying all over the place
+    // =========================================================================
+    const canvas = document.getElementById('sparksCanvas');
+    const ctx = canvas.getContext('2d');
+    let sparkParticles = [];
+    let sparksLoop = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Graduated Rapid-Click Spark Tracking
+    let eventClickTimestamps = [];
+    let currentSparkCombo = 0;
+    const MAX_PARTICLES_CAP = 220;
+
+    function triggerThemedWelderSparks(themeKey, evt) {
+      if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+        resizeCanvas();
+      }
+
+      const originX = (evt && evt.clientX) ? evt.clientX : mousePos.x;
+      const originY = (evt && evt.clientY) ? evt.clientY : mousePos.y;
+
+      const now = performance.now();
+      // Keep clicks within a 3.0-second rolling window so user can build up combo
+      eventClickTimestamps = eventClickTimestamps.filter(t => now - t < 3000);
+      eventClickTimestamps.push(now);
+      currentSparkCombo = eventClickTimestamps.length;
+
+      // Calculate click rate (clicks per second) for dynamic speed multiplier
+      let clickRate = 1;
+      if (eventClickTimestamps.length >= 2) {
+        const timeSpan = (eventClickTimestamps[eventClickTimestamps.length - 1] - eventClickTimestamps[0]) / 1000;
+        if (timeSpan > 0.05) {
+          clickRate = Math.min(8, (eventClickTimestamps.length - 1) / timeSpan);
+        }
+      }
+
+      // Faster clicking scales up particle size and speed continuously!
+      const speedMultiplier = 1 + (clickRate * 0.25);
+      const sizeMultiplier = 1 + (clickRate * 0.35);
+
+      const sparkHues = COLOR_THEMES[themeKey] || COLOR_THEMES.orange;
+      const isBigExplosion = currentSparkCombo >= 20;
+
+      let count, minSpeed, maxSpeed, minSize, maxSize, decayRate;
+
+      if (isBigExplosion) {
+        // 20TH CLICK: BIG EXPLOSION! Massive fiery burst across screen!
+        count = 65;
+        minSpeed = 6.0 * speedMultiplier;
+        maxSpeed = 12.0 * speedMultiplier;
+        minSize = 3.5 * sizeMultiplier;
+        maxSize = 5.8 * sizeMultiplier;
+        decayRate = 0.016;
+      } else if (currentSparkCombo >= 15) {
+        // Pre-explosion frenzy (Clicks 15-19)
+        count = 32;
+        minSpeed = 4.0 * speedMultiplier;
+        maxSpeed = 7.5 * speedMultiplier;
+        minSize = 2.4 * sizeMultiplier;
+        maxSize = 3.8 * sizeMultiplier;
+        decayRate = 0.024;
+      } else if (currentSparkCombo >= 10) {
+        // Heavy shower (Clicks 10-14)
+        count = 22;
+        minSpeed = 3.0 * speedMultiplier;
+        maxSpeed = 5.8 * speedMultiplier;
+        minSize = 1.9 * sizeMultiplier;
+        maxSize = 2.8 * sizeMultiplier;
+        decayRate = 0.028;
+      } else if (currentSparkCombo >= 5) {
+        // CLICK COUNT 5: Sparks visibly grow bigger and branch outward!
+        count = 14;
+        minSpeed = 2.0 * speedMultiplier;
+        maxSpeed = 4.2 * speedMultiplier;
+        minSize = 1.4 * sizeMultiplier;
+        maxSize = 2.2 * sizeMultiplier;
+        decayRate = 0.034;
+      } else {
+        // STARTING STATE (Clicks 1-4): VERY SMALL, tucked right behind cursor tip
+        count = 4;
+        minSpeed = 0.5;
+        maxSpeed = 1.2;
+        minSize = 0.6;
+        maxSize = 0.9;
+        decayRate = 0.05;
+      }
+
+      // Cap active particle count for guaranteed 60fps performance
+      if (sparkParticles.length + count > MAX_PARTICLES_CAP) {
+        sparkParticles.splice(0, (sparkParticles.length + count) - MAX_PARTICLES_CAP);
+      }
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+        const colorObj = sparkHues[Math.floor(Math.random() * sparkHues.length)];
+        const size = minSize + Math.random() * (maxSize - minSize);
+
+        sparkParticles.push({
+          x: originX,
+          y: originY,
+          prevX: originX,
+          prevY: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          headColor: colorObj.head,
+          tailColor: colorObj.tail,
+          glowColor: colorObj.glow,
+          width: size,
+          lengthMult: isBigExplosion ? 4.5 : (currentSparkCombo >= 5 ? 2.5 : 1.4),
+          alpha: 1.0,
+          decay: decayRate,
+          friction: isBigExplosion ? 0.96 : (currentSparkCombo >= 5 ? 0.92 : 0.88)
+        });
+      }
+
+      if (!sparksLoop) {
+        animateWelderSparks();
+      }
+    }
+
+    function animateWelderSparks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = sparkParticles.length - 1; i >= 0; i--) {
+        const p = sparkParticles[i];
+
+        p.prevX = p.x;
+        p.prevY = p.y;
+
+        p.vx *= p.friction;
+        p.vy *= p.friction;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          sparkParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.shadowBlur = p.width > 1.5 ? 12 : 5;
+        ctx.shadowColor = p.glowColor;
+
+        const tailX = p.prevX;
+        const tailY = p.prevY;
+        const headX = p.x;
+        const headY = p.y;
+
+        const grad = ctx.createLinearGradient(headX, headY, tailX, tailY);
+        grad.addColorStop(0, p.headColor);
+        grad.addColorStop(0.5, p.tailColor);
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = p.width;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(headX, headY);
+        ctx.stroke();
+
+        // Bright spark white core
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(headX, headY, p.width * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      if (sparkParticles.length > 0) {
+        sparksLoop = requestAnimationFrame(animateWelderSparks);
+      } else {
+        sparksLoop = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // Toggle WP Stack Group
+    function toggleWpGroup(e) {
+      const hub = document.getElementById('wpHub');
+      const isExpanding = !hub.classList.contains('expanded');
+      hub.classList.toggle('expanded');
+
+      triggerThemedWelderSparks('orange', e);
+
+      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
+
+      if (isExpanding) {
+        applyFilter('wp-all');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      } else {
+        const allBtn = document.querySelector('.filter-btn');
+        if (allBtn) {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          allBtn.classList.add('active');
+        }
+        applyFilter('all');
+      }
+    }
+
+    // Location Pill Click: Fires UNIQUE Spark Color Theme
+    function filterWpSub(category, btn, e, themeColor) {
+      if (e) e.stopPropagation();
+      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      triggerThemedWelderSparks(themeColor, e);
+
+      applyFilter(category);
+    }
+
+    // Standard Category Filter: Clean click, NO sparks
+    function filterCategory(category, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (category !== 'action') {
+        document.getElementById('wpHub').classList.remove('expanded');
+      }
+
+      applyFilter(category);
+    }
+
+    function applyFilter(category) {
+      const cards = document.querySelectorAll('.product-card');
+      cards.forEach(card => {
+        if (category === 'all') {
+          card.classList.remove('hidden');
+        } else {
+          const categories = card.getAttribute('data-category') || '';
+          if (categories.includes(category)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // Undertale Soul Like Interaction (3 Quick Little Hops)
+    function toggleLike(btn) {
+      const isCurrentlyLiked = btn.classList.contains('liked');
+
+      if (!isCurrentlyLiked) {
+        btn.classList.add('liked');
+        btn.classList.remove('hopping');
+        void btn.offsetWidth;
+        btn.classList.add('hopping');
+
+        setTimeout(() => {
+          btn.classList.remove('hopping');
+        }, 750);
+      } else {
+        btn.classList.remove('liked');
+        btn.classList.remove('hopping');
+      }
+    }
+
+    function determineCartPosition(clickX) {
+      const width = window.innerWidth;
+      const x = (typeof clickX === 'number' && !isNaN(clickX)) ? clickX : mousePos.x;
+
+      // Split viewport horizontally into three zones (left 35%, center 30%, right 35%)
+      if (x < width * 0.35) {
+        // User clicked on the LEFT side -> pop up on the RIGHT
+        return 'pos-right';
+      } else if (x > width * 0.65) {
+        // User clicked on the RIGHT side -> pop up on the LEFT
+        return 'pos-left';
+      } else {
+        // User clicked in the MIDDLE -> pop up in the CENTER
+        return 'pos-center';
+      }
+    }
+
+    function toggleCart(open, targetPosition) {
+      const drawer = document.getElementById('cartDrawer');
+      const overlay = document.getElementById('cartOverlay');
+      if (!drawer || !overlay) return;
+
+      if (open) {
+        const posClass = targetPosition || determineCartPosition();
+        drawer.classList.remove('pos-left', 'pos-right', 'pos-center');
+        drawer.classList.add(posClass);
+        // Force reflow before applying active so transition plays smoothly
+        void drawer.offsetWidth;
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+      } else {
+        drawer.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+    }
+
+    function addToCart(title, price, e) {
+      let clickX = null;
+      if (e && typeof e.clientX === 'number') {
+        clickX = e.clientX;
+      } else if (window.event && typeof window.event.clientX === 'number') {
+        clickX = window.event.clientX;
+      }
+
+      cart.push({ title, price });
+      renderCart();
+      const posClass = determineCartPosition(clickX);
+      toggleCart(true, posClass);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cartItemsContainer');
+      const countBadge = document.getElementById('cartCount');
+      const totalEl = document.getElementById('cartTotal');
+      countBadge.textContent = cart.length;
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="cart-empty-message">Your digital downloads queue is currently empty.</p>';
+        totalEl.textContent = 'R 0';
+        return;
+      }
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      totalEl.textContent = 'R ' + total.toLocaleString();
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-title">${item.title}</div>
+            <div class="cart-item-price">R ${item.price.toLocaleString()}</div>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${idx})">Remove</button>
+        </div>
+      `).join('');
+    }
+
+    function checkout() {
+      if (cart.length === 0) return alert('Your cart is empty.');
+      const items = cart.map(i => `${i.title} (R ${i.price})`).join('%0D%0A- ');
+      const total = cart.reduce((s, i) => s + i.price, 0);
+      window.location.href = `mailto:lionbarton@gmail.com?subject=Digital%20Media%20Order&body=Hi%20Seth,%0D%0A%0D%0AI would like to purchase and download the following digital files:%0D%0A- ${items}%0D%0A%0D%0ATotal: R ${total}%0D%0A%0D%0APlease send through the download link and invoice.`;
+    }
+
+    // =========================================================================
+    // INSTAGRAM BUTTON: SQUASHABLE, DRAGGABLE, & RESURRECTABLE ANTS
+    // =========================================================================
+    let isAntPartyActive = false;
+    let antPartyAnimId = null;
+    let localAnts = [];
+    let squashedSplat = null;
+    let isAntSquashed = false;
+    let isDraggingSquashedAnt = false;
+    let revivedAnt = null; // Ant running around the page upon resurrection
+
+    function togglePipeColor(e) {
+      const wrap = document.getElementById('pipeWrap');
+      const stage = document.getElementById('antsStageWrapper');
+      if (!wrap) return;
+
+      const isRainbow = wrap.classList.toggle('rainbow-mode');
+
+      if (isRainbow) {
+        if (stage) stage.classList.add('active');
+        startLocalAntDance();
+      } else {
+        if (stage) stage.classList.remove('active');
+        stopLocalAntDance();
+      }
+    }
+
+    function startLocalAntDance() {
+      const canvas = document.getElementById('antsLocalCanvas');
+      const msgEl = document.getElementById('antsHappyMsg');
+      const ghost = document.getElementById('dragAntGhost');
+      if (!canvas) return;
+
+      canvas.width = canvas.offsetWidth || 400;
+      canvas.height = 52;
+      const ctx = canvas.getContext('2d');
+
+      isAntPartyActive = true;
+      isAntSquashed = false;
+      isDraggingSquashedAnt = false;
+      squashedSplat = null;
+      localAnts = [];
+
+      if (ghost) ghost.classList.remove('active');
+
+      // Reset message
+      if (msgEl) {
+        msgEl.className = 'ants-happy-msg';
+        msgEl.innerHTML = '&#10024; you made the ants happy &#10024;';
+      }
+
+      const hatColors = ['#ff0055', '#ff9900', '#ffee00', '#00ff66', '#00e1ff', '#9900ff', '#ff00aa', '#fed7aa'];
+      const count = 16;
+      const spacing = canvas.width / (count + 1);
+
+      for (let i = 0; i < count; i++) {
+        localAnts.push({
+          id: i,
+          baseX: spacing * (i + 1),
+          x: spacing * (i + 1),
+          y: 28,
+          currentX: spacing * (i + 1),
+          currentY: 28,
+          danceSpeed: 0.08 + (i % 3) * 0.02,
+          dancePhase: i * 0.45,
+          hatColor: hatColors[i % hatColors.length],
+          size: 2.8,
+          state: 'dancing', // 'dancing', 'squashed', 'fleeing'
+          fleeSpeed: 6 + Math.random() * 5,
+          fleeDir: (i < count / 2) ? -1 : 1
+        });
+      }
+
+      // Mouse down for squashing AND dragging
+      canvas.onmousedown = handleAntMouseDown;
+
+      function handleAntMouseDown(e) {
+        if (!isAntPartyActive) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const clickX = (e.clientX - rect.left) * scaleX;
+        const clickY = (e.clientY - rect.top) * scaleY;
+
+        // If not squashed yet: find and squash nearest dancing ant
+        if (!isAntSquashed) {
+          let hitAnt = null;
+          let minDist = 36;
+
+          localAnts.forEach(ant => {
+            if (ant.state !== 'dancing') return;
+            const dist = Math.hypot(ant.currentX - clickX, ant.currentY - clickY);
+            if (dist < minDist) {
+              minDist = dist;
+              hitAnt = ant;
+            }
+          });
+
+          if (hitAnt) {
+            isAntSquashed = true;
+            hitAnt.state = 'squashed';
+
+            squashedSplat = {
+              x: hitAnt.currentX,
+              y: hitAnt.currentY,
+              hatColor: hitAnt.hatColor,
+              canvasRect: rect,
+              particles: Array.from({ length: 18 }, () => {
+                const a = Math.random() * Math.PI * 2;
+                const spd = 1.5 + Math.random() * 4;
+                return {
+                  x: hitAnt.currentX,
+                  y: hitAnt.currentY,
+                  vx: Math.cos(a) * spd,
+                  vy: Math.sin(a) * spd,
+                  r: 1 + Math.random() * 2,
+                  alpha: 1
+                };
+              })
+            };
+
+            // Panic flee for others
+            localAnts.forEach(ant => {
+              if (ant.state === 'dancing') {
+                ant.state = 'fleeing';
+                ant.fleeDir = (ant.currentX < hitAnt.currentX) ? -1 : 1;
+                ant.fleeSpeed = 8 + Math.random() * 6;
+              }
+            });
+
+            if (msgEl) {
+              msgEl.className = 'ants-happy-msg squashed';
+              msgEl.innerHTML = '&#9888; YOU SQUASHED IT! &#9888;';
+            }
+
+            // Immediately pick it up for dragging
+            startDraggingSquashedAnt(e.clientX, e.clientY);
+          }
+        } else if (squashedSplat) {
+          // If already squashed, check if user clicked on the pancake splat to pick it up again
+          const distToSplat = Math.hypot(squashedSplat.x - clickX, squashedSplat.y - clickY);
+          if (distToSplat < 28) {
+            startDraggingSquashedAnt(e.clientX, e.clientY);
+          }
+        }
+      }
+
+      function startDraggingSquashedAnt(clientX, clientY) {
+        isDraggingSquashedAnt = true;
+        const ghost = document.getElementById('dragAntGhost');
+        const dragHat = document.getElementById('dragAntHat');
+        if (ghost && squashedSplat) {
+          if (dragHat) dragHat.setAttribute('fill', squashedSplat.hatColor);
+          ghost.classList.add('active');
+          ghost.style.left = `${clientX}px`;
+          ghost.style.top = `${clientY}px`;
+        }
+        window.addEventListener('mousemove', onGlobalAntDrag);
+        window.addEventListener('mouseup', onGlobalAntDrop);
+      }
+
+      function onGlobalAntDrag(e) {
+        if (!isDraggingSquashedAnt) return;
+        const ghost = document.getElementById('dragAntGhost');
+        if (ghost) {
+          ghost.style.left = `${e.clientX}px`;
+          ghost.style.top = `${e.clientY}px`;
+        }
+
+        // Check if dragged over the broken diamond puddle
+        checkPuddleResurrection(e.clientX, e.clientY);
+      }
+
+      function onGlobalAntDrop(e) {
+        if (!isDraggingSquashedAnt) return;
+        isDraggingSquashedAnt = false;
+        window.removeEventListener('mousemove', onGlobalAntDrag);
+        window.removeEventListener('mouseup', onGlobalAntDrop);
+
+        // Check if dropped directly inside the puddle
+        const resurrected = checkPuddleResurrection(e.clientX, e.clientY);
+
+        const ghost = document.getElementById('dragAntGhost');
+        if (ghost && !resurrected) {
+          ghost.classList.remove('active');
+        }
+      }
+
+      function checkPuddleResurrection(clientX, clientY) {
+        const puddle = document.getElementById('floorPuddle');
+        if (!puddle || !isDiamondBroken) return false;
+
+        const rect = puddle.getBoundingClientRect();
+        // Check collision with the floor puddle (giving generous generous radius)
+        const inPuddle = (
+          clientX >= rect.left - 30 &&
+          clientX <= rect.right + 30 &&
+          clientY >= rect.top - 30 &&
+          clientY <= rect.bottom + 30
+        );
+
+        if (inPuddle) {
+          resurrectAnt(clientX, clientY);
+          return true;
+        }
+        return false;
+      }
+
+      function resurrectAnt(spawnX, spawnY) {
+        isDraggingSquashedAnt = false;
+        window.removeEventListener('mousemove', onGlobalAntDrag);
+        window.removeEventListener('mouseup', onGlobalAntDrop);
+
+        const ghost = document.getElementById('dragAntGhost');
+        if (ghost) ghost.classList.remove('active');
+
+        // Hide squashed pancake
+        squashedSplat = null;
+
+        // Change text strictly to "Huh?" with no emojis
+        const msgEl = document.getElementById('antsHappyMsg');
+        if (msgEl) {
+          msgEl.className = 'ants-happy-msg revived';
+          msgEl.textContent = 'Huh?';
+        }
+
+        // Spawn revived ant with paced steps, pause, and motorbike getaway
+        spawnRevivedAnt(spawnX, spawnY);
+      }
+
+      function spawnRevivedAnt(startX, startY) {
+        const actor = document.createElement('div');
+        actor.style.position = 'fixed';
+        actor.style.left = `${startX}px`;
+        actor.style.top = `${startY}px`;
+        actor.style.zIndex = '99999';
+        actor.style.pointerEvents = 'none';
+        actor.style.transition = 'none';
+        actor.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.6))';
+
+        // Stage 1 Ant SVG (Paced runner)
+        const antRunnerHTML = `
+          <svg width="34" height="26" viewBox="0 0 34 26" style="display:block;">
+            <!-- Legs -->
+            <path d="M7,14 L3,19 M13,14 L11,20 M19,14 L17,19 M23,14 L25,19 M15,14 L18,20 M9,14 L6,19" stroke="#374151" stroke-width="1.6" stroke-linecap="round" />
+            <!-- Abdomen -->
+            <ellipse cx="8" cy="12" rx="6" ry="4.5" fill="#111827" />
+            <!-- Thorax -->
+            <ellipse cx="16" cy="12" rx="4" ry="3.5" fill="#1f2937" />
+            <!-- Head -->
+            <ellipse cx="23" cy="11" rx="3.8" ry="3.8" fill="#111827" />
+            <!-- Antennae -->
+            <path d="M25,9 L28,4 M24,9 L27,3" stroke="#ffaa00" stroke-width="1.2" stroke-linecap="round" />
+            <!-- Tiny Cone Hat -->
+            <polygon points="21,9 25,9 23,2" fill="#ff0055" />
+            <circle cx="23" cy="1.5" r="1" fill="#ffffff" />
+          </svg>
+        `;
+
+        // Stage 2 Ant riding a badass little Motorbike SVG
+        const antMotorbikeHTML = `
+          <svg width="56" height="38" viewBox="0 0 56 38" style="display:block;">
+            <!-- Rear Wheel -->
+            <circle cx="11" cy="27" r="8" fill="#111827" stroke="#9ca3af" stroke-width="2.5" />
+            <circle cx="11" cy="27" r="3.5" fill="#d1d5db" />
+            <!-- Front Wheel -->
+            <circle cx="45" cy="27" r="8" fill="#111827" stroke="#9ca3af" stroke-width="2.5" />
+            <circle cx="45" cy="27" r="3.5" fill="#d1d5db" />
+            <!-- Frame & Exhaust -->
+            <path d="M11,27 L25,27 L33,21 L45,27 M25,27 L27,18 L38,18 L43,24" stroke="#ff6a00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <path d="M14,28 L28,29" stroke="#9ca3af" stroke-width="2" />
+            <circle cx="8" cy="29" r="2" fill="rgba(255,106,0,0.8)" />
+            <!-- Handlebars & Headlight -->
+            <path d="M38,18 L42,12 L39,11" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="46" cy="19" r="2.5" fill="#00f0ff" filter="drop-shadow(0 0 4px #00f0ff)" />
+            <!-- Ant Rider on top -->
+            <!-- Abdomen -->
+            <ellipse cx="21" cy="15" rx="5" ry="3.5" fill="#111827" />
+            <!-- Thorax -->
+            <ellipse cx="27" cy="14" rx="3.5" ry="3" fill="#1f2937" />
+            <!-- Head with helmet/hat -->
+            <ellipse cx="32" cy="12" rx="3.5" ry="3.5" fill="#111827" />
+            <polygon points="30,10 34,10 32,3" fill="#ff0055" />
+            <circle cx="32" cy="2.5" r="0.9" fill="#fff" />
+            <!-- Ant Arms on handlebars -->
+            <path d="M28,14 L39,12" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" />
+            <!-- Ant Legs on pedals -->
+            <path d="M24,16 L27,23" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        `;
+
+        actor.innerHTML = antRunnerHTML;
+        document.body.appendChild(actor);
+
+        // Sequence:
+        // 1. Walk out slowly from the puddle (speed ~2.5px/frame for ~100px)
+        // 2. Quick pause (looks around for ~600ms)
+        // 3. Mounts motorbike!
+        // 4. Revs and zooms smoothly away across the floor/screen!
+
+        let posX = startX;
+        let posY = startY - 14;
+        let walkStep = 0;
+        const walkTargetX = startX + (startX < window.innerWidth / 2 ? 80 : -80);
+        const walkDir = walkTargetX > startX ? 1 : -1;
+
+        if (walkDir < 0) {
+          actor.style.transform = 'scaleX(-1)';
+        }
+
+        function walkPaced() {
+          walkStep += 0.25;
+          posX += walkDir * 2.2; // Slow, natural paced scamper
+          posY += Math.sin(walkStep * 2) * 1.5;
+
+          actor.style.left = `${posX}px`;
+          actor.style.top = `${posY}px`;
+
+          const distanceWalked = Math.abs(posX - startX);
+          if (distanceWalked < 85) {
+            requestAnimationFrame(walkPaced);
+          } else {
+            // Reached checkpoint: Quick pause!
+            pauseMoment();
+          }
+        }
+
+        function pauseMoment() {
+          // Subtle curious wobble while looking around
+          let pauseFrames = 0;
+          function pauseLoop() {
+            pauseFrames++;
+            actor.style.transform = (walkDir < 0 ? 'scaleX(-1) ' : '') + `rotate(${Math.sin(pauseFrames * 0.2) * 5}deg)`;
+            if (pauseFrames < 35) {
+              requestAnimationFrame(pauseLoop);
+            } else {
+              mountMotorbike();
+            }
+          }
+          requestAnimationFrame(pauseLoop);
+        }
+
+        function mountMotorbike() {
+          // Switch sprite to Ant riding Motorbike
+          actor.innerHTML = antMotorbikeHTML;
+          actor.style.transform = walkDir < 0 ? 'scaleX(-1)' : 'scaleX(1)';
+
+          // Brief engine rev hesitation
+          setTimeout(() => {
+            let bikeSpeed = 3;
+            let bikeAccel = 0.45;
+            let exhaustParticles = [];
+
+            function rideAway() {
+              bikeSpeed += bikeAccel;
+              posX += walkDir * bikeSpeed;
+              // Minor road bump vibration
+              posY += (Math.random() - 0.5) * 1.2;
+
+              actor.style.left = `${posX}px`;
+              actor.style.top = `${posY}px`;
+              actor.style.transform = (walkDir < 0 ? 'scaleX(-1) ' : '') + `rotate(${walkDir * (bikeSpeed * 0.4)}deg)`;
+
+              // Continue until well off the screen
+              if (posX > -120 && posX < window.innerWidth + 120) {
+                requestAnimationFrame(rideAway);
+              } else {
+                actor.remove();
+              }
+            }
+
+            requestAnimationFrame(rideAway);
+          }, 250);
+        }
+
+        requestAnimationFrame(walkPaced);
+      }
+
+      function renderAntDance() {
+        if (!isAntPartyActive) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Render Squashed Splat Mark on the stage canvas
+        if (squashedSplat && !isDraggingSquashedAnt) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(20, 24, 34, 0.88)';
+          ctx.beginPath();
+          ctx.ellipse(squashedSplat.x, squashedSplat.y + 4, 9, 3.5, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = squashedSplat.hatColor;
+          ctx.beginPath();
+          ctx.ellipse(squashedSplat.x - 3, squashedSplat.y + 2, 4, 1.8, -0.4, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Particle puffs
+          squashedSplat.particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.92;
+            p.vy *= 0.92;
+            p.alpha -= 0.025;
+            if (p.alpha > 0) {
+              ctx.fillStyle = `rgba(80, 90, 110, ${p.alpha})`;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
           });
           ctx.restore();
         }
@@ -5117,6 +6211,559 @@
         msgEl.innerHTML = '&#10024; you made the ants happy &#10024;';
       }
     }
+  
+    // =========================================================================
+    // FAVORITE PHOTOS ENGINE (MUTABLE & FULLY EDITABLE VIA CREATOR STUDIO)
+    // =========================================================================
+    let SETH_FAVORITES = [
+      {
+        id: 'fav-1',
+        title: 'Rock Garden Descent',
+        tag: 'WC XCO #1 • Bloemendal',
+        desc: 'High-speed technical rock garden roll • 1/3200s Shutter • Uncompressed RAW',
+        price: 250,
+        src: 'https://picsum.photos/seed/xco1/800/1000'
+      },
+      {
+        id: 'fav-2',
+        title: 'Dawn Stalker Leopard',
+        tag: 'Wildlife • Kruger National Park',
+        desc: 'Silently prowling the dry Sabi riverbed under pre-dawn ambient light • 400mm f/2.8',
+        price: 380,
+        src: 'https://picsum.photos/seed/wildlife1/800/1000'
+      },
+      {
+        id: 'fav-3',
+        title: 'Summit Ridge 4K Aerial',
+        tag: 'Drone • Bainskloof Pass',
+        desc: 'Cinematic FPV mountain climb catching morning thermo-inversion clouds • D-Log M 10-bit',
+        price: 450,
+        src: 'https://picsum.photos/seed/drone1/800/1000'
+      },
+      {
+        id: 'fav-4',
+        title: 'Cape Ridgeline Mist',
+        tag: 'Landscape • Jonkershoek Valley',
+        desc: 'Dense marine layer rolling over dramatic sandstone peaks at golden hour • 70-200mm f/4',
+        price: 290,
+        src: 'https://picsum.photos/seed/landscape1/800/1000'
+      },
+      {
+        id: 'fav-5',
+        title: 'Black Eagle Thermal',
+        tag: 'Wildlife • 600mm Prime',
+        desc: 'Verreaux eagle carving high-altitude drafts above Cape fold peaks • 1/4000s RAW',
+        price: 360,
+        src: 'https://picsum.photos/seed/blackeagle/800/1000'
+      },
+      {
+        id: 'fav-6',
+        title: 'Championship Podium Spray',
+        tag: 'XCO Champs • Bloemendal',
+        desc: 'Pure post-race champagne celebration in intense afternoon backlight • 85mm f/1.4',
+        price: 320,
+        src: 'https://picsum.photos/seed/champs/800/1000'
+      }
+    ];
+
+    let activeFavoriteIdx = 0;
+
+    function initFavoritesList() {
+      const container = document.getElementById('favoritesListContainer');
+      if (!container) return;
+
+      container.innerHTML = SETH_FAVORITES.map((item, idx) => `
+        <div class="favorite-item-row ${idx === activeFavoriteIdx ? 'active' : ''}" onclick="selectFavoritePhoto(${idx}, event)">
+          <img src="${item.src}" class="favorite-thumb" alt="${item.title}" loading="lazy">
+          <div class="favorite-meta">
+            <span class="favorite-title">${item.title}</span>
+            <span class="favorite-tag">${item.tag}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Open out of the frame into a new Secret Section (ONLY ONCE PANEL IS THROWN AWAY!)
+    function toggleFavoritesDropdown(e) {
+      if (e) e.stopPropagation();
+      if (!window.isPanelThrownAway) return; // Strict lock: Only accessible after panel is thrown in trash!
+
+      openSecretFavoritesSection();
+    }
+
+    function openSecretFavoritesSection() {
+      const section = document.getElementById('secretFavoritesSection');
+      if (!section) return;
+
+      renderSecretFavoritesGrid();
+      section.classList.add('unlocked-open');
+
+      // Smooth cinematic scroll down into the unlocked section
+      setTimeout(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }
+
+    function closeSecretFavoritesSection() {
+      const section = document.getElementById('secretFavoritesSection');
+      if (section) {
+        section.classList.remove('unlocked-open');
+        // Scroll back to Bio
+        const aboutSec = document.getElementById('about');
+        if (aboutSec) aboutSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function renderSecretFavoritesGrid() {
+      const container = document.getElementById('secretFavoritesGrid');
+      if (!container) return;
+
+      const SECRET_ITEMS = [
+        {
+          title: 'Rock Garden Descent',
+          tag: 'WC XCO #1 • Bloemendal',
+          desc: 'High-speed technical rock garden roll • 1/3200s Shutter • Uncompressed RAW',
+          price: 250,
+          src: 'https://picsum.photos/seed/xco1/800/1000'
+        },
+        {
+          title: 'Dawn Stalker Leopard',
+          tag: 'Wildlife • Kruger National Park',
+          desc: 'Golden hour fig tree stalk • 600mm F4 Prime • 45MP Personal License',
+          price: 480,
+          src: 'https://picsum.photos/seed/wildlife1/800/1000'
+        },
+        {
+          title: 'Summit Ridge 4K Aerial',
+          tag: 'Cinematic Drone • Bainskloof Pass',
+          desc: 'ProRes 422 4K 60fps Cinema Drone Master • Commercial Sync Included',
+          price: 850,
+          src: 'https://picsum.photos/seed/drone1/800/1000'
+        },
+        {
+          title: 'Cape Ridgeline Mist',
+          tag: 'Landscape • Jonkershoek Basin',
+          desc: 'Cloud inversion over Cape Fold Sandstone • 16-Bit Master TIFF',
+          price: 400,
+          src: 'https://picsum.photos/seed/landscape1/800/1000'
+        },
+        {
+          title: 'Black Eagle Thermal',
+          tag: 'Wildlife • Raptor Flight',
+          desc: 'Verreaux’s Eagle thermal banking • Razor-sharp eye focus • Editorial RAW',
+          price: 450,
+          src: 'https://picsum.photos/seed/blackeagle/800/1000'
+        },
+        {
+          title: 'Championship Podium Spray',
+          tag: 'XCO Champs • Final Ceremony',
+          desc: 'Provincial Championship Champagne celebration • Editorial Coverage',
+          price: 350,
+          src: 'https://picsum.photos/seed/champs/800/1000'
+        }
+      ];
+
+      container.innerHTML = SECRET_ITEMS.map((item, idx) => `
+        <article class="secret-card">
+          <img src="${item.src}" alt="${item.title}" loading="lazy">
+          <div class="secret-card-overlay">
+            <span class="secret-card-tag">${item.tag}</span>
+            <h3 class="secret-card-title">${item.title}</h3>
+            <p class="secret-card-desc">${item.desc}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem;">
+              <span style="font-family: var(--font-mono); font-size: 1.05rem; font-weight: 800; color: var(--hazard-orange);">R ${item.price}</span>
+              <button class="secret-card-btn" onclick="addToCart('${item.title.replace(/'/g, "\\'")}', ${item.price}, event)">+ Add to Cart</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function selectFavoritePhoto(idx, e) {
+      if (e) e.stopPropagation();
+      activeFavoriteIdx = idx;
+      const item = SETH_FAVORITES[idx];
+      const activeImg = document.getElementById('favoritesActiveImg');
+      const badgeText = document.getElementById('favoritesBadgeText');
+      const underlayer = document.getElementById('aboutSecretUnderlayer');
+
+      if (activeImg) {
+        activeImg.style.opacity = '0';
+        setTimeout(() => {
+          activeImg.src = item.src;
+          activeImg.style.opacity = '1';
+        }, 150);
+      }
+
+      if (badgeText) {
+        badgeText.textContent = item.title.toUpperCase();
+      }
+
+      initFavoritesList();
+
+      // Close menu smoothly after selection
+      setTimeout(() => {
+        if (underlayer) underlayer.classList.remove('menu-open');
+      }, 200);
+    }
+
+    document.addEventListener('DOMContentLoaded', initFavoritesList);
+    initFavoritesList();
+
+  
+    // =========================================================================
+    // HERO DEEP SPACE ENGINE: FLOATING STARS, TWINKLING CLUSTERS & CELESTIAL DUST
+    // =========================================================================
+// =========================================================================
+    // HERO DEEP SPACE ENGINE: FLOATING STARS, TWINKLING CLUSTERS & CELESTIAL DUST
+    // =========================================================================
+    (function initHeroSpaceEngine() {
+      const sCanvas = document.getElementById('spaceCanvas');
+      if (!sCanvas) return;
+      const sCtx = sCanvas.getContext('2d');
+      const heroEl = document.getElementById('hero');
+      let stars = [];
+      let shootingStars = [];
+      let spaceAnimationId;
+
+      let heroMouse = { x: -1000, y: -1000, active: false };
+      // Cursor Tracking for Persistent Orbit
+      if (heroEl) {
+        window.addEventListener('mousemove', (e) => {
+          const rect = sCanvas.getBoundingClientRect();
+          heroMouse.x = e.clientX - rect.left;
+          heroMouse.y = e.clientY - rect.top;
+          heroMouse.active = (e.clientY >= rect.top && e.clientY <= rect.bottom);
+        });
+
+        heroEl.addEventListener('mouseleave', () => {
+          heroMouse.active = false;
+        });
+      }
+
+      // Support up to 10 SIMULTANEOUS CLICKED STAR ORBITS!
+      const MAX_ACTIVE_ANCHORS = 10;
+      let activeAnchorStars = [];
+
+      // Function to handle clicking on a star or in space:
+      function handleStarClick(clientX, clientY) {
+        const rect = sCanvas.getBoundingClientRect();
+        const clickX = clientX - rect.left;
+        const clickY = clientY - rect.top;
+
+        // Find the closest star within 55px of click (or use exact click location)
+        let closestStar = null;
+        let minDist = 55;
+
+        for (let i = 0; i < stars.length; i++) {
+          const d = Math.hypot(stars[i].x - clickX, stars[i].y - clickY);
+          if (d < minDist) {
+            minDist = d;
+            closestStar = stars[i];
+          }
+        }
+
+        const anchorX = closestStar ? closestStar.x : clickX;
+        const anchorY = closestStar ? closestStar.y : clickY;
+
+        // If we reached the cap of 10, remove the oldest anchor cleanly
+        if (activeAnchorStars.length >= MAX_ACTIVE_ANCHORS) {
+          const oldest = activeAnchorStars.shift();
+          if (oldest.starRef) oldest.starRef.isAnchor = false;
+        }
+
+        const newAnchor = {
+          id: 'anchor_' + performance.now() + '_' + Math.random(),
+          x: anchorX,
+          y: anchorY,
+          starRef: closestStar,
+          radius: 190,
+          speed: 1.0,
+          startTime: performance.now(),
+          duration: 20000 // Each orbit lasts for 20 seconds!
+        };
+
+        activeAnchorStars.push(newAnchor);
+
+        if (closestStar) {
+          closestStar.isAnchor = true;
+          closestStar.anchorPulse = 2.5; // Beacon illumination
+        }
+      }
+
+      sCanvas.addEventListener('pointerdown', (e) => {
+        handleStarClick(e.clientX, e.clientY);
+      });
+
+      // Also listen on hero element for clicks
+      heroEl.addEventListener('pointerdown', (e) => {
+        // If not clicking a button/link inside the HUD:
+        if (!e.target.closest('a') && !e.target.closest('button')) {
+          handleStarClick(e.clientX, e.clientY);
+        }
+      });
+
+      function resizeSpace() {
+        if (!heroEl) return;
+        sCanvas.width = heroEl.offsetWidth || window.innerWidth;
+        sCanvas.height = heroEl.offsetHeight || window.innerHeight;
+      }
+
+      window.addEventListener('resize', resizeSpace);
+      resizeSpace();
+
+      // Create 200 floating stars with individual orbital rates
+      const STAR_COUNT = 200;
+      stars = [];
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const initX = Math.random() * (sCanvas.width || window.innerWidth);
+        const initY = Math.random() * (sCanvas.height || window.innerHeight);
+        stars.push({
+          x: initX,
+          y: initY,
+          originX: initX,
+          originY: initY,
+          vx: 0,
+          vy: 0,
+          size: Math.random() * 1.8 + 0.6,
+          baseAlpha: Math.random() * 0.7 + 0.3,
+          twinkleSpeed: Math.random() * 0.03 + 0.008,
+          twinklePhase: Math.random() * Math.PI * 2,
+          driftSpeedX: (Math.random() - 0.5) * 0.16,
+          driftSpeedY: (Math.random() - 0.5) * 0.12,
+          orbitDir: Math.random() > 0.5 ? 1 : -1,
+          orbitRate: 0.035 + Math.random() * 0.04,
+          isAnchor: false,
+          anchorPulse: 1.0,
+          color: Math.random() > 0.75 
+            ? 'rgba(0, 240, 255,' 
+            : (Math.random() > 0.5 ? 'rgba(255, 215, 0,' : 'rgba(255, 255, 255,')
+        });
+      }
+
+      function spawnShootingStar() {
+        if (shootingStars.length < 2 && Math.random() < 0.02) {
+          shootingStars.push({
+            x: Math.random() * sCanvas.width * 0.8,
+            y: Math.random() * (sCanvas.height * 0.45),
+            length: Math.random() * 85 + 50,
+            speed: Math.random() * 8 + 6,
+            angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2,
+            alpha: 1,
+            decay: 0.02
+          });
+        }
+      }
+
+      // Interactive Subtler 3D Pull-Up & Gentle Tilt on Hover (Seth Barton block moves less)
+      const hudFrame = document.querySelector('.hero-hud-frame');
+      if (heroEl && hudFrame) {
+        heroEl.addEventListener('mousemove', (e) => {
+          const rect = hudFrame.getBoundingClientRect();
+          const frameCenterX = rect.left + rect.width / 2;
+          const frameCenterY = rect.top + rect.height / 2;
+
+          const mouseX = e.clientX - frameCenterX;
+          const mouseY = e.clientY - frameCenterY;
+
+          const distToCenter = Math.hypot(mouseX, mouseY);
+          if (distToCenter < 600) {
+            const tiltX = (mouseY / (rect.height / 2)) * -3.2; 
+            const tiltY = (mouseX / (rect.width / 2)) * 3.2;
+            hudFrame.style.transform = `perspective(1000px) translateY(-5px) translateZ(14px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+          } else {
+            hudFrame.style.transform = 'perspective(1000px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg)';
+          }
+        });
+
+        heroEl.addEventListener('mouseleave', () => {
+          hudFrame.style.transform = 'perspective(1000px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg)';
+        });
+      }
+
+      function renderSpace() {
+        sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+
+        // Update lifetimes for all active anchor stars (up to 10)
+        const now = performance.now();
+        for (let a = activeAnchorStars.length - 1; a >= 0; a--) {
+          const anchor = activeAnchorStars[a];
+          const elapsed = now - anchor.startTime;
+          if (elapsed < anchor.duration) {
+            // Smooth bell curve envelope so orbits accelerate in and fade gracefully out over 20s
+            anchor.speed = Math.sin((elapsed / anchor.duration) * Math.PI);
+          } else {
+            if (anchor.starRef) anchor.starRef.isAnchor = false;
+            activeAnchorStars.splice(a, 1);
+          }
+        }
+
+        const hasActiveAnchors = activeAnchorStars.length > 0;
+
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+
+          // 1. Ambient gentle cosmic drift
+          s.originX += s.driftSpeedX;
+          s.originY += s.driftSpeedY;
+
+          if (s.originX < 0) s.originX = sCanvas.width;
+          if (s.originX > sCanvas.width) s.originX = 0;
+          if (s.originY < 0) s.originY = sCanvas.height;
+          if (s.originY > sCanvas.height) s.originY = 0;
+
+          // 2. CURSOR HOVER ORBIT: Weaker, slower, gentle ambient drift around cursor!
+          if (heroMouse.active) {
+            const mDx = heroMouse.x - s.x;
+            const mDy = heroMouse.y - s.y;
+            const mDist = Math.hypot(mDx, mDy);
+            const CURSOR_ORBIT_MAX = 160;
+
+            if (mDist < CURSOR_ORBIT_MAX && mDist > 2) {
+              const mInfluence = (1 - (mDist / CURSOR_ORBIT_MAX));
+              
+              // Soft, weak radial attraction (~85px wide band)
+              const mRadialForce = (mDist - 85) * 0.0045 * mInfluence;
+              const mNormX = mDx / mDist;
+              const mNormY = mDy / mDist;
+
+              // Significantly slower, subtle tangential rotation (~65% slower)
+              const mTangentX = -mNormY * s.orbitDir;
+              const mTangentY = mNormX * s.orbitDir;
+              const mOrbitSpeed = 0.52 * mInfluence * s.orbitRate * 18;
+
+              s.vx += (mNormX * mRadialForce) + (mTangentX * mOrbitSpeed);
+              s.vy += (mNormY * mRadialForce) + (mTangentY * mOrbitSpeed);
+            }
+          }
+
+          // 3. MULTI-ANCHOR CLICK ORBITS: Up to 10 simultaneous gravitational systems!
+          if (hasActiveAnchors) {
+            for (let a = 0; a < activeAnchorStars.length; a++) {
+              const anchor = activeAnchorStars[a];
+              if (anchor.speed <= 0.01) continue;
+
+              // If this star is the anchor itself, lock it gently to anchor center
+              if (s === anchor.starRef) {
+                s.vx *= 0.5;
+                s.vy *= 0.5;
+              } else {
+                const dx = anchor.x - s.x;
+                const dy = anchor.y - s.y;
+                const dist = Math.hypot(dx, dy);
+
+                if (dist < anchor.radius && dist > 5) {
+                  const influence = (1 - (dist / anchor.radius)) * anchor.speed;
+
+                  // Unique orbital tier for each particle
+                  const targetOrbitR = 52 + (i % 6) * 16;
+                  const radialForce = (dist - targetOrbitR) * 0.02 * influence;
+                  const normX = dx / dist;
+                  const normY = dy / dist;
+
+                  // Tangential orbit velocity around clicked star
+                  const tangentX = -normY * s.orbitDir;
+                  const tangentY = normX * s.orbitDir;
+                  const orbitSpeed = 2.4 * influence;
+
+                  s.vx += (normX * radialForce) + (tangentX * orbitSpeed);
+                  s.vy += (normY * radialForce) + (tangentY * orbitSpeed);
+                }
+              }
+            }
+          }
+
+          // 4. Return spring gently pulling stars back to natural drift
+          const springPower = (heroMouse.active || hasActiveAnchors) ? 0.015 : 0.035;
+          s.vx += (s.originX - s.x) * springPower;
+          s.vy += (s.originY - s.y) * springPower;
+
+          s.vx *= 0.88;
+          s.vy *= 0.88;
+
+          s.x += s.vx;
+          s.y += s.vy;
+
+          s.twinklePhase += s.twinkleSpeed;
+          let currentAlpha = Math.max(0.14, s.baseAlpha + Math.sin(s.twinklePhase) * 0.35);
+
+          // Anchor star beacon glow
+          let currentSize = s.size;
+          if (s.isAnchor) {
+            currentSize = s.size * 2.2;
+            currentAlpha = 1.0;
+            sCtx.shadowBlur = 15;
+            sCtx.shadowColor = '#00f0ff';
+          } else {
+            sCtx.shadowBlur = 0;
+          }
+
+          sCtx.fillStyle = s.color + currentAlpha + ')';
+          sCtx.beginPath();
+          sCtx.arc(s.x, s.y, currentSize, 0, Math.PI * 2);
+          sCtx.fill();
+
+          // Small, refined star cross gleam
+          if ((currentSize > 1.8 || s.isAnchor) && currentAlpha > 0.6) {
+            sCtx.strokeStyle = s.color + (currentAlpha * 0.45) + ')';
+            sCtx.lineWidth = 0.5;
+            sCtx.beginPath();
+            sCtx.moveTo(s.x - currentSize * 1.3, s.y);
+            sCtx.lineTo(s.x + currentSize * 1.3, s.y);
+            sCtx.moveTo(s.x, s.y - currentSize * 1.3);
+            sCtx.lineTo(s.x, s.y + currentSize * 1.3);
+            sCtx.stroke();
+          }
+          sCtx.shadowBlur = 0;
+        }
+
+        // Render shooting stars streaks
+        spawnShootingStar();
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          const ss = shootingStars[i];
+          const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+          const tailY = ss.y - Math.sin(ss.angle) * ss.length;
+
+          const grad = sCtx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
+          grad.addColorStop(0.3, `rgba(0, 240, 255, ${ss.alpha * 0.8})`);
+          grad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+
+          sCtx.strokeStyle = grad;
+          sCtx.lineWidth = 1.6;
+          sCtx.lineCap = 'round';
+          sCtx.beginPath();
+          sCtx.moveTo(tailX, tailY);
+          sCtx.lineTo(ss.x, ss.y);
+          sCtx.stroke();
+
+          ss.x += Math.cos(ss.angle) * ss.speed;
+          ss.y += Math.sin(ss.angle) * ss.speed;
+          ss.alpha -= ss.decay;
+
+          if (ss.alpha <= 0 || ss.x > sCanvas.width || ss.y > sCanvas.height) {
+            shootingStars.splice(i, 1);
+          }
+        }        spaceAnimationId = requestAnimationFrame(renderSpace);
+      }
+
+      renderSpace();
+    })();
+  
+    // =========================================================================
+    // SPRING-LOADED MECHANICAL BUTTON ENGINE
+    // Depresses down, holds pressure, and pops back up in 2 seconds with spring recoil!
+    // =========================================================================
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn');
+      if (btn && !btn.classList.contains('spring-pressed')) {
+        btn.classList.add('spring-pressed');
+        setTimeout(() => {
+          btn.classList.remove('spring-pressed');
+        }, 2000);
+      }
+    });
+
   </script>
 </body>
 </html>
