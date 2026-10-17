@@ -2498,16 +2498,1144 @@
       height: 28px;
       color: #ff4757;
       transition: transform 0.2s ease;
-       </div>
-            <p class="typewriter-desc" data-text="WC XCO #3 Spice Route • High-Speed Dust Explosion Capture"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Paarl Granite Roost (WC XCO #3)', 250)">+ Add to Cart</button>
-          </div>
-        </article>
+    }
 
-        <!-- Item 14: WC XCO #4 Rhebokskloof Peak -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
+    .trash-dropzone.dragover .trash-dropzone-icon {
+      transform: scale(1.2) rotate(-8deg);
+      color: #ffffff;
+    }
+
+    .trash-dropzone-label {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: #ff8899;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Animation when thrown into trash can: shrinking, crumpling & sucking in */
+    @keyframes suckIntoTrash {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(0.4) rotate(180deg);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(0.01) rotate(450deg);
+        opacity: 0;
+      }
+    }
+
+    .about-image.thrown-away {
+      animation: suckIntoTrash 0.45s cubic-bezier(0.5, 0, 0.75, 0) forwards !important;
+      pointer-events: none !important;
+    }
+
+  
+    /* =========================================================================
+       ANIMATED ANT TRASH CREW:
+       Ants march out carrying the trashcan, wait for the broken panel,
+       then march away wheeling/carrying it off-screen!
+       ========================================================================= */
+    .ant-trash-crew {
+      position: fixed;
+      bottom: 24px;
+      right: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 999998;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(160px);
+      transition: transform 0.6s cubic-bezier(0.18, 0.9, 0.26, 1), opacity 0.4s ease;
+    }
+
+    .ant-trash-crew.marching-in {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .ant-trash-crew.marching-out {
+      opacity: 1;
+      transform: translateX(240px);
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s 0.4s ease;
+    }
+
+    /* Ants carrying trashcan banner */
+    .ant-crew-speech {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #00f0ff;
+      background: rgba(8, 14, 22, 0.95);
+      border: 1px solid var(--neon-cyan);
+      border-radius: 8px;
+      padding: 0.25rem 0.6rem;
+      margin-bottom: 6px;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      white-space: nowrap;
+      animation: crewSpeechBounce 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes crewSpeechBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-3px); }
+    }
+
+    .ant-crew-carrier-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Trash Can Vessel */
+    .ant-carried-trashcan {
+      width: 68px;
+      height: 74px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #1f2532 0%, #11151e 100%);
+      border: 2px dashed rgba(255, 75, 95, 0.75);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 60, 80, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .ant-carried-trashcan.dragover {
+      border-color: #00f0ff;
+      background: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
+      transform: scale(1.18);
+    }
+
+    .ant-carried-trashcan.panel-dropped-in {
+      border-color: #39ff14;
+      background: rgba(57, 255, 20, 0.2);
+      box-shadow: 0 0 35px rgba(57, 255, 20, 0.7);
+    }
+
+    .ant-trash-label {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 800;
+      color: #ff6a80;
+      letter-spacing: 0.1em;
+      margin-top: 3px;
+    }
+
+    .ant-carrier-ant {
+      width: 24px;
+      height: 28px;
+      display: inline-block;
+    }
+
+    .ant-crew-legs-walk {
+      animation: antLegsScamper 0.18s infinite alternate ease-in-out;
+      transform-origin: center;
+    }
+
+    @keyframes antLegsScamper {
+      0% { transform: rotate(-5deg) translateY(-1px); }
+      100% { transform: rotate(5deg) translateY(1px); }
+    }
+
+  
+    /* Favorite Photos Badge & Dropdown Menu */
+    .about-secret-underlayer {
+      cursor: pointer !important;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .about-secret-underlayer:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.25);
+    }
+
+    .about-secret-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(8, 14, 22, 0.92);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.25s ease;
+      z-index: 10;
+    }
+
+    .about-secret-underlayer:hover .about-secret-badge {
+      background: rgba(0, 240, 255, 0.15);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    .favorites-chevron {
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+    }
+
+    .about-secret-underlayer.menu-open .favorites-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Favorites Dropdown Drawer */
+    .favorites-dropdown-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(10, 15, 23, 0.97) 0%, rgba(5, 8, 13, 0.98) 100%);
+      backdrop-filter: blur(14px);
+      z-index: 20;
+      border-radius: 13px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.97);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .about-secret-underlayer.menu-open .favorites-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .favorites-dropdown-header {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .favorites-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .favorite-item-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .favorite-item-row:hover {
+      background: rgba(0, 240, 255, 0.1);
+      border-color: rgba(0, 240, 255, 0.4);
+      transform: translateX(2px);
+    }
+
+    .favorite-item-row.active {
+      background: rgba(255, 106, 0, 0.15);
+      border-color: var(--hazard-orange);
+    }
+
+    .favorite-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+    }
+
+    .favorite-meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .favorite-title {
+      font-family: var(--font-main);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .favorite-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+  
+    /* =========================================================================
+       SECRET UNLOCKED FAVORITES SECTION (EXPANDS SMOOTHLY BELOW BIO)
+       ========================================================================= */
+    .secret-favorites-section {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-top: 0;
+      margin-bottom: 0;
+      transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.6s ease, 
+                  margin 0.5s ease, 
+                  padding 0.6s ease;
+      background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%);
+      border-top: 1.5px solid transparent;
+      border-bottom: 1.5px solid transparent;
+      pointer-events: none;
+    }
+
+    .secret-favorites-section.unlocked-open {
+      max-height: 2400px;
+      opacity: 1;
+      padding-top: 5rem !important;
+      padding-bottom: 6rem !important;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+      border-top-color: rgba(0, 240, 255, 0.3);
+      border-bottom-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.1), inset 0 0 40px rgba(0, 240, 255, 0.05);
+      pointer-events: auto;
+    }
+
+    .secret-vault-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      position: relative;
+    }
+
+    .secret-status-tag {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      color: #00f0ff;
+      text-shadow: 0 0 14px rgba(0, 240, 255, 0.8);
+      margin-bottom: 0.75rem;
+      display: inline-block;
+      animation: vaultTagPulse 2s infinite alternate;
+    }
+
+    @keyframes vaultTagPulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      100% { transform: scale(1.04); opacity: 1; text-shadow: 0 0 22px rgba(0, 240, 255, 1); }
+    }
+
+    .secret-vault-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 1rem;
+    }
+
+    .secret-vault-sub {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 680px;
+      margin: 0 auto 1.75rem auto;
+      line-height: 1.6;
+    }
+
+    .secret-close-btn {
+      background: rgba(255, 51, 68, 0.12);
+      border: 1px solid rgba(255, 51, 68, 0.4);
+      color: #ff4757;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.6rem 1.4rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .secret-close-btn:hover {
+      background: rgba(255, 51, 68, 0.25);
+      border-color: #ff3344;
+      color: #fff;
+      box-shadow: 0 0 18px rgba(255, 51, 68, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Secret Grid Layout */
+    .secret-favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .secret-card {
+      background: linear-gradient(145deg, #181d26 0%, #10141c 100%);
+      border: 1.5px solid rgba(0, 240, 255, 0.35);
+      border-radius: 18px;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      position: relative;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.15);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .secret-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: #00f0ff;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 240, 255, 0.4);
+    }
+
+    .secret-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) saturate(1.1);
+      transition: transform 0.4s ease;
+    }
+
+    .secret-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .secret-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(8, 12, 18, 0.95) 100%);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      z-index: 2;
+    }
+
+    .secret-card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #00f0ff;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.35rem;
+    }
+
+    .secret-card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+
+    .secret-card-desc {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 0.85rem;
+    }
+
+    .secret-card-btn {
+      background: linear-gradient(135deg, #00f0ff 0%, #0099ff 100%);
+      color: #040910;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .secret-card-btn:hover {
+      background: #ffffff;
+      transform: scale(1.03);
+    }
+
+    @media (max-width: 900px) {
+      .secret-favorites-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .secret-favorites-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  
+    
+    /* =========================================================================
+       ORGANIC TREE & GARDEN SPROUT -> SQUARE FILL SEQUENCE
+       1. Dot/Seed ignition at bottom center
+       2. Realistic Tree & Garden branches and leaves erupt & bloom
+       3. Living foliage expands and completely fills the gaps into a flush square
+       ========================================================================= */
+    .tree-garden-grow-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 8;
+      overflow: hidden;
+      border-radius: 14px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .about-secret-underlayer.grow-tree-garden-active .tree-garden-grow-overlay {
+      opacity: 1;
+    }
+
+    
+    /* =========================================================================
+       BIRD FLIGHT & SEED DROP PRE-ANIMATION
+       A bird gracefully flaps across the photo frame from top-left to top-right,
+       drops an acorn/seed that plummets down to the soil, triggering the SJV tree morph!
+       ========================================================================= */
+    /* =========================================================================
+       3D BIRD SCREEN-WIDE FLIGHT & SEED DROP
+       A photorealistic / 3D origami neon cyber-falcon swoops across the ENTIRE viewport,
+       banking in 3D perspective with flapping depth, swooping down over the Bio card,
+       dropping a seed that hurtles into the soil, then soaring off into the horizon!
+       ========================================================================= */
+    .bird-seed-stage {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999999;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      overflow: hidden;
+    }
+
+    .flying-bird-wrap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 90px;
+      height: 60px;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* Cinematic 4.2-second full screen 3D swooping flight path */
+    .flying-bird-wrap.fly-3d-screen {
+      opacity: 1;
+      animation: bird3dScreenPath 4.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+
+    @keyframes bird3dScreenPath {
+      0% {
+        /* Starts off-screen top-left, banking in from the distance */
+        transform: translate3d(-120px, 15vh, -400px) rotateY(35deg) rotateX(15deg) rotateZ(22deg) scale3d(0.5, 0.5, 0.5);
+      }
+      22% {
+        /* Swoops inward toward the camera over the left side of the screen */
+        transform: translate3d(22vw, 28vh, 150px) rotateY(15deg) rotateX(8deg) rotateZ(10deg) scale3d(1.25, 1.25, 1.25);
+      }
+      45% {
+        /* Banks gracefully right above Seth Barton's Bio Card ready to drop the seed */
+        transform: translate3d(var(--bird-drop-x, 38vw), var(--bird-drop-y, 42vh), 60px) rotateY(5deg) rotateX(2deg) rotateZ(4deg) scale3d(1.1, 1.1, 1.1);
+      }
+      65% {
+        /* Tilts wings and climbs upwards across the right half of the screen */
+        transform: translate3d(65vw, 24vh, -50px) rotateY(-20deg) rotateX(-12deg) rotateZ(-18deg) scale3d(0.95, 0.95, 0.95);
+      }
+      85% {
+        /* Accelerates high into top-right distance */
+        transform: translate3d(88vw, 12vh, -250px) rotateY(-35deg) rotateX(-18deg) rotateZ(-24deg) scale3d(0.7, 0.7, 0.7);
+      }
+      100% {
+        /* Disappears gracefully into the deep horizon */
+        transform: translate3d(115vw, 4vh, -600px) rotateY(-40deg) rotateX(-22deg) rotateZ(-28deg) scale3d(0.35, 0.35, 0.35);
+        opacity: 0;
+      }
+    }
+
+    /* 3D Polyhedral Origami Cyber-Falcon Body & Wings */
+    .bird-3d-container {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .bird-3d-wing-left {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 48px;
+      height: 40px;
+      transform-origin: 38px 24px;
+      transform-style: preserve-3d;
+      animation: birdWing3dFlapLeft 0.32s ease-in-out infinite alternate;
+    }
+
+    .bird-3d-wing-right {
+      position: absolute;
+      top: 10px;
+      left: 36px;
+      width: 48px;
+      height: 40px;
+      transform-origin: 10px 24px;
+      transform-style: preserve-3d;
+      animation: birdWing3dFlapRight 0.32s ease-in-out infinite alternate;
+    }
+
+    @keyframes birdWing3dFlapLeft {
+      0% {
+        transform: rotateX(45deg) rotateZ(-38deg) rotateY(15deg);
+      }
+      100% {
+        transform: rotateX(-35deg) rotateZ(32deg) rotateY(-10deg);
+      }
+    }
+
+    @keyframes birdWing3dFlapRight {
+      0% {
+        transform: rotateX(45deg) rotateZ(38deg) rotateY(-15deg);
+      }
+      100% {
+        transform: rotateX(-35deg) rotateZ(-32deg) rotateY(10deg);
+      }
+    }
+
+    /* Dynamic Falling Seed positioned directly at card drop target */
+    .dropping-seed {
+      position: fixed;
+      width: 14px;
+      height: 18px;
+      background: radial-gradient(circle at 35% 25%, #55efc4 0%, #00cec9 50%, #0984e3 100%);
+      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+      box-shadow: 0 0 20px #00f0ff, 0 0 6px #ffffff;
+      z-index: 99999999;
+      opacity: 0;
+      pointer-events: none;
+      transform-origin: center center;
+    }
+
+    .dropping-seed.plummet-3d {
+      animation: seed3dDrop 1.1s cubic-bezier(0.5, 0.05, 0.8, 0.4) forwards;
+    }
+
+    @keyframes seed3dDrop {
+      0% {
+        opacity: 1;
+        transform: translate3d(var(--seed-start-x, 50vw), var(--seed-start-y, 35vh), 50px) scale(1) rotate(0deg);
+      }
+      65% {
+        opacity: 1;
+        transform: translate3d(var(--seed-target-x, 50vw), calc(var(--seed-target-y, 60vh) - 35px), 0px) scale(0.9) rotate(220deg);
+      }
+      90% {
+        transform: translate3d(var(--seed-target-x, 50vw), calc(var(--seed-target-y, 60vh) - 6px), 0px) scale(1.4, 0.55) rotate(360deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(var(--seed-target-x, 50vw), var(--seed-target-y, 60vh), 0px) scale(1.6, 0.35) rotate(360deg);
+      }
+    }
+
+    /* Impact Ripple directly at the soil */
+    .seed-impact-ripple {
+      position: fixed;
+      width: 48px;
+      height: 20px;
+      border: 2px solid #00f0ff;
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.1);
+      pointer-events: none;
+      z-index: 99999998;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+    }
+
+    .seed-impact-ripple.pulse {
+      animation: seedRipplePulse 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    /* Seed Impact Pulse Wave in soil */
+    .seed-impact-ripple {
+      position: absolute;
+      bottom: 12px;
+      left: 126px;
+      width: 28px;
+      height: 12px;
+      border: 1.5px solid #00f0ff;
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.2);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .seed-impact-ripple.pulse {
+      animation: seedRipplePulse 0.5s ease-out forwards;
+    }
+
+    @keyframes seedRipplePulse {
+      0% {
+        opacity: 1;
+        transform: scale(0.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(3.5);
+      }
+    }
+
+    /* =========================================================================
+       SJV TREE OUTLINE MORPH:
+       The photograph itself starts as a microscopic dot, shoots up as a tree trunk,
+       morphs directly into the unmistakable SJV / Valley Oak tree outline,
+       then stretches its canopy and roots into the corners to fill the square box.
+       ========================================================================= */
+    @keyframes sjvTreeMorphFillSquare {
+      0% {
+        opacity: 0;
+        /* Stage 1: Microscopic seed dot centered at the base */
+        clip-path: polygon(
+          49% 98%, 49% 98%, 49% 98%, 49% 98%, 49% 98%, 49% 98%, 49% 98%, 49% 98%,
+          50% 97%, 50% 97%, 50% 97%, 50% 97%, 50% 97%, 50% 97%, 50% 97%, 50% 97%,
+          51% 98%, 51% 98%, 51% 98%, 51% 98%, 51% 98%, 51% 98%, 51% 98%, 51% 98%,
+          51% 99%, 50% 99%, 49% 99%, 49% 99%
+        );
+        transform: scale(0.92) translateY(10px);
+        filter: drop-shadow(0 0 35px #00f0ff) brightness(2.2);
+      }
+      12% {
+        opacity: 1;
+        /* Stage 2: Sprouting vertical tree trunk */
+        clip-path: polygon(
+          43% 97%, 45% 82%, 46% 68%, 46% 52%, 45% 42%, 44% 36%, 46% 30%, 48% 24%,
+          50% 20%, 51% 20%, 52% 24%, 54% 30%, 56% 36%, 55% 42%, 54% 52%, 54% 68%,
+          55% 82%, 57% 97%, 56% 99%, 54% 99%, 52% 99%, 50% 99%, 48% 99%, 46% 99%,
+          44% 99%, 44% 99%, 43% 98%, 43% 97%
+        );
+        transform: scale(1) translateY(4px);
+        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.7)) brightness(1.5);
+      }
+      38% {
+        /* Stage 3: THE ICONIC SJV TREE OUTLINE
+           Broad spreading valley oak canopy lobes, drooping side branches, and flared base roots */
+        clip-path: polygon(
+          32% 96%, 38% 88%, 44% 75%, 45% 62%, 28% 62%, 18% 54%, 22% 42%, 12% 34%,
+          20% 22%, 32% 22%, 36% 12%, 46% 6%,  54% 6%,  64% 12%, 68% 22%, 80% 22%,
+          88% 34%, 78% 42%, 82% 54%, 72% 62%, 55% 62%, 56% 75%, 62% 88%, 68% 96%,
+          62% 99%, 55% 99%, 45% 99%, 38% 99%
+        );
+        transform: scale(1.04) translateY(-4px);
+        filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.85)) contrast(1.15) brightness(1.2);
+      }
+      55% {
+        /* Stage 4: SJV Tree branches & foliage actively stretching out wide into the open sky */
+        clip-path: polygon(
+          20% 98%, 28% 90%, 38% 80%, 40% 64%, 18% 64%, 8%  52%, 12% 38%, 4%  28%,
+          14% 14%, 26% 12%, 32% 4%,  46% 1%,  54% 1%,  68% 4%,  74% 12%, 86% 14%,
+          96% 28%, 88% 38%, 92% 52%, 82% 64%, 60% 64%, 62% 80%, 72% 90%, 80% 98%,
+          70% 100%, 55% 100%, 45% 100%, 30% 100%
+        );
+        transform: scale(1.02) translateY(-2px);
+        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.6)) brightness(1.1);
+      }
+      74% {
+        /* Stage 5: Gaps filling in — outer lobes expand outward toward the square boundaries */
+        clip-path: polygon(
+          5%  100%, 10% 92%, 20% 86%, 22% 70%, 5%  70%, 0%  55%, 2%  40%, 0%  20%,
+          5%  5%,   18% 2%,  25% 0%,  48% 0%,  52% 0%,  75% 0%,  82% 2%,  95% 5%,
+          100% 20%, 98% 40%, 100% 55%, 95% 70%, 78% 70%, 80% 86%, 90% 92%, 95% 100%,
+          85% 100%, 65% 100%, 35% 100%, 15% 100%
+        );
+        transform: scale(1.01) translateY(0);
+        filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)) brightness(1.05);
+      }
+      88% {
+        /* Stage 6: Corner gaps nearly sealed into full box */
+        clip-path: polygon(
+          0% 100%, 0% 85%, 0% 70%, 0% 50%, 0% 30%, 0% 15%, 2% 5%, 5% 2%,
+          15% 0%, 30% 0%, 45% 0%, 50% 0%, 55% 0%, 70% 0%, 85% 0%, 95% 2%,
+          98% 5%, 100% 15%, 100% 30%, 100% 50%, 100% 70%, 100% 85%, 100% 100%, 100% 100%,
+          85% 100%, 55% 100%, 45% 100%, 15% 100%
+        );
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
+      }
+      100% {
+        /* Stage 7: Fully flush square box */
+        opacity: 1;
+        clip-path: polygon(
+          0% 100%, 0% 80%, 0% 60%, 0% 40%, 0% 20%, 0% 10%, 0% 5%, 0% 0%,
+          20% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 0%,
+          100% 10%, 100% 20%, 100% 40%, 100% 60%, 100% 80%, 100% 90%, 100% 95%, 100% 100%,
+          80% 100%, 60% 100%, 40% 100%, 20% 100%
+        );
+        transform: scale(1);
+        filter: none;
+      }
+    }
+
+    .about-secret-underlayer.grow-sjv-tree {
+      animation: sjvTreeMorphFillSquare 2.6s cubic-bezier(0.22, 0.9, 0.32, 1) forwards !important;
+      will-change: clip-path, transform, filter;
+    }
+
+    /* Internal SVG Botanical Element Animations */
+    .tree-stem, .tree-root, .tree-branch {
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .turf-hill, .grass-blade, .garden-flower, .foliage-puff {
+      transform-origin: center bottom;
+      transform: scale(0);
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    /* When animated: */
+    .grow-tree-garden-active .tree-stem,
+    .grow-tree-garden-active .tree-root {
+      stroke-dashoffset: 0;
+    }
+
+    .grow-tree-garden-active .tree-branch {
+      stroke-dashoffset: 0;
+      transition-delay: 0.35s;
+    }
+
+    .grow-tree-garden-active .turf-hill {
+      transform: scale(1);
+      opacity: 1;
+      transition-delay: 0.15s;
+    }
+
+    .grow-tree-garden-active .grass-blade {
+      transform: scale(1);
+      opacity: 1;
+      transition-delay: 0.3s;
+    }
+
+    .grow-tree-garden-active .garden-flower {
+      transform: scale(1);
+      opacity: 1;
+      transition-delay: 0.55s;
+    }
+
+    .grow-tree-garden-active .foliage-puff {
+      transform: scale(1);
+      opacity: 0.95;
+      transition-delay: 0.5s;
+    }
+
+    .about-secret-underlayer.grow-tree-garden-active {
+      animation: treeGardenFillToSquare 2.2s cubic-bezier(0.2, 0.85, 0.3, 1) forwards !important;
+      will-change: clip-path, transform, filter;
+    }
+
+    /* =========================================================================
+       DYNAMIC LIQUID REVEAL ANIMATION:
+       1. Tree Sprout: Liquid droplet surges upward like organic sap / tree trunk
+       2. Bike Surge: Fluid aerodynamic ripples rolling like bike wheels & motion
+       3. Viscous Settle: Molten glass tension settling smoothly into the box frame
+       ========================================================================= */
+    @keyframes growTreeBikeToBox {
+      0% {
+        opacity: 0;
+        /* Sub-atomic microscopic singularity point */
+        border-radius: 50%;
+        transform: scale(0.005) translateY(0);
+        filter: blur(0px) drop-shadow(0 0 40px #00f0ff);
+      }
+      10% {
+        /* Atom quantum ignition burst - tiny pulsing particle */
+        opacity: 1;
+        border-radius: 50%;
+        transform: scale(0.05) translateY(0);
+        filter: drop-shadow(0 0 30px #00f0ff) brightness(2.5);
+      }
+      25% {
+        /* Liquid tree trunk surge upward - stretched vertical sap surge */
+        border-radius: 40% 60% 70% 30% / 45% 45% 55% 55%;
+        transform: scale(0.55, 1.25) translateY(-25px);
+        filter: drop-shadow(0 0 35px rgba(0, 240, 255, 0.8)) brightness(1.3);
+      }
+      42% {
+        /* Canopy blossom - bulbous organic liquid crown flowing outward */
+        border-radius: 65% 35% 30% 70% / 60% 30% 70% 40%;
+        transform: scale(1.12, 0.92) translateY(-28px) rotate(-4deg);
+        filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.6)) brightness(1.1);
+      }
+      60% {
+        /* Fluid bike rolling wave - fluid wheels & aerodynamic leap */
+        border-radius: 35% 65% 55% 45% / 40% 68% 32% 60%;
+        transform: scale(1.1, 0.95) translateY(-10px) rotate(5deg);
+        filter: drop-shadow(0 10px 25px rgba(0, 240, 255, 0.5));
+      }
+      78% {
+        /* Bike suspension rebound - smooth circular undulating ripple */
+        border-radius: 52% 48% 44% 56% / 50% 55% 45% 50%;
+        transform: scale(0.97, 1.04) translateY(-3px) rotate(-1.5deg);
+        filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.4));
+      }
+      90% {
+        /* Viscous liquid tension settling into rounded square */
+        border-radius: 22px;
+        transform: scale(1.02, 0.99) translateY(0) rotate(0deg);
+        filter: drop-shadow(0 0 18px rgba(0, 240, 255, 0.3));
+      }
+      100% {
+        /* Locked solid photographic frame */
+        opacity: 1;
+        border-radius: 14px;
+        transform: scale(1, 1) translateY(0) rotate(0deg);
+        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.25));
+      }
+    }
+
+    .about-secret-underlayer.grow-tree-bike-box {
+      transform-origin: center center;
+      animation: growTreeBikeToBox 1.9s cubic-bezier(0.19, 1, 0.22, 1) forwards !important;
+      will-change: transform, border-radius, filter;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Ant Crew Trash Removal Squad -->
+  <div id="antTrashCrew" class="ant-trash-crew">
+    <div class="ant-crew-speech" id="antCrewSpeech">&#128679; DROP PANEL HERE &#128679;</div>
+    <div class="ant-crew-carrier-row">
+      <!-- Left Ant Carrier -->
+      <svg class="ant-carrier-ant ant-crew-legs-walk" viewBox="0 0 28 28">
+        <ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827" />
+        <ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937" />
+        <ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827" />
+        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffaa00" stroke-width="1.2" />
+        <path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8" />
+        <polygon points="12,5 16,5 14,1" fill="#00f0ff" />
+      </svg>
+
+      <!-- Center Carried Trashcan -->
+      <div id="trashDropzone" class="ant-carried-trashcan" title="Drop broken panel here to throw away">
+        <svg style="width: 28px; height: 28px; color: #ff4757;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+        <span class="ant-trash-label">TRASH</span>
+      </div>
+
+      <!-- Right Ant Carrier -->
+      <svg class="ant-carrier-ant ant-crew-legs-walk" viewBox="0 0 28 28" style="transform: scaleX(-1);">
+        <ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827" />
+        <ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937" />
+        <ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827" />
+        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffaa00" stroke-width="1.2" />
+        <path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8" />
+        <polygon points="12,5 16,5 14,1" fill="#ff0055" />
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Falling Glass Diamond Container & Floor Impact Zone -->
+  <div id="fallingDiamondContainer">
+    <div class="falling-gem" id="fallingGem"></div>
+    <div class="floor-puddle" id="floorPuddle"></div>
+  </div>
+
+  <!-- Swimming Welder Sparks Canvas -->
+  <canvas id="sparksCanvas"></canvas>
+
+  <div id="pageContent">
+    <!-- Navigation -->
+    <header>
+      <div class="nav-container">
+        <div class="logo-badge">
+          <div class="logo-rune-wrap" onclick="breakDiamond(event)" title="Click to knock off">
+            <div class="logo-rune" id="logoRune"></div>
+          </div>
+          <div class="logo">
+            <span class="logo-name">
+              <span class="secret-letter" data-secret="S" onclick="handleSecretLetter('S', event)">S</span>eth 
+              <span class="secret-letter" data-secret="B" onclick="handleSecretLetter('B', event)">B</span>arton
+            </span>
+            <span class="logo-sub">
+              <span class="secret-letter" data-secret="C" onclick="handleSecretLetter('C', event)">C</span>oreStall
+            </span>
+          </div>
+        </div>
+        <div class="nav-right">
+          <ul class="nav-links">
+            <li><a href="#media">Media</a></li>
+            <li><a href="#about">Bio</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <button class="cart-trigger-btn" onclick="toggleCart(true, determineCartPosition(event.clientX))" aria-label="Open cart">
+            <span>Cart</span>
+            <span class="cart-count-badge" id="cartCount">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section with Floating Space, Stars & Celestial Objects -->
+    <section class="hero" id="hero">
+      <canvas id="spaceCanvas"></canvas>
+      <div class="space-nebula-glow"></div>
+
+      <div class="hero-hud-frame">
+        <div class="hero-tag">[ DIGITAL LICENSING // 4K & RAW MEDIA ]</div>
+        <h1>Seth Barton</h1>
+        <div class="hero-sub" style="font-family: var(--font-mono); color: var(--hazard-orange); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; margin-top: -0.5rem; margin-bottom: 1.25rem; text-shadow: 0 0 12px rgba(255,106,0,0.5);">// CoreStall</div>
+        <p>High-resolution action imagery, cinematic drone footage, wildlife captures, and 2027 Western Cape XCO mountain biking calendar coverage.</p>
+        <a href="#media" class="btn">Explore Digital Library</a>
+      </div>
+    </section>
+
+    <!-- Digital Media & Category Filter Section -->
+    <section id="media">
+      <div class="section-header">
+        <span class="section-tag">[ DIGITAL ASSET VAULT ]</span>
+        <h2 class="section-title">Categories & Race Calendar</h2>
+      </div>
+
+      <!-- Grouped & Stacked Filter Section -->
+      <div class="filter-wrapper">
+        
+        <!-- Primary MediaType Filters -->
+        <div class="primary-filters">
+          <button class="filter-btn active" onclick="filterCategory('all', this)">All Media</button>
+          <button class="filter-btn" onclick="filterCategory('action', this)">Action</button>
+          <button class="filter-btn" onclick="filterCategory('wildlife', this)">Wildlife</button>
+          <button class="filter-btn" onclick="filterCategory('landscape', this)">Landscape</button>
+          <button class="filter-btn" onclick="filterCategory('drone', this)">Drone Footage</button>
+        </div>
+
+        <!-- STACKED WP XCO EXPANDER HUB (WITH CUSTOM COLOR SPARKS) -->
+        <div class="wp-hub-container" id="wpHub">
+          
+          <div class="wp-stack-btn-wrap" onclick="toggleWpGroup(event)">
+            <div class="wp-stack-layer-1"></div>
+            <div class="wp-stack-layer-2"></div>
+            <button class="wp-group-master-btn" id="wpMasterBtn" aria-expanded="false">
+              <span>2027 Western Cape XCO Series</span>
+              <span class="badge">6 Rounds</span>
+              <span class="arrow-indicator">&#9660;</span>
+            </button>
+          </div>
+
+          <!-- Expanded Locations / Dates Grid (Each with its OWN Unique Color Theme!) -->
+          <div class="wp-expanded-locations" id="wpLocationsList">
+            <!-- Round 1: Molten Terran Orange & Gold -->
+            <button class="location-pill" onclick="filterWpSub('wc-xco-1', this, event, 'orange')">
+              <span class="date-tag">13 Feb</span>
+              <span>WC XCO #1 Bloemendal</span>
+            </button>
+            
+            <!-- SA Cup: Championship Royal Gold & Amber Spark -->
+            <button class="location-pill" onclick="filterWpSub('sa-cup', this, event, 'gold')">
+              <span class="date-tag">27-28 Feb</span>
+              <span>SA Cup (Cat 1) Bloemendal</span>
+            </button>
+            
+            <!-- Round 2: Electric Cyan & Ice Bioluminescence -->
+            <button class="location-pill" onclick="filterWpSub('wc-xco-2', this, event, 'cyan')">
+              <span class="date-tag">13 Mar</span>
+              <span>WC XCO #2 Doolhof</span>
+            </button>
+            
+            <!-- Round 3: High-Voltage Acid Neon Emerald Green -->
+            <button class="location-pill" onclick="filterWpSub('wc-xco-3', this, event, 'emerald')">
+              <span class="date-tag">25 Apr</span>
+              <span>WC XCO #3 Spice Route</span>
+            </button>
+            
+            <!-- Round 4: Intense Crimson & Soul Ruby Plasma -->
+            <button class="location-pill" onclick="filterWpSub('wc-xco-4', this, event, 'ruby')">
+              <span class="date-tag">16 May</span>
+              <span>WC XCO #4 Rhebokskloof</span>
+            </button>
+            
+            <!-- Champs: Hextech Violet & Electric Amethyst -->
+            <button class="location-pill" onclick="filterWpSub('xco-champs', this, event, 'violet')">
+              <span class="date-tag">12-13 Jun</span>
+              <span>XCO & XCC Champs Bloemendal</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Framed Full-Picture Media Grid (Only Soul Heart visible, Typewriter on hover) -->
+      <div class="shop-grid" id="mediaGrid">
+
+        <!-- Item: WC XCO #1 -->
+        <article class="product-card" data-category="wc-xco-1 action wp-all">
           <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xco4peak/800/1000" alt="Rhebokskloof Ridgeline" loading="lazy">
+            <img src="https://picsum.photos/seed/xco1/800/1000" alt="WC XCO #1 Bloemendal Action" loading="lazy">
           </div>
           <div class="card-3d-glare"></div>
           <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
@@ -2515,20 +3643,109 @@
               <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
             </svg>
           </button>
+          
           <div class="product-info-slideup">
             <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Granite Dome Traverse"></h3>
+              <h3 class="typewriter-title" data-text="Rock Garden Descent"></h3>
               <span class="product-price">R 250</span>
             </div>
-            <p class="typewriter-desc" data-text="WC XCO #4 Rhebokskloof • Exposed Rock Slab Technical Line"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Granite Dome Traverse (WC XCO #4)', 250)">+ Add to Cart</button>
+            <p class="typewriter-desc" data-text="Full Res Digital RAW + JPEG • Commercial / Rider License"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Rock Garden Descent (WC XCO #1)', 250)">+ Add to Cart</button>
           </div>
         </article>
 
-        <!-- Item 15: XCO & XCC Champs Sprint -->
+        <!-- Item: SA CUP (CAT 1) -->
+        <article class="product-card" data-category="sa-cup action wp-all">
+          <div class="product-image-wrap">
+            <img src="https://picsum.photos/seed/sacup/800/1000" alt="SA Cup Cat 1 Bloemendal" loading="lazy">
+          </div>
+          <div class="card-3d-glare"></div>
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
+            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
+              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
+            </svg>
+          </button>
+          
+          <div class="product-info-slideup">
+            <div class="product-title-row">
+              <h3 class="typewriter-title" data-text="Pro Lead Sprint"></h3>
+              <span class="product-price">R 300</span>
+            </div>
+            <p class="typewriter-desc" data-text="Full Res Digital RAW + JPEG • Cat 1 Coverage"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Pro Lead Sprint (SA Cup)', 300)">+ Add to Cart</button>
+          </div>
+        </article>
+
+        <!-- Item: WC XCO #2 -->
+        <article class="product-card" data-category="wc-xco-2 action wp-all">
+          <div class="product-image-wrap">
+            <img src="https://picsum.photos/seed/xco2/800/1000" alt="WC XCO #2 Doolhof" loading="lazy">
+          </div>
+          <div class="card-3d-glare"></div>
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
+            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
+              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
+            </svg>
+          </button>
+          
+          <div class="product-info-slideup">
+            <div class="product-title-row">
+              <h3 class="typewriter-title" data-text="Doolhof Switchbacks"></h3>
+              <span class="product-price">R 250</span>
+            </div>
+            <p class="typewriter-desc" data-text="High-Speed Singletrack Focus • Full Res Download"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Doolhof Switchbacks (WC XCO #2)', 250)">+ Add to Cart</button>
+          </div>
+        </article>
+
+        <!-- Item: WC XCO #3 -->
+        <article class="product-card" data-category="wc-xco-3 action wp-all">
+          <div class="product-image-wrap">
+            <img src="https://picsum.photos/seed/xco3/800/1000" alt="WC XCO #3 Spice Route" loading="lazy">
+          </div>
+          <div class="card-3d-glare"></div>
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
+            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
+              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
+            </svg>
+          </button>
+          
+          <div class="product-info-slideup">
+            <div class="product-title-row">
+              <h3 class="typewriter-title" data-text="Dust & Berm Attack"></h3>
+              <span class="product-price">R 250</span>
+            </div>
+            <p class="typewriter-desc" data-text="Full Res Digital Action Capture • Instant Delivery"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Dust & Berm Attack (WC XCO #3)', 250)">+ Add to Cart</button>
+          </div>
+        </article>
+
+        <!-- Item: WC XCO #4 -->
+        <article class="product-card" data-category="wc-xco-4 action wp-all">
+          <div class="product-image-wrap">
+            <img src="https://picsum.photos/seed/xco4/800/1000" alt="WC XCO #4 Rhebokskloof" loading="lazy">
+          </div>
+          <div class="card-3d-glare"></div>
+          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
+            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
+              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
+            </svg>
+          </button>
+          
+          <div class="product-info-slideup">
+            <div class="product-title-row">
+              <h3 class="typewriter-title" data-text="Granite Climb Surge"></h3>
+              <span class="product-price">R 250</span>
+            </div>
+            <p class="typewriter-desc" data-text="Rhebokskloof Technical Ascent • Full Res Download"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Granite Climb Surge (WC XCO #4)', 250)">+ Add to Cart</button>
+          </div>
+        </article>
+
+        <!-- Item: XCO & XCC Championships -->
         <article class="product-card" data-category="xco-champs action wp-all">
           <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/xccchamps/800/1000" alt="Short Track XCC Finale" loading="lazy">
+            <img src="https://picsum.photos/seed/champs/800/1000" alt="XCO & XCC Championships Bloemendal" loading="lazy">
           </div>
           <div class="card-3d-glare"></div>
           <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
@@ -2536,20 +3753,21 @@
               <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
             </svg>
           </button>
+          
           <div class="product-info-slideup">
             <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="XCC Short Track Final Lap"></h3>
+              <h3 class="typewriter-title" data-text="Championship Podium Finish"></h3>
               <span class="product-price">R 350</span>
             </div>
-            <p class="typewriter-desc" data-text="WC Champs Bloemendal • Full Throttle Championship Sprint"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('XCC Short Track Final Lap', 350)">+ Add to Cart</button>
+            <p class="typewriter-desc" data-text="Provincial Championship Final • Full Res RAW/JPEG"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Championship Podium Finish', 350)">+ Add to Cart</button>
           </div>
         </article>
 
-        <!-- Item 16: Wildlife Black Eagle -->
+        <!-- Item: Wildlife -->
         <article class="product-card" data-category="wildlife">
           <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/blackeagle/800/1000" alt="Verreauxs Eagle Flight" loading="lazy">
+            <img src="https://picsum.photos/seed/wildlife1/800/1000" alt="Apex Hunter Wildlife" loading="lazy">
           </div>
           <div class="card-3d-glare"></div>
           <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
@@ -2557,20 +3775,21 @@
               <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
             </svg>
           </button>
+          
           <div class="product-info-slideup">
             <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Black Eagle Thermal"></h3>
+              <h3 class="typewriter-title" data-text="Dawn Stalker"></h3>
               <span class="product-price">R 450</span>
             </div>
-            <p class="typewriter-desc" data-text="600mm F4 Prime • Cape Mountain Raptor In Flight • RAW + TIFF"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Black Eagle Thermal (Wildlife)', 450)">+ Add to Cart</button>
+            <p class="typewriter-desc" data-text="Uncompressed 45MP RAW • Personal & Editorial License"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Dawn Stalker (Wildlife)', 450)">+ Add to Cart</button>
           </div>
         </article>
 
-        <!-- Item 17: Landscape Atlantic Coast Wave -->
+        <!-- Item: Landscape -->
         <article class="product-card" data-category="landscape">
           <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/capeocean/800/1000" alt="Atlantic Coastline Swell" loading="lazy">
+            <img src="https://picsum.photos/seed/landscape1/800/1000" alt="Cape Ridgeline Mist Landscape" loading="lazy">
           </div>
           <div class="card-3d-glare"></div>
           <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
@@ -2578,20 +3797,21 @@
               <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
             </svg>
           </button>
+          
           <div class="product-info-slideup">
             <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Atlantic Swell Surge"></h3>
-              <span class="product-price">R 420</span>
+              <h3 class="typewriter-title" data-text="Cape Ridgeline Mist"></h3>
+              <span class="product-price">R 400</span>
             </div>
-            <p class="typewriter-desc" data-text="High Dynamic Range • Cape Peninsula Ocean Crest • Digital Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Atlantic Swell Surge (Landscape)', 420)">+ Add to Cart</button>
+            <p class="typewriter-desc" data-text="Ultra High-Res Landscape Digital Master • 16-Bit TIFF/RAW"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Cape Ridgeline Mist (Landscape)', 400)">+ Add to Cart</button>
           </div>
         </article>
 
-        <!-- Item 18: Drone Mountain Pass 4K -->
+        <!-- Item: Drone Footage -->
         <article class="product-card" data-category="drone">
           <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/dronepass/800/1000" alt="Bainskloof Aerial 4K" loading="lazy">
+            <img src="https://picsum.photos/seed/drone1/800/1000" alt="Mountain Pass Drone Aerial" loading="lazy">
           </div>
           <div class="card-3d-glare"></div>
           <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
@@ -2599,657 +3819,16 @@
               <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
             </svg>
           </button>
+          
           <div class="product-info-slideup">
             <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Canyon Pass 4K ProRes"></h3>
-              <span class="product-price">R 850</span>
+              <h3 class="typewriter-title" data-text="Summit Ridge 4K"></h3>
+              <span class="product-price">R 800</span>
             </div>
-            <p class="typewriter-desc" data-text="D-Log M 4K 120fps Cinema Drone Take • Uncompressed Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Canyon Pass 4K ProRes (Drone Footage)', 850)">+ Add to Cart</button>
+            <p class="typewriter-desc" data-text="ProRes 422 4K 60fps Drone Clip • Full Commercial Sync"></p>
+            <button class="add-to-cart-btn" onclick="addToCart('Summit Ridge 4K (Drone Footage)', 800)">+ Add to Cart</button>
           </div>
         </article>
-
-        <!-- Item: Bloemendal Gap Jump -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/bloemendal_gap/800/1000" alt="Bloemendal Gap Jump" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Bloemendal Gap Jump"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #1 • High-Speed Gap Jump Catch • Digital RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Bloemendal Gap Jump', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Vineyard Berm Switchback -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/bloemendal_switchback/800/1000" alt="Vineyard Berm Switchback" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Vineyard Berm Switchback"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #1 Bloemendal • Dust Apex Cornering • 1/2000s Shutter"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Vineyard Berm Switchback', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Bloemendal Elite Podium -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/bloemendal_podium/800/1000" alt="Bloemendal Elite Podium" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Bloemendal Elite Podium"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #1 • Elite Men & Women Ceremony • Commercial License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Bloemendal Elite Podium', 300)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Winter Creek Crossing -->
-        <article class="product-card" data-category="wc-xco-1 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/bloemendal_mud/800/1000" alt="Winter Creek Crossing" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Winter Creek Crossing"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #1 • Wet Course Section Splash • Action High-Speed"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Winter Creek Crossing', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Hillside Attack Surge -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacup_attack/800/1000" alt="Hillside Attack Surge" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Hillside Attack Surge"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="SA Cup Cat 1 • Breakaway Attack on Steep Ascent • RAW + TIFF"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Hillside Attack Surge', 300)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Tech Zone Feed Hand-Off -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacup_feed/800/1000" alt="Tech Zone Feed Hand-Off" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Tech Zone Feed Hand-Off"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="SA Cup Cat 1 • High-Speed Bottle Hand-off in Technical Zone"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Tech Zone Feed Hand-Off', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Sprint Finish Line Lean -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacup_sprint/800/1000" alt="Sprint Finish Line Lean" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Sprint Finish Line Lean"></h3>
-              <span class="product-price">R 320</span>
-            </div>
-            <p class="typewriter-desc" data-text="SA Cup Cat 1 • Photo-Finish Bike Throw • Full High-Res Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Sprint Finish Line Lean', 320)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Peloton Dust Cloud -->
-        <article class="product-card" data-category="sa-cup action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/sacup_pack/800/1000" alt="Peloton Dust Cloud" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Peloton Dust Cloud"></h3>
-              <span class="product-price">R 280</span>
-            </div>
-            <p class="typewriter-desc" data-text="SA Cup Cat 1 • Lap 1 Mass Start Through Paarl Vineyard"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Peloton Dust Cloud', 280)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Wellington River Bridge -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/doolhof_bridge/800/1000" alt="Wellington River Bridge" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Wellington River Bridge"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #2 Doolhof • Wooden Bridge High-Speed Compression"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Wellington River Bridge', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Vineyard Spine Climb -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/doolhof_climb/800/1000" alt="Vineyard Spine Climb" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Vineyard Spine Climb"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #2 • Grueling 24% Gradient Power Effort • Digital RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Vineyard Spine Climb', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Pine Canopy Light Shafts -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/doolhof_canopy/800/1000" alt="Pine Canopy Light Shafts" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Pine Canopy Light Shafts"></h3>
-              <span class="product-price">R 280</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #2 Doolhof • God Rays Filtering Through Forest Descent"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Pine Canopy Light Shafts', 280)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Rock Garden Float Line -->
-        <article class="product-card" data-category="wc-xco-2 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/doolhof_gap/800/1000" alt="Rock Garden Float Line" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Rock Garden Float Line"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #2 • High Line Over Boulders • Full Rider License"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Rock Garden Float Line', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Spice Route Table Top -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/spiceroute_table/800/1000" alt="Spice Route Table Top" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Spice Route Table Top"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #3 • Tail-Whip Jump Over Course Feature • RAW Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Spice Route Table Top', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Paarl Rock Horizon Descent -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/spiceroute_dust/800/1000" alt="Paarl Rock Horizon Descent" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Paarl Rock Horizon Descent"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #3 Spice Route • Sweeping Valley Backdrop Action"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Paarl Rock Horizon Descent', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Granite Chute Entry -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/spiceroute_switch/800/1000" alt="Granite Chute Entry" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Granite Chute Entry"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #3 • Extreme Steep Roller Entry • 1/4000s Sharp Capture"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Granite Chute Entry', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Golden Hour Final Heat -->
-        <article class="product-card" data-category="wc-xco-3 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/spiceroute_sunset/800/1000" alt="Golden Hour Final Heat" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Golden Hour Final Heat"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #3 • Warm Sunburst Silhouette Action Shot"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Golden Hour Final Heat', 300)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Slickrock Friction Roll -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/rhebok_slab/800/1000" alt="Slickrock Friction Roll" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Slickrock Friction Roll"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #4 Rhebokskloof • Pure Granite Traction Test"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Slickrock Friction Roll', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Amphitheatre Rock Step -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/rhebok_drop/800/1000" alt="Amphitheatre Rock Step" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Amphitheatre Rock Step"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #4 • Two-Meter Boulder Drop Compression • RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Amphitheatre Rock Step', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Rhebok Vineyard Fast Berm -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/rhebok_berm/800/1000" alt="Rhebok Vineyard Fast Berm" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Rhebok Vineyard Fast Berm"></h3>
-              <span class="product-price">R 250</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #4 • High-G Turn Around Lake Feature"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Rhebok Vineyard Fast Berm', 250)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Paarl Mountain North Face -->
-        <article class="product-card" data-category="wc-xco-4 action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/rhebok_climb/800/1000" alt="Paarl Mountain North Face" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Paarl Mountain North Face"></h3>
-              <span class="product-price">R 260</span>
-            </div>
-            <p class="typewriter-desc" data-text="WC XCO #4 • Endless Switchback Ascent Drone Angle Action"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Paarl Mountain North Face', 260)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: National Title Celebrations -->
-        <article class="product-card" data-category="xco-champs action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/champs_champ/800/1000" alt="National Title Celebrations" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="National Title Celebrations"></h3>
-              <span class="product-price">R 350</span>
-            </div>
-            <p class="typewriter-desc" data-text="XCO Champs • Emotional Finish Line Celebration • High-Res"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('National Title Celebrations', 350)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Elite Women Start Charge -->
-        <article class="product-card" data-category="xco-champs action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/champs_pack/800/1000" alt="Elite Women Start Charge" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Elite Women Start Charge"></h3>
-              <span class="product-price">R 300</span>
-            </div>
-            <p class="typewriter-desc" data-text="XCO Champs • Explosive Opening 400m Charge • Commercial"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Elite Women Start Charge', 300)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Short Track Corner Drift -->
-        <article class="product-card" data-category="xco-champs action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/champs_dust/800/1000" alt="Short Track Corner Drift" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Short Track Corner Drift"></h3>
-              <span class="product-price">R 320</span>
-            </div>
-            <p class="typewriter-desc" data-text="XCC Champs • Two-Wheel Drift On Flat Hardpack Turn"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Short Track Corner Drift', 320)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Champagne Podium Spray -->
-        <article class="product-card" data-category="xco-champs action wp-all">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/champs_trophy/800/1000" alt="Champagne Podium Spray" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Champagne Podium Spray"></h3>
-              <span class="product-price">R 350</span>
-            </div>
-            <p class="typewriter-desc" data-text="XCO & XCC Champs • Full Podium Celebration • Editorial RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Champagne Podium Spray', 350)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Kalahari Sprint Chase -->
-        <article class="product-card" data-category="wildlife">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/wild_cheetah/800/1000" alt="Kalahari Sprint Chase" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Kalahari Sprint Chase"></h3>
-              <span class="product-price">R 450</span>
-            </div>
-            <p class="typewriter-desc" data-text="600mm F4 • Full-Speed Predator Stride • High Dynamic RAW"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Kalahari Sprint Chase', 450)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Kruger Fig Tree Stalker -->
-        <article class="product-card" data-category="wildlife">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/wild_leopard/800/1000" alt="Kruger Fig Tree Stalker" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Kruger Fig Tree Stalker"></h3>
-              <span class="product-price">R 480</span>
-            </div>
-            <p class="typewriter-desc" data-text="Golden Hour Branch Rest • Ultra-Crisp Whiskers • TIFF Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Kruger Fig Tree Stalker', 480)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Dust Bath Backlight -->
-        <article class="product-card" data-category="wildlife">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/wild_zebra/800/1000" alt="Dust Bath Backlight" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Dust Bath Backlight"></h3>
-              <span class="product-price">R 380</span>
-            </div>
-            <p class="typewriter-desc" data-text="Cape Mountain Zebra Herd • Sunset Dust Glow Silhouette"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Dust Bath Backlight', 380)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Spotted Eagle Owl Perch -->
-        <article class="product-card" data-category="wildlife">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/wild_owl/800/1000" alt="Spotted Eagle Owl Perch" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Spotted Eagle Owl Perch"></h3>
-              <span class="product-price">R 420</span>
-            </div>
-            <p class="typewriter-desc" data-text="Night Shutter Flash Sync • Razor Sharp Plumage Capture"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Spotted Eagle Owl Perch', 420)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Chapman's Peak Ocean Chasm -->
-        <article class="product-card" data-category="landscape">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/land_chapmans/800/1000" alt="Chapman's Peak Ocean Chasm" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Chapman's Peak Ocean Chasm"></h3>
-              <span class="product-price">R 420</span>
-            </div>
-            <p class="typewriter-desc" data-text="Atlantic Coastline Cliffs • Long Exposure Water • 60MP Master"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Chapman\'s Peak Ocean Chasm', 420)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Cederberg Sandstone Arch -->
-        <article class="product-card" data-category="landscape">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/land_cederberg/800/1000" alt="Cederberg Sandstone Arch" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Cederberg Sandstone Arch"></h3>
-              <span class="product-price">R 450</span>
-            </div>
-            <p class="typewriter-desc" data-text="Night Milky Way Arch Over Ancient Rock Formations"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Cederberg Sandstone Arch', 450)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Jonkershoek Autumn Mist -->
-        <article class="product-card" data-category="landscape">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/land_stellenbosch/800/1000" alt="Jonkershoek Autumn Mist" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Jonkershoek Autumn Mist"></h3>
-              <span class="product-price">R 390</span>
-            </div>
-            <p class="typewriter-desc" data-text="Cape Fold Mountain Basin • Low Hanging Cloud Inversion"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Jonkershoek Autumn Mist', 390)">+ Add to Cart</button>
-          </div>
-        </article>
-        <!-- Item: Twelve Apostles Sunset 4K -->
-        <article class="product-card" data-category="drone">
-          <div class="product-image-wrap">
-            <img src="https://picsum.photos/seed/drone_coast/800/1000" alt="Twelve Apostles Sunset 4K" loading="lazy">
-          </div>
-          <div class="card-3d-glare"></div>
-          <button class="like-btn" onclick="toggleLike(this)" title="Save to soul collection" aria-label="Like">
-            <svg class="undertale-soul-icon" viewBox="0 0 16 16">
-              <path d="M2,2 h4 v2 h-4 z M10,2 h4 v2 h-4 z M1,4 h6 v2 h-6 z M9,4 h6 v2 h-6 z M0,6 h16 v4 h-16 z M2,10 h12 v2 h-12 z M4,12 h8 v2 h-8 z M6,14 h4 v2 h-4 z" />
-            </svg>
-          </button>
-          <div class="product-info-slideup">
-            <div class="product-title-row">
-              <h3 class="typewriter-title" data-text="Twelve Apostles Sunset 4K"></h3>
-              <span class="product-price">R 850</span>
-            </div>
-            <p class="typewriter-desc" data-text="Cinema DNG 4K 60fps • Atlantic Golden Coastline Sweep"></p>
-            <button class="add-to-cart-btn" onclick="addToCart('Twelve Apostles Sunset 4K', 850)">+ Add to Cart</button>
-          </div>
-        </article>
-
 
       </div>
     </section>
@@ -3276,8 +3855,31 @@
     <!-- About Section with 3D Holographic Tilt Portrait -->
     <section id="about">
       <div class="about-frame">
-        <!-- 3D Interactive Tilt Wrapper -->
+        <!-- 3D Interactive Tilt Wrapper with Hidden Secret Layer -->
         <div class="about-3d-wrapper" id="aboutTiltCard">
+          <!-- Hidden Secret Underlayer Revealed Once Broken & Moved -->
+          <div class="about-secret-underlayer" id="aboutSecretUnderlayer" onclick="toggleFavoritesDropdown(event)" title="Click to view favorite photos">
+            <img id="favoritesActiveImg" src="https://picsum.photos/seed/secretsethaction/600/600" alt="Seth Barton Favorite Action Photo" loading="lazy">
+            
+
+
+            <div class="about-secret-badge" onclick="toggleFavoritesDropdown(event)">
+              <span id="favoritesBadgeText">FAVORITE PHOTOS</span>
+              <span class="favorites-chevron">&#9660;</span>
+            </div>
+
+            <!-- Interactive Dropdown Menu of Favorite Photos -->
+            <div class="favorites-dropdown-menu" id="favoritesDropdownMenu">
+              <div class="favorites-dropdown-header">
+                <span>// CURATED FAVORITES</span>
+                <span style="font-size: 0.65rem; color: var(--hazard-orange);">SELECT TO PREVIEW</span>
+              </div>
+              <div class="favorites-list" id="favoritesListContainer">
+                <!-- Dynamically populated favorite items -->
+              </div>
+            </div>
+          </div>
+          <!-- Top Forefront Portrait (Kickflips & Breaks into Draggable Shard) -->
           <div class="about-image" id="aboutPortrait">
             <div class="about-glare" id="aboutGlare"></div>
             <img src="https://picsum.photos/seed/sethheadshot/600/600" alt="Seth Barton portrait" loading="lazy">
@@ -3290,6 +3892,21 @@
             Specialist in extreme sports, XCO mountain biking, wildlife documentary, and cinematic drone filming throughout the Western Cape. Providing athletes, brands, and agencies with high-resolution digital media packages, live race day coverage, and raw aerial footage.
           </p>
         </div>
+      </div>
+    </section>
+
+    <!-- SECRET UNLOCKED FAVORITES SHOWCASE SECTION (OPENS OUT OF THE FRAME) -->
+    <section id="secretFavoritesSection" class="secret-favorites-section">
+      <div class="secret-vault-header">
+        <div class="secret-status-tag">&#10024; [ ARCHIVE UNLOCKED // PERSONAL FAVORITES ] &#10024;</div>
+        <h2 class="secret-vault-title">Seth Barton &bull; Curated Master Selection</h2>
+        <p class="secret-vault-sub">Exclusive director's cut of my absolute favorite captures — technical lines, golden hour lighting, and uncompressed aerials.</p>
+        <button class="secret-close-btn" onclick="closeSecretFavoritesSection()" title="Close secret vault">&times; Close Vault</button>
+      </div>
+
+      <!-- Full-Width Unlocked Curated Gallery -->
+      <div class="secret-favorites-grid" id="secretFavoritesGrid">
+        <!-- Injected dynamically with high-res curated cards -->
       </div>
     </section>
 
@@ -3342,7 +3959,7 @@
       <div class="footer-content">
         <ul class="footer-links">
           <li><a href="mailto:lionbarton@gmail.com">Email</a></li>
-          <li><a href="https://wa.me/27607073275" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+          <li><a href="tel:+27607073275">Phone</a></li>
           <li><a href="https://instagram.com/corestall" target="_blank" rel="noopener noreferrer">Instagram</a></li>
         </ul>
         <p class="copyright">&copy; 2026 Seth Barton &bull; All Rights Reserved</p>
@@ -3394,6 +4011,10 @@
             <span>MANAGE LIVE GALLERY</span>
             <span class="studio-tab-badge" id="studioLiveBadge">0</span>
           </button>
+          <button class="studio-tab-btn" id="tabBtnFavorites" onclick="switchStudioTab('favorites')">
+            <span>⭐ FAVORITES VAULT</span>
+            <span class="studio-tab-badge" id="studioFavBadge">0</span>
+          </button>
         </div>
 
         <!-- TAB 1: UPLOAD & STAGING -->
@@ -3425,6 +4046,40 @@
             <div style="display: flex; gap: 0.75rem;">
               <button class="filter-btn" onclick="toggleStudio(false)">Cancel</button>
               <button class="btn" style="padding: 0.6rem 1.4rem; font-size: 0.8rem;" onclick="publishStagedMedia()">Publish to Gallery</button>
+            </div>
+          </div>
+        </div>
+
+        
+        <!-- TAB 3: FAVORITES VAULT MANAGER & UPLOADER -->
+        <div id="studioTabFavorites" style="display: none; flex-direction: column; flex: 1; min-height: 0;">
+          <div class="studio-body">
+            <!-- Dedicated Drag & Drop Uploader for Favorites -->
+            <div class="studio-dropzone" id="studioFavDropzone" style="border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03);">
+              <input type="file" id="studioFavFileInput" multiple accept="image/*" onchange="handleStudioFavUpload(this.files)">
+              <div class="dropzone-icon" style="color: var(--neon-cyan);">&#9733;</div>
+              <div class="dropzone-text" style="color: #ffffff;">Drop Photos to Add Directly to Curated Favorites</div>
+              <div class="dropzone-sub">Instantly syncs with the Secret Unlocked Vault & Underlayer Photo</div>
+            </div>
+
+            <div class="studio-queue-header">
+              <span>CURATED FAVORITE PHOTOS (<span id="studioFavCount">0</span>)</span>
+              <span style="color: var(--neon-cyan); font-size: 0.75rem;">EDIT TITLE, TAG, DESC & PRICE</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Control what appears in the Secret Vault unlocked after throwing away the broken panel. Edit titles, tags, descriptions, prices, or remove items in real time.
+            </div>
+
+            <!-- List of Editable Favorites -->
+            <div class="studio-queue-list" id="studioFavList" style="max-height: 380px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <div class="studio-footer">
+            <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--neon-cyan);">Updates reflect immediately on live vault</span>
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="filter-btn" onclick="toggleStudio(false)">Close Studio</button>
             </div>
           </div>
         </div>
@@ -3634,18 +4289,27 @@
     function switchStudioTab(tab) {
       const uploadTab = document.getElementById('studioTabUpload');
       const manageTab = document.getElementById('studioTabManage');
+      const favTab = document.getElementById('studioTabFavorites');
       const btnUpload = document.getElementById('tabBtnUpload');
       const btnManage = document.getElementById('tabBtnManage');
+      const btnFav = document.getElementById('tabBtnFavorites');
+
+      uploadTab.style.display = 'none';
+      manageTab.style.display = 'none';
+      if (favTab) favTab.style.display = 'none';
+      btnUpload.classList.remove('active');
+      btnManage.classList.remove('active');
+      if (btnFav) btnFav.classList.remove('active');
 
       if (tab === 'upload') {
         uploadTab.style.display = 'flex';
-        manageTab.style.display = 'none';
         btnUpload.classList.add('active');
-        btnManage.classList.remove('active');
+      } else if (tab === 'favorites') {
+        if (favTab) favTab.style.display = 'flex';
+        if (btnFav) btnFav.classList.add('active');
+        renderStudioFavoritesManager();
       } else {
-        uploadTab.style.display = 'none';
         manageTab.style.display = 'flex';
-        btnUpload.classList.remove('active');
         btnManage.classList.add('active');
         renderStudioLiveManager();
       }
@@ -3847,10 +4511,177 @@
     // =========================================================================
     // LIVE MEDIA MANAGER: EDIT CATEGORY / PRICE / TITLE & REMOVE FROM GALLERY
     // =========================================================================
+    
+    // =========================================================================
+    // CREATOR STUDIO: FAVORITES VAULT MANAGER & UPLOADER
+    // =========================================================================
+    function renderStudioFavoritesManager() {
+      const container = document.getElementById('studioFavList');
+      const countEl = document.getElementById('studioFavCount');
+      const badgeEl = document.getElementById('studioFavBadge');
+      if (!container) return;
+
+      if (countEl) countEl.textContent = SETH_FAVORITES.length;
+      if (badgeEl) badgeEl.textContent = SETH_FAVORITES.length;
+
+      if (SETH_FAVORITES.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-industrial); font-family: var(--font-mono); font-size: 0.82rem; padding: 2rem;">
+            No favorites currently in vault. Drop photos above to add them immediately.
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = SETH_FAVORITES.map((item, idx) => `
+        <div class="studio-queue-item" style="border-left: 3px solid var(--neon-cyan); display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: #090e14; border-radius: 10px;">
+          <!-- 64x64 Visible Thumbnail with Click to Expand -->
+          <img src="${item.src}" class="studio-queue-thumb" alt="${item.title}" onclick="previewFavoritePhotoSrc('${item.src}')" title="Click to view full image" style="cursor: pointer;">
+          
+          <div class="studio-queue-details" style="flex: 1; min-width: 0;">
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem;">
+              <input type="text" class="studio-input-title" value="${(item.title || '').replace(/"/g, '&quot;')}" placeholder="Photo Title"
+                onchange="updateFavoriteField(${idx}, 'title', this.value)" style="flex: 1; font-weight: 700; background: #0d141c; border: 1px solid var(--panel-border); color: var(--text-bright); font-family: var(--font-mono); font-size: 0.78rem; padding: 0.35rem 0.6rem; border-radius: 6px;">
+              <span class="auto-sort-tag" style="white-space: nowrap;">#${idx + 1} FAVORITE</span>
+            </div>
+
+            <div class="studio-item-inputs" style="display: flex; gap: 0.5rem; margin-bottom: 0.35rem; align-items: center;">
+              <!-- Tag/Category selector like in gallery manager -->
+              <select class="studio-select" onchange="updateFavoriteField(${idx}, 'tag', this.value)" style="flex: 1.2;">
+                <option value="WC XCO #1 • Bloemendal" ${item.tag.includes('Bloemendal') ? 'selected' : ''}>WC XCO #1 • Bloemendal</option>
+                <option value="SA Cup • Cat 1" ${item.tag.includes('SA Cup') ? 'selected' : ''}>SA Cup (Cat 1)</option>
+                <option value="WC XCO #2 • Doolhof" ${item.tag.includes('Doolhof') ? 'selected' : ''}>WC XCO #2 • Doolhof</option>
+                <option value="WC XCO #3 • Spice Route" ${item.tag.includes('Spice Route') ? 'selected' : ''}>WC XCO #3 • Spice Route</option>
+                <option value="WC XCO #4 • Rhebokskloof" ${item.tag.includes('Rhebokskloof') ? 'selected' : ''}>WC XCO #4 • Rhebokskloof</option>
+                <option value="Wildlife • Kruger National Park" ${item.tag.includes('Wildlife') || item.tag.includes('Kruger') ? 'selected' : ''}>Wildlife • Kruger Park</option>
+                <option value="Drone • 4K Aerial" ${item.tag.includes('Drone') ? 'selected' : ''}>Drone • 4K Aerial</option>
+                <option value="Landscape • Western Cape" ${item.tag.includes('Landscape') ? 'selected' : ''}>Landscape • Western Cape</option>
+                <option value="Action • Downhill RAW" ${item.tag.includes('Action') ? 'selected' : ''}>Action • Downhill RAW</option>
+              </select>
+
+              <div style="display: flex; align-items: center; gap: 0.2rem; flex-shrink: 0;">
+                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">R</span>
+                <input type="number" class="studio-input" value="${item.price || 250}" placeholder="Price"
+                  onchange="updateFavoriteField(${idx}, 'price', Number(this.value))" style="width: 75px; text-align: center;">
+              </div>
+            </div>
+
+            <input type="text" class="studio-input" value="${(item.desc || '').replace(/"/g, '&quot;')}" placeholder="Camera gear, lens, settings (e.g. 1/3200s Shutter • 400mm f/2.8)"
+              onchange="updateFavoriteField(${idx}, 'desc', this.value)" style="width: 100%; font-size: 0.72rem; color: var(--text-muted);">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; justify-content: center; flex-shrink: 0;">
+            <button class="studio-remove-btn" onclick="setAsPrimaryUnderlayer(${idx})" title="Set as bio underlayer primary cover" style="color: var(--neon-cyan); font-size: 0.68rem; padding: 0.35rem 0.65rem; border: 1px solid var(--neon-cyan); background: rgba(0, 240, 255, 0.08); border-radius: 4px; cursor: pointer; white-space: nowrap;">
+              &#9733; Set Cover
+            </button>
+            <button class="studio-remove-btn" onclick="removeFavoritePhoto(${idx})" title="Remove from favorites" style="color: #ff5252; font-size: 0.68rem; padding: 0.35rem 0.65rem; border: 1px solid rgba(255, 82, 82, 0.3); background: rgba(255, 82, 82, 0.08); border-radius: 4px; cursor: pointer; white-space: nowrap;">
+              &times; Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateFavoriteField(idx, field, value) {
+      if (!SETH_FAVORITES[idx]) return;
+      SETH_FAVORITES[idx][field] = value;
+      initFavoritesList();
+      renderSecretFavoritesGrid();
+    }
+
+    function removeFavoritePhoto(idx) {
+      if (confirm(`Remove "${SETH_FAVORITES[idx].title}" from Favorites?`)) {
+        SETH_FAVORITES.splice(idx, 1);
+        renderStudioFavoritesManager();
+        initFavoritesList();
+        renderSecretFavoritesGrid();
+        showNotification('Favorite photo removed');
+      }
+    }
+
+    
+    function previewFavoritePhotoSrc(src) {
+      window.open(src, '_blank');
+    }
+
+    function setAsPrimaryUnderlayer(idx) {
+      const item = SETH_FAVORITES[idx];
+      if (!item) return;
+      const activeImg = document.getElementById('favoritesActiveImg');
+      if (activeImg) {
+        activeImg.src = item.src;
+        showNotification(`Set "${item.title}" as primary underlayer photo!`);
+      }
+    }
+
+    function handleStudioFavUpload(files) {
+      if (!files || files.length === 0) return;
+
+      Array.from(files).forEach((file, fIdx) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const rawName = file.name.replace(/\.[^/.]+$/, '');
+          const cleanTitle = rawName
+            .replace(/[_-]+/g, ' ')
+            .replace(/\w/g, l => l.toUpperCase());
+
+          const newFav = {
+            id: 'fav-' + Date.now() + '-' + fIdx,
+            title: cleanTitle || 'Curated Master Capture',
+            tag: 'Curated • Master Series',
+            desc: 'High-resolution digital master file • Professional grade license',
+            price: 290,
+            src: e.target.result
+          };
+
+          SETH_FAVORITES.unshift(newFav); // Prepend to top of favorites!
+
+          renderStudioFavoritesManager();
+          initFavoritesList();
+          renderSecretFavoritesGrid();
+
+          // Also immediately update the underlayer photo preview if desired
+          const activeImg = document.getElementById('favoritesActiveImg');
+          if (activeImg && SETH_FAVORITES.length === 1) {
+            activeImg.src = newFav.src;
+          }
+
+          showNotification(`Added "${newFav.title}" to Favorites!`);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Connect drag & drop events for the Favorites uploader
+    const favDropzone = document.getElementById('studioFavDropzone');
+    if (favDropzone) {
+      ['dragenter', 'dragover'].forEach(evt => {
+        favDropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          favDropzone.style.borderColor = '#ffffff';
+          favDropzone.style.background = 'rgba(0, 240, 255, 0.08)';
+        });
+      });
+      ['dragleave', 'drop'].forEach(evt => {
+        favDropzone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          favDropzone.style.borderColor = 'var(--neon-cyan)';
+          favDropzone.style.background = 'rgba(0, 240, 255, 0.03)';
+        });
+      });
+      favDropzone.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files) {
+          handleStudioFavUpload(e.dataTransfer.files);
+        }
+      });
+    }
+
     function renderStudioLiveManager() {
       const container = document.getElementById('studioLiveList');
       const countEl = document.getElementById('studioLiveCount');
       const badgeEl = document.getElementById('studioLiveBadge');
+      const favBadgeEl = document.getElementById('studioFavBadge'); if (favBadgeEl) favBadgeEl.textContent = SETH_FAVORITES.length;
       const grid = document.getElementById('mediaGrid');
       if (!grid || !container) return;
 
@@ -4085,920 +4916,89 @@
     const tiltGlare = document.getElementById('aboutGlare');
 
     if (tiltCard && tiltPortrait) {
-      tiltCard.addEventListener('mousemove', (e) => {
-        const rect = tiltCard.getBoundingClientRect();
-        const x = e.clientX - rect.left; // x position within card
-        const y = e.clientY - rect.top;  // y position within card
+      let isKickflipping = false;
+      window.isCardBroken = false;
+      let kickflipClicks = [];
+      let isDraggingBroken = false;
+      let dragOffset = { x: 0, y: 0 };
+      let brokenPos = { x: 0, y: 0, hasMoved: false };
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+      // 10 clicks within 3 seconds (3000ms) breaks the photo!
+      tiltCard.addEventListener('click', (e) => {
+        if (window.isCardBroken) return; // Already broken & draggable
 
-        // Calculate rotation angles (max tilt ~22deg)
-        const rotateX = ((y - centerY) / centerY) * -18;
-        const rotateY = ((x - centerX) / centerX) * 18;
+        const now = performance.now();
+        // Keep clicks only within the 3-second window
+        kickflipClicks = kickflipClicks.filter(t => now - t <= 3000);
+        kickflipClicks.push(now);
 
-        tiltPortrait.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        // 10TH CLICK IN 3 SECONDS: BREAKS & DETACHES INTO DRAGGABLE OBJECT!
+        if (kickflipClicks.length >= 10) {
+          window.isCardBroken = true;
+          isKickflipping = false;
+          tiltPortrait.classList.remove('kickflipping');
+          void tiltPortrait.offsetWidth;
+          tiltPortrait.classList.add('broken-snapped');
 
-        // Move the dynamic light glare reflection
-        if (tiltGlare) {
-          tiltGlare.style.opacity = '1';
-          const glareX = (x / rect.width) * 100;
-          const glareY = (y / rect.height) * 100;
-          tiltGlare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(0, 240, 255, 0.2) 40%, transparent 75%)`;
-        }
-      });
-
-      tiltCard.addEventListener('mouseleave', () => {
-        // Smoothly spring back to flat position
-        tiltPortrait.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        if (tiltGlare) {
-          tiltGlare.style.opacity = '0';
-        }
-      });
-    }
-
-    // =========================================================================
-    // TYPEWRITER ENGINE FOR SLIDE-UP CARDS ON HOVER
-    // =========================================================================
-    function startCardTypewriter(card) {
-      const titleEl = card.querySelector('.typewriter-title');
-      const descEl = card.querySelector('.typewriter-desc');
-
-      if (!titleEl || !descEl) return;
-
-      const fullTitle = titleEl.getAttribute('data-text') || '';
-      const fullDesc = descEl.getAttribute('data-text') || '';
-
-      if (card._typewriterTimeouts) {
-        card._typewriterTimeouts.forEach(t => clearTimeout(t));
-      }
-      card._typewriterTimeouts = [];
-
-      titleEl.innerHTML = '<span class="type-caret"></span>';
-      descEl.innerHTML = '';
-
-      let titleIdx = 0;
-      function typeTitle() {
-        if (titleIdx <= fullTitle.length) {
-          titleEl.innerHTML = fullTitle.substring(0, titleIdx) + '<span class="type-caret"></span>';
-          titleIdx++;
-          const t = setTimeout(typeTitle, 22);
-          card._typewriterTimeouts.push(t);
-        } else {
-          titleEl.innerHTML = fullTitle;
-          descEl.innerHTML = '<span class="type-caret"></span>';
-          typeDesc();
-        }
-      }
-
-      let descIdx = 0;
-      function typeDesc() {
-        if (descIdx <= fullDesc.length) {
-          descEl.innerHTML = fullDesc.substring(0, descIdx) + '<span class="type-caret"></span>';
-          descIdx++;
-          const t = setTimeout(typeDesc, 14);
-          card._typewriterTimeouts.push(t);
-        } else {
-          descEl.innerHTML = fullDesc;
-        }
-      }
-
-      typeTitle();
-    }
-
-    function resetCardTypewriter(card) {
-      if (card._typewriterTimeouts) {
-        card._typewriterTimeouts.forEach(t => clearTimeout(t));
-      }
-      card._typewriterTimeouts = [];
-
-      const titleEl = card.querySelector('.typewriter-title');
-      const descEl = card.querySelector('.typewriter-desc');
-      if (titleEl) titleEl.innerHTML = '';
-      if (descEl) descEl.innerHTML = '';
-    }
-
-    // =========================================================================
-    // ULTRA-SUBTLE, TASTEFUL 3D DEPTH (MICRO-TILT & WHISPER SHEEN)
-    // =========================================================================
-    function initCard3DPhysics(card) {
-      if (card._has3DInit) return;
-      card._has3DInit = true;
-
-      const img = card.querySelector('.product-image-wrap img');
-      let glare = card.querySelector('.card-3d-glare');
-      if (!glare) {
-        glare = document.createElement('div');
-        glare.className = 'card-3d-glare';
-        card.appendChild(glare);
-      }
-
-      let rafId = null;
-
-      function onMouseMove(e) {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        // Ultra-subtle, organic tilt angles (max +/- 1.8 degrees)
-        const rotX = ((y - centerY) / centerY) * -1.8;
-        const rotY = ((x - centerX) / centerX) * 1.8;
-
-        // Microscopic parallax shift (+/- 1.2px)
-        const transX = ((x - centerX) / centerX) * 1.2;
-        const transY = ((y - centerY) / centerY) * 1.2;
-
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(() => {
-          card.style.transform = `perspective(1600px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.008, 1.008, 1.008)`;
-          if (img) {
-            img.style.transform = `translate3d(${transX.toFixed(1)}px, ${transY.toFixed(1)}px, 5px) scale(1.015)`;
+          // Unlock Favorite Photos underlayer interaction now that panel is broken!
+          const underlayer = document.getElementById('aboutSecretUnderlayer');
+          if (underlayer) {
+            underlayer.classList.add('is-unlocked');
           }
-          if (glare) {
-            const pctX = (x / rect.width) * 100;
-            const pctY = (y / rect.height) * 100;
-            glare.style.opacity = '1';
-            glare.style.background = `radial-gradient(circle at ${pctX.toFixed(1)}% ${pctY.toFixed(1)}%, rgba(255, 255, 255, 0.12) 0%, rgba(200, 220, 245, 0.03) 40%, transparent 70%)`;
-          }
-        });
-      }
 
-      function onMouseLeave() {
-        if (rafId) cancelAnimationFrame(rafId);
-        card.style.transform = 'perspective(1600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-        if (img) {
-          img.style.transform = 'translate3d(0px, 0px, 5px) scale(1.012)';
-        }
-        if (glare) {
-          glare.style.opacity = '0';
-        }
-      }
-
-      card.addEventListener('mousemove', onMouseMove);
-      card.addEventListener('mouseleave', onMouseLeave);
-      card.addEventListener('mouseenter', () => startCardTypewriter(card));
-      card.addEventListener('mouseleave', () => resetCardTypewriter(card));
-    }
-
-    document.querySelectorAll('.product-card').forEach(initCard3DPhysics);
-
-    // =========================================================================
-    // THEMED COLOR PALETTES FOR EACH 2027 WC XCO EVENT
-    // =========================================================================
-    const COLOR_THEMES = {
-      orange: [
-        { head: '#ffffff', tail: '#ffeedd', glow: '#ffaa00' },
-        { head: '#fff3aa', tail: '#ffaa00', glow: '#ff6600' },
-        { head: '#ffbb33', tail: '#ff5500', glow: '#ff3300' },
-        { head: '#ff7700', tail: '#cc2200', glow: '#ff4400' }
-      ],
-      gold: [
-        { head: '#ffffff', tail: '#fff9cc', glow: '#ffd700' },
-        { head: '#fff388', tail: '#ffc400', glow: '#ffaa00' },
-        { head: '#ffd000', tail: '#e69500', glow: '#ffb700' },
-        { head: '#ffea70', tail: '#cc8800', glow: '#ffbb00' }
-      ],
-      cyan: [
-        { head: '#ffffff', tail: '#d4ffff', glow: '#00f0ff' },
-        { head: '#a6faff', tail: '#00e1ff', glow: '#00a6ff' },
-        { head: '#00f0ff', tail: '#0088ff', glow: '#0066ff' },
-        { head: '#52e5ff', tail: '#0055ff', glow: '#0099ff' }
-      ],
-      emerald: [
-        { head: '#ffffff', tail: '#e6ffea', glow: '#00ff66' },
-        { head: '#afffc0', tail: '#10e854', glow: '#00cc44' },
-        { head: '#39ff14', tail: '#00aa33', glow: '#00ff88' },
-        { head: '#85ff5e', tail: '#057d25', glow: '#26ff00' }
-      ],
-      ruby: [
-        { head: '#ffffff', tail: '#ffdae4', glow: '#ff2a55' },
-        { head: '#ff88a3', tail: '#ff1744', glow: '#e00034' },
-        { head: '#ff2a55', tail: '#c5002a', glow: '#ff4081' },
-        { head: '#ff5252', tail: '#990020', glow: '#ff1744' }
-      ],
-      violet: [
-        { head: '#ffffff', tail: '#f7e6ff', glow: '#d946ef' },
-        { head: '#f0abfc', tail: '#c026d3', glow: '#a855f7' },
-        { head: '#c084fc', tail: '#7e22ce', glow: '#9333ea' },
-        { head: '#e879f9', tail: '#6b21a8', glow: '#d946ef' }
-      ]
-    };
-
-    // =========================================================================
-    // TIGHT-RADIUS (6px - 22px) "SWIMMING" SPARKS ENGINE
-    // - Hugs the cursor tip tightly without flying all over the place
-    // =========================================================================
-    const canvas = document.getElementById('sparksCanvas');
-    const ctx = canvas.getContext('2d');
-    let sparkParticles = [];
-    let sparksLoop = null;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function triggerThemedWelderSparks(themeKey) {
-      if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
-        resizeCanvas();
-      }
-
-      const sparkHues = COLOR_THEMES[themeKey] || COLOR_THEMES.orange;
-
-      // Tight swarm of 55 sparks hugging the cursor
-      for (let i = 0; i < 55; i++) {
-        const startAngle = Math.random() * Math.PI * 2;
-        // Spawn right at the cursor tip (2px to 10px)
-        const startDist = 2 + Math.random() * 8;
-        const colorObj = sparkHues[Math.floor(Math.random() * sparkHues.length)];
-        
-        sparkParticles.push({
-          x: mousePos.x + Math.cos(startAngle) * startDist,
-          y: mousePos.y + Math.sin(startAngle) * startDist,
-          prevX: mousePos.x,
-          prevY: mousePos.y,
-          vx: 0,
-          vy: 0,
-          orbitAngle: startAngle,
-          targetRadius: 7 + Math.random() * 15, // Extremely tight orbit (7px - 22px)
-          orbitSpeed: (0.07 + Math.random() * 0.08) * (Math.random() > 0.5 ? 1 : -1),
-          swimFreq: 0.22 + Math.random() * 0.16,
-          swimAmp: 1.2 + Math.random() * 1.8,   // Minimal wiggle to stay close
-          swimPhase: Math.random() * Math.PI * 2,
-          headColor: colorObj.head,
-          tailColor: colorObj.tail,
-          glowColor: colorObj.glow,
-          width: 1.3 + Math.random() * 0.8,
-          lengthMult: 1.8 + Math.random() * 1.2,
-          alpha: 1,
-          decay: 0.018 + Math.random() * 0.014
-        });
-      }
-
-      if (!sparksLoop) {
-        animateWelderSparks();
-      }
-    }
-
-    function animateWelderSparks() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = sparkParticles.length - 1; i >= 0; i--) {
-        const p = sparkParticles[i];
-
-        p.prevX = p.x;
-        p.prevY = p.y;
-
-        p.orbitAngle += p.orbitSpeed;
-        p.swimPhase += p.swimFreq;
-
-        const wiggleR = p.targetRadius + Math.sin(p.swimPhase) * p.swimAmp;
-        const targetX = mousePos.x + Math.cos(p.orbitAngle) * wiggleR;
-        const targetY = mousePos.y + Math.sin(p.orbitAngle) * wiggleR;
-
-        // Strong spring force to lock sparks tightly to cursor coordinates
-        const dx = targetX - p.x;
-        const dy = targetY - p.y;
-        
-        p.vx += dx * 0.35;
-        p.vy += dy * 0.35;
-
-        // High fluid damping to prevent escaping
-        p.vx *= 0.65;
-        p.vy *= 0.65;
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= p.decay;
-
-        if (p.alpha <= 0) {
-          sparkParticles.splice(i, 1);
-          continue;
+          // Initialize dragging for the broken photo
+          enableBrokenCardDragging();
+          return;
         }
 
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, p.alpha);
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = p.glowColor;
+        if (isKickflipping) return;
+        isKickflipping = true;
 
-        const headX = p.x;
-        const headY = p.y;
-        const tailX = p.x - p.vx * p.lengthMult;
-        const tailY = p.y - p.vy * p.lengthMult;
-
-        const grad = ctx.createLinearGradient(headX, headY, tailX, tailY);
-        grad.addColorStop(0, p.headColor);
-        grad.addColorStop(0.35, p.tailColor);
-        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = p.width;
-        ctx.lineCap = 'round';
-
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(headX, headY);
-        ctx.stroke();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(headX, headY, p.width * 0.65, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      if (sparkParticles.length > 0) {
-        sparksLoop = requestAnimationFrame(animateWelderSparks);
-      } else {
-        sparksLoop = null;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-
-    // Toggle WP Stack Group
-    function toggleWpGroup(e) {
-      const hub = document.getElementById('wpHub');
-      const isExpanding = !hub.classList.contains('expanded');
-      hub.classList.toggle('expanded');
-
-      triggerThemedWelderSparks('orange');
-
-      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
-
-      if (isExpanding) {
-        applyFilter('wp-all');
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      } else {
-        const allBtn = document.querySelector('.filter-btn');
-        if (allBtn) {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          allBtn.classList.add('active');
-        }
-        applyFilter('all');
-      }
-    }
-
-    // Location Pill Click: Fires UNIQUE Spark Color Theme
-    function filterWpSub(category, btn, e, themeColor) {
-      if (e) e.stopPropagation();
-      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      triggerThemedWelderSparks(themeColor);
-
-      applyFilter(category);
-    }
-
-    // Standard Category Filter: Clean click, NO sparks
-    function filterCategory(category, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.location-pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-
-      if (category !== 'action') {
-        document.getElementById('wpHub').classList.remove('expanded');
-      }
-
-      applyFilter(category);
-    }
-
-    function applyFilter(category) {
-      const cards = document.querySelectorAll('.product-card');
-      cards.forEach(card => {
-        if (category === 'all') {
-          card.classList.remove('hidden');
-        } else {
-          const categories = card.getAttribute('data-category') || '';
-          if (categories.includes(category)) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        }
-      });
-    }
-
-    // Undertale Soul Like Interaction (3 Quick Little Hops)
-    function toggleLike(btn) {
-      const isCurrentlyLiked = btn.classList.contains('liked');
-
-      if (!isCurrentlyLiked) {
-        btn.classList.add('liked');
-        btn.classList.remove('hopping');
-        void btn.offsetWidth;
-        btn.classList.add('hopping');
+        tiltPortrait.classList.remove('kickflipping');
+        void tiltPortrait.offsetWidth;
+        tiltPortrait.classList.add('kickflipping');
 
         setTimeout(() => {
-          btn.classList.remove('hopping');
-        }, 750);
-      } else {
-        btn.classList.remove('liked');
-        btn.classList.remove('hopping');
-      }
-    }
-
-    function determineCartPosition(clickX) {
-      const width = window.innerWidth;
-      const x = (typeof clickX === 'number' && !isNaN(clickX)) ? clickX : mousePos.x;
-
-      // Split viewport horizontally into three zones (left 35%, center 30%, right 35%)
-      if (x < width * 0.35) {
-        // User clicked on the LEFT side -> pop up on the RIGHT
-        return 'pos-right';
-      } else if (x > width * 0.65) {
-        // User clicked on the RIGHT side -> pop up on the LEFT
-        return 'pos-left';
-      } else {
-        // User clicked in the MIDDLE -> pop up in the CENTER
-        return 'pos-center';
-      }
-    }
-
-    function toggleCart(open, targetPosition) {
-      const drawer = document.getElementById('cartDrawer');
-      const overlay = document.getElementById('cartOverlay');
-      if (!drawer || !overlay) return;
-
-      if (open) {
-        const posClass = targetPosition || determineCartPosition();
-        drawer.classList.remove('pos-left', 'pos-right', 'pos-center');
-        drawer.classList.add(posClass);
-        // Force reflow before applying active so transition plays smoothly
-        void drawer.offsetWidth;
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-      } else {
-        drawer.classList.remove('active');
-        overlay.classList.remove('active');
-      }
-    }
-
-    function addToCart(title, price, e) {
-      let clickX = null;
-      if (e && typeof e.clientX === 'number') {
-        clickX = e.clientX;
-      } else if (window.event && typeof window.event.clientX === 'number') {
-        clickX = window.event.clientX;
-      }
-
-      cart.push({ title, price });
-      renderCart();
-      const posClass = determineCartPosition(clickX);
-      toggleCart(true, posClass);
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      renderCart();
-    }
-
-    function renderCart() {
-      const container = document.getElementById('cartItemsContainer');
-      const countBadge = document.getElementById('cartCount');
-      const totalEl = document.getElementById('cartTotal');
-      countBadge.textContent = cart.length;
-      if (cart.length === 0) {
-        container.innerHTML = '<p class="cart-empty-message">Your digital downloads queue is currently empty.</p>';
-        totalEl.textContent = 'R 0';
-        return;
-      }
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
-      totalEl.textContent = 'R ' + total.toLocaleString();
-      container.innerHTML = cart.map((item, idx) => `
-        <div class="cart-item">
-          <div>
-            <div class="cart-item-title">${item.title}</div>
-            <div class="cart-item-price">R ${item.price.toLocaleString()}</div>
-          </div>
-          <button class="cart-item-remove" onclick="removeFromCart(${idx})">Remove</button>
-        </div>
-      `).join('');
-    }
-
-    function checkout() {
-      if (cart.length === 0) return alert('Your cart is empty.');
-      const items = cart.map(i => `${i.title} (R ${i.price})`).join('%0D%0A- ');
-      const total = cart.reduce((s, i) => s + i.price, 0);
-      window.location.href = `mailto:lionbarton@gmail.com?subject=Digital%20Media%20Order&body=Hi%20Seth,%0D%0A%0D%0AI would like to purchase and download the following digital files:%0D%0A- ${items}%0D%0A%0D%0ATotal: R ${total}%0D%0A%0D%0APlease send through the download link and invoice.`;
-    }
-
-    // =========================================================================
-    // INSTAGRAM BUTTON: SQUASHABLE, DRAGGABLE, & RESURRECTABLE ANTS
-    // =========================================================================
-    let isAntPartyActive = false;
-    let antPartyAnimId = null;
-    let localAnts = [];
-    let squashedSplat = null;
-    let isAntSquashed = false;
-    let isDraggingSquashedAnt = false;
-    let revivedAnt = null; // Ant running around the page upon resurrection
-
-    function togglePipeColor(e) {
-      const wrap = document.getElementById('pipeWrap');
-      const stage = document.getElementById('antsStageWrapper');
-      if (!wrap) return;
-
-      const isRainbow = wrap.classList.toggle('rainbow-mode');
-
-      if (isRainbow) {
-        if (stage) stage.classList.add('active');
-        startLocalAntDance();
-      } else {
-        if (stage) stage.classList.remove('active');
-        stopLocalAntDance();
-      }
-    }
-
-    function startLocalAntDance() {
-      const canvas = document.getElementById('antsLocalCanvas');
-      const msgEl = document.getElementById('antsHappyMsg');
-      const ghost = document.getElementById('dragAntGhost');
-      if (!canvas) return;
-
-      canvas.width = canvas.offsetWidth || 400;
-      canvas.height = 52;
-      const ctx = canvas.getContext('2d');
-
-      isAntPartyActive = true;
-      isAntSquashed = false;
-      isDraggingSquashedAnt = false;
-      squashedSplat = null;
-      localAnts = [];
-
-      if (ghost) ghost.classList.remove('active');
-
-      // Reset message
-      if (msgEl) {
-        msgEl.className = 'ants-happy-msg';
-        msgEl.innerHTML = '&#10024; you made the ants happy &#10024;';
-      }
-
-      const hatColors = ['#ff0055', '#ff9900', '#ffee00', '#00ff66', '#00e1ff', '#9900ff', '#ff00aa', '#fed7aa'];
-      const count = 16;
-      const spacing = canvas.width / (count + 1);
-
-      for (let i = 0; i < count; i++) {
-        localAnts.push({
-          id: i,
-          baseX: spacing * (i + 1),
-          x: spacing * (i + 1),
-          y: 28,
-          currentX: spacing * (i + 1),
-          currentY: 28,
-          danceSpeed: 0.08 + (i % 3) * 0.02,
-          dancePhase: i * 0.45,
-          hatColor: hatColors[i % hatColors.length],
-          size: 2.8,
-          state: 'dancing', // 'dancing', 'squashed', 'fleeing'
-          fleeSpeed: 6 + Math.random() * 5,
-          fleeDir: (i < count / 2) ? -1 : 1
-        });
-      }
-
-      // Mouse down for squashing AND dragging
-      canvas.onmousedown = handleAntMouseDown;
-
-      function handleAntMouseDown(e) {
-        if (!isAntPartyActive) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        const clickX = (e.clientX - rect.left) * scaleX;
-        const clickY = (e.clientY - rect.top) * scaleY;
-
-        // If not squashed yet: find and squash nearest dancing ant
-        if (!isAntSquashed) {
-          let hitAnt = null;
-          let minDist = 36;
-
-          localAnts.forEach(ant => {
-            if (ant.state !== 'dancing') return;
-            const dist = Math.hypot(ant.currentX - clickX, ant.currentY - clickY);
-            if (dist < minDist) {
-              minDist = dist;
-              hitAnt = ant;
-            }
-          });
-
-          if (hitAnt) {
-            isAntSquashed = true;
-            hitAnt.state = 'squashed';
-
-            squashedSplat = {
-              x: hitAnt.currentX,
-              y: hitAnt.currentY,
-              hatColor: hitAnt.hatColor,
-              canvasRect: rect,
-              particles: Array.from({ length: 18 }, () => {
-                const a = Math.random() * Math.PI * 2;
-                const spd = 1.5 + Math.random() * 4;
-                return {
-                  x: hitAnt.currentX,
-                  y: hitAnt.currentY,
-                  vx: Math.cos(a) * spd,
-                  vy: Math.sin(a) * spd,
-                  r: 1 + Math.random() * 2,
-                  alpha: 1
-                };
-              })
-            };
-
-            // Panic flee for others
-            localAnts.forEach(ant => {
-              if (ant.state === 'dancing') {
-                ant.state = 'fleeing';
-                ant.fleeDir = (ant.currentX < hitAnt.currentX) ? -1 : 1;
-                ant.fleeSpeed = 8 + Math.random() * 6;
-              }
-            });
-
-            if (msgEl) {
-              msgEl.className = 'ants-happy-msg squashed';
-              msgEl.innerHTML = '&#9888; YOU SQUASHED IT! &#9888;';
-            }
-
-            // Immediately pick it up for dragging
-            startDraggingSquashedAnt(e.clientX, e.clientY);
+          if (!window.isCardBroken) {
+            tiltPortrait.classList.remove('kickflipping');
+            tiltPortrait.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
           }
-        } else if (squashedSplat) {
-          // If already squashed, check if user clicked on the pancake splat to pick it up again
-          const distToSplat = Math.hypot(squashedSplat.x - clickX, squashedSplat.y - clickY);
-          if (distToSplat < 28) {
-            startDraggingSquashedAnt(e.clientX, e.clientY);
-          }
-        }
+          isKickflipping = false;
+        }, 1250);
+      });
+
+      // Broken panel stays right in place and allows user to drag it
+      function enableBrokenCardDragging() {
+        tiltPortrait.style.cursor = 'grab';
+        tiltPortrait.addEventListener('pointerdown', startScreenDrag);
       }
 
-      function startDraggingSquashedAnt(clientX, clientY) {
-        isDraggingSquashedAnt = true;
-        const ghost = document.getElementById('dragAntGhost');
-        const dragHat = document.getElementById('dragAntHat');
-        if (ghost && squashedSplat) {
-          if (dragHat) dragHat.setAttribute('fill', squashedSplat.hatColor);
-          ghost.classList.add('active');
-          ghost.style.left = `${clientX}px`;
-          ghost.style.top = `${clientY}px`;
-        }
-        window.addEventListener('mousemove', onGlobalAntDrag);
-        window.addEventListener('mouseup', onGlobalAntDrop);
+      let isPanelAttachedToBody = false;
+
+      function attachBrokenPanelToBody(e) {
+        if (isPanelAttachedToBody) return;
+        isPanelAttachedToBody = true;
+
+        const rect = tiltPortrait.getBoundingClientRect();
+        tiltPortrait.style.position = 'fixed';
+        tiltPortrait.style.left = `${rect.left}px`;
+        tiltPortrait.style.top = `${rect.top}px`;
+        tiltPortrait.style.width = `${rect.width}px`;
+        tiltPortrait.style.height = `${rect.height}px`;
+        tiltPortrait.style.margin = '0';
+        tiltPortrait.style.zIndex = '999999';
+        document.body.appendChild(tiltPortrait);
       }
 
-      function onGlobalAntDrag(e) {
-        if (!isDraggingSquashedAnt) return;
-        const ghost = document.getElementById('dragAntGhost');
-        if (ghost) {
-          ghost.style.left = `${e.clientX}px`;
-          ghost.style.top = `${e.clientY}px`;
+      const trashCrew = document.getElementById('antTrashCrew');
+      const trashBin = document.getElementById('trashDropzone');
+      const crewSpeech = document.getElementById('antCrewSpeech');
+
+      function summonAntTrashCrew() {
+        if (trashCrew) {
+          trashCrew.classList.remove('marching-out');
+          trashCrew.classList.add('marching-in');
         }
-
-        // Check if dragged over the broken diamond puddle
-        checkPuddleResurrection(e.clientX, e.clientY);
-      }
-
-      function onGlobalAntDrop(e) {
-        if (!isDraggingSquashedAnt) return;
-        isDraggingSquashedAnt = false;
-        window.removeEventListener('mousemove', onGlobalAntDrag);
-        window.removeEventListener('mouseup', onGlobalAntDrop);
-
-        // Check if dropped directly inside the puddle
-        const resurrected = checkPuddleResurrection(e.clientX, e.clientY);
-
-        const ghost = document.getElementById('dragAntGhost');
-        if (ghost && !resurrected) {
-          ghost.classList.remove('active');
-        }
-      }
-
-      function checkPuddleResurrection(clientX, clientY) {
-        const puddle = document.getElementById('floorPuddle');
-        if (!puddle || !isDiamondBroken) return false;
-
-        const rect = puddle.getBoundingClientRect();
-        // Check collision with the floor puddle (giving generous generous radius)
-        const inPuddle = (
-          clientX >= rect.left - 30 &&
-          clientX <= rect.right + 30 &&
-          clientY >= rect.top - 30 &&
-          clientY <= rect.bottom + 30
-        );
-
-        if (inPuddle) {
-          resurrectAnt(clientX, clientY);
-          return true;
-        }
-        return false;
-      }
-
-      function resurrectAnt(spawnX, spawnY) {
-        isDraggingSquashedAnt = false;
-        window.removeEventListener('mousemove', onGlobalAntDrag);
-        window.removeEventListener('mouseup', onGlobalAntDrop);
-
-        const ghost = document.getElementById('dragAntGhost');
-        if (ghost) ghost.classList.remove('active');
-
-        // Hide squashed pancake
-        squashedSplat = null;
-
-        // Change text strictly to "Huh?" with no emojis
-        const msgEl = document.getElementById('antsHappyMsg');
-        if (msgEl) {
-          msgEl.className = 'ants-happy-msg revived';
-          msgEl.textContent = 'Huh?';
-        }
-
-        // Spawn revived ant with paced steps, pause, and motorbike getaway
-        spawnRevivedAnt(spawnX, spawnY);
-      }
-
-      function spawnRevivedAnt(startX, startY) {
-        const actor = document.createElement('div');
-        actor.style.position = 'fixed';
-        actor.style.left = `${startX}px`;
-        actor.style.top = `${startY}px`;
-        actor.style.zIndex = '99999';
-        actor.style.pointerEvents = 'none';
-        actor.style.transition = 'none';
-        actor.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,0.6))';
-
-        // Stage 1 Ant SVG (Paced runner)
-        const antRunnerHTML = `
-          <svg width="34" height="26" viewBox="0 0 34 26" style="display:block;">
-            <!-- Legs -->
-            <path d="M7,14 L3,19 M13,14 L11,20 M19,14 L17,19 M23,14 L25,19 M15,14 L18,20 M9,14 L6,19" stroke="#374151" stroke-width="1.6" stroke-linecap="round" />
-            <!-- Abdomen -->
-            <ellipse cx="8" cy="12" rx="6" ry="4.5" fill="#111827" />
-            <!-- Thorax -->
-            <ellipse cx="16" cy="12" rx="4" ry="3.5" fill="#1f2937" />
-            <!-- Head -->
-            <ellipse cx="23" cy="11" rx="3.8" ry="3.8" fill="#111827" />
-            <!-- Antennae -->
-            <path d="M25,9 L28,4 M24,9 L27,3" stroke="#ffaa00" stroke-width="1.2" stroke-linecap="round" />
-            <!-- Tiny Cone Hat -->
-            <polygon points="21,9 25,9 23,2" fill="#ff0055" />
-            <circle cx="23" cy="1.5" r="1" fill="#ffffff" />
-          </svg>
-        `;
-
-        // Stage 2 Ant riding a badass little Motorbike SVG
-        const antMotorbikeHTML = `
-          <svg width="56" height="38" viewBox="0 0 56 38" style="display:block;">
-            <!-- Rear Wheel -->
-            <circle cx="11" cy="27" r="8" fill="#111827" stroke="#9ca3af" stroke-width="2.5" />
-            <circle cx="11" cy="27" r="3.5" fill="#d1d5db" />
-            <!-- Front Wheel -->
-            <circle cx="45" cy="27" r="8" fill="#111827" stroke="#9ca3af" stroke-width="2.5" />
-            <circle cx="45" cy="27" r="3.5" fill="#d1d5db" />
-            <!-- Frame & Exhaust -->
-            <path d="M11,27 L25,27 L33,21 L45,27 M25,27 L27,18 L38,18 L43,24" stroke="#ff6a00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <path d="M14,28 L28,29" stroke="#9ca3af" stroke-width="2" />
-            <circle cx="8" cy="29" r="2" fill="rgba(255,106,0,0.8)" />
-            <!-- Handlebars & Headlight -->
-            <path d="M38,18 L42,12 L39,11" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" />
-            <circle cx="46" cy="19" r="2.5" fill="#00f0ff" filter="drop-shadow(0 0 4px #00f0ff)" />
-            <!-- Ant Rider on top -->
-            <!-- Abdomen -->
-            <ellipse cx="21" cy="15" rx="5" ry="3.5" fill="#111827" />
-            <!-- Thorax -->
-            <ellipse cx="27" cy="14" rx="3.5" ry="3" fill="#1f2937" />
-            <!-- Head with helmet/hat -->
-            <ellipse cx="32" cy="12" rx="3.5" ry="3.5" fill="#111827" />
-            <polygon points="30,10 34,10 32,3" fill="#ff0055" />
-            <circle cx="32" cy="2.5" r="0.9" fill="#fff" />
-            <!-- Ant Arms on handlebars -->
-            <path d="M28,14 L39,12" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" />
-            <!-- Ant Legs on pedals -->
-            <path d="M24,16 L27,23" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" />
-          </svg>
-        `;
-
-        actor.innerHTML = antRunnerHTML;
-        document.body.appendChild(actor);
-
-        // Sequence:
-        // 1. Walk out slowly from the puddle (speed ~2.5px/frame for ~100px)
-        // 2. Quick pause (looks around for ~600ms)
-        // 3. Mounts motorbike!
-        // 4. Revs and zooms smoothly away across the floor/screen!
-
-        let posX = startX;
-        let posY = startY - 14;
-        let walkStep = 0;
-        const walkTargetX = startX + (startX < window.innerWidth / 2 ? 80 : -80);
-        const walkDir = walkTargetX > startX ? 1 : -1;
-
-        if (walkDir < 0) {
-          actor.style.transform = 'scaleX(-1)';
-        }
-
-        function walkPaced() {
-          walkStep += 0.25;
-          posX += walkDir * 2.2; // Slow, natural paced scamper
-          posY += Math.sin(walkStep * 2) * 1.5;
-
-          actor.style.left = `${posX}px`;
-          actor.style.top = `${posY}px`;
-
-          const distanceWalked = Math.abs(posX - startX);
-          if (distanceWalked < 85) {
-            requestAnimationFrame(walkPaced);
-          } else {
-            // Reached checkpoint: Quick pause!
-            pauseMoment();
-          }
-        }
-
-        function pauseMoment() {
-          // Subtle curious wobble while looking around
-          let pauseFrames = 0;
-          function pauseLoop() {
-            pauseFrames++;
-            actor.style.transform = (walkDir < 0 ? 'scaleX(-1) ' : '') + `rotate(${Math.sin(pauseFrames * 0.2) * 5}deg)`;
-            if (pauseFrames < 35) {
-              requestAnimationFrame(pauseLoop);
-            } else {
-              mountMotorbike();
-            }
-          }
-          requestAnimationFrame(pauseLoop);
-        }
-
-        function mountMotorbike() {
-          // Switch sprite to Ant riding Motorbike
-          actor.innerHTML = antMotorbikeHTML;
-          actor.style.transform = walkDir < 0 ? 'scaleX(-1)' : 'scaleX(1)';
-
-          // Brief engine rev hesitation
-          setTimeout(() => {
-            let bikeSpeed = 3;
-            let bikeAccel = 0.45;
-            let exhaustParticles = [];
-
-            function rideAway() {
-              bikeSpeed += bikeAccel;
-              posX += walkDir * bikeSpeed;
-              // Minor road bump vibration
-              posY += (Math.random() - 0.5) * 1.2;
-
-              actor.style.left = `${posX}px`;
-              actor.style.top = `${posY}px`;
-              actor.style.transform = (walkDir < 0 ? 'scaleX(-1) ' : '') + `rotate(${walkDir * (bikeSpeed * 0.4)}deg)`;
-
-              // Continue until well off the screen
-              if (posX > -120 && posX < window.innerWidth + 120) {
-                requestAnimationFrame(rideAway);
-              } else {
-                actor.remove();
-              }
-            }
-
-            requestAnimationFrame(rideAway);
-          }, 250);
-        }
-
-        requestAnimationFrame(walkPaced);
-      }
-
-      function renderAntDance() {
-        if (!isAntPartyActive) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Render Squashed Splat Mark on the stage canvas
-        if (squashedSplat && !isDraggingSquashedAnt) {
-          ctx.save();
-          ctx.fillStyle = 'rgba(20, 24, 34, 0.88)';
-          ctx.beginPath();
-          ctx.ellipse(squashedSplat.x, squashedSplat.y + 4, 9, 3.5, 0, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = squashedSplat.hatColor;
-          ctx.beginPath();
-          ctx.ellipse(squashedSplat.x - 3, squashedSplat.y + 2, 4, 1.8, -0.4, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Particle puffs
-          squashedSplat.particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vx *= 0.92;
-            p.vy *= 0.92;
-            p.alpha -= 0.025;
-            if (p.alpha > 0) {
-              ctx.fillStyle = `rgba(80, 90, 110, ${p.alpha})`;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-              ctx.fill();
-            }
-         }
       }
 
       function marchAntsAwayWithTrash() {
