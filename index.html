@@ -4513,6 +4513,32 @@
     .product-image-wrap::after {
       border-radius: 12px;
     }
+
+    /* =========================================================================
+       COMIC INK BUTTONS: heavy ink edge and hard comic-style label shadow.
+       Additive only: press, spring and grounding behaviour are unchanged.
+       ========================================================================= */
+    button:not(.like-btn):not(.studio-passcode-toggle) {
+      outline: 2px solid #0b0b10;
+      outline-offset: -3px;
+      text-shadow: 2px 2px 0 #0b0b10;
+    }
+
+    /* =========================================================================
+       FULL-SCREEN LAYOUT: sections and header run edge to edge.
+       Content inside each section stays capped at 1300px so it stays readable.
+       ========================================================================= */
+    section {
+      max-width: none;
+    }
+    section:not(.hero) > * {
+      max-width: 1300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-container {
+      max-width: none;
+    }
   </style>
 </head>
 <body>
