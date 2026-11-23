@@ -5117,9 +5117,21 @@
        Not yet checked on a real phone.
        ========================================================================= */
     @media (max-width: 550px) {
-      .nav-container { flex-wrap: wrap; row-gap: 0.7rem; padding: 0.85rem 1rem; }
-      .nav-right { width: 100%; justify-content: space-between; gap: 1rem; }
-      .nav-links { gap: 1rem; flex-wrap: wrap; }
+      /* Header: logo and cart on the first row, the four links in one row below */
+      .nav-container {
+        display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo cart" "nav nav";
+        align-items: center; row-gap: 0.55rem; padding: 0.7rem 1rem;
+      }
+      .nav-container > .logo-badge { grid-area: logo; min-width: 0; }
+      .nav-container > .nav-right { display: contents; }
+      .nav-right .cart-trigger-btn { grid-area: cart; justify-self: end; }
+      .nav-right .nav-links {
+        grid-area: nav; display: flex; justify-content: space-between; align-items: center;
+        flex-wrap: nowrap; gap: 0.25rem; margin: 0; padding: 0;
+      }
+      .nav-links a { padding: 12px 2px; font-size: 0.72rem; letter-spacing: 0.1em; white-space: nowrap; }
+      /* Back-to-top sits above the bottom browser bar and clear of the content */
+      .back-to-top { right: 12px; bottom: 92px; width: 40px; height: 40px; }
       .hero .hero-hud-frame { padding: 2.25rem 1.25rem; }
       .availability-section { padding: 3rem 1rem; }
       .avail-cal, .avail-panel { padding: 1rem; }
