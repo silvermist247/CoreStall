@@ -10,6 +10,7 @@
   <meta property="og:title" content="Seth Barton / CoreStall: Action & Digital Media Vault">
   <meta property="og:description" content="Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.">
   <meta name="twitter:card" content="summary">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0a12'/%3E%3Cpath d='M8 2 L14 8 L8 14 L2 8 Z' fill='%23ff6a00'/%3E%3C/svg%3E">
   <style>
     /* Reset & Base Variables */
@@ -4484,7 +4485,8 @@
         transition-duration: 0.001ms !important;
         scroll-behavior: auto !important;
       }
-      #sparksCanvas, #spaceCanvas, #antsLocalCanvas { display: none !important; }
+      /* Galaxy and ants stay visible under Reduce Motion (user request). Sparks still hide. */
+      #sparksCanvas { display: none !important; }
     }
 
     /* =========================================================================
@@ -8691,7 +8693,7 @@
       }
 
       // Animate only while the hero is on screen, and not at all under reduced motion (the canvas is hidden then)
-      const spaceReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      const spaceReduce = false; /* galaxy keeps running under Reduce Motion (user request) */
       let heroVisible = true;
       let spaceLoopOn = false;
       if ('IntersectionObserver' in window && heroEl) {
