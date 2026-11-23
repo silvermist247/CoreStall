@@ -5308,6 +5308,11 @@
     /* SIDEWAYS SCROLL BAR: hidden on the phone product row. Swiping still works. */
     .shop-grid { scrollbar-width: none; }
     .shop-grid::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  
+    /* PAGE SCROLL BAR: the right-hand bar is hidden on desktop and phone. The page still
+       scrolls with the mouse wheel, trackpad, touch and keyboard. The top progress line stays. */
+    html, body { scrollbar-width: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
