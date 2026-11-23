@@ -5112,85 +5112,27 @@
     .availability-section .avail-cal .avail-day:focus-visible,
     .availability-section .avail-cal .avail-nav:focus-visible,
     .availability-section .avail-panel .avail-jump:focus-visible { outline: 2px solid var(--hazard-orange); outline-offset: 2px; }
+    /* =========================================================================
+       PHONE PASS (under 550px): the header wraps to two rows and the panels are tighter.
+       Not yet checked on a real phone.
+       ========================================================================= */
+    @media (max-width: 550px) {
+      .nav-container { flex-wrap: wrap; row-gap: 0.7rem; padding: 0.85rem 1rem; }
+      .nav-right { width: 100%; justify-content: space-between; gap: 1rem; }
+      .nav-links { gap: 1rem; flex-wrap: wrap; }
+      .hero .hero-hud-frame { padding: 2.25rem 1.25rem; }
+      .availability-section { padding: 3rem 1rem; }
+      .avail-cal, .avail-panel { padding: 1rem; }
+      .avail-dow, .avail-grid { gap: 4px; }
+    }
+    /* PERFORMANCE 1: looping animations pause while their section is off screen,
+       and everything in the page pauses while the tab is hidden. */
+    .anim-paused *, .tab-hidden #pageContent * { animation-play-state: paused !important; }
   </style>
-  <!-- Desktop-only gate: phones are shown a notice instead of the site -->
-  <style>
-    html.phone-blocked body > *:not(#phoneGate) { display: none !important; }
-    #phoneGate { display: none; }
-    html.phone-blocked #phoneGate {
-      display: flex;
-      position: fixed;
-      inset: 0;
-      z-index: 2147483647;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background: #05080d;
-      font-family: var(--font-mono, monospace);
-      text-align: center;
-      color: #ffe3b0;
-    }
-    html.phone-blocked body { background: #05080d; overflow: hidden; }
-    .phone-gate-card {
-      max-width: 420px;
-      border: 2px solid #b8893a;
-      background: linear-gradient(180deg, #2a1d12 0%, #140d07 100%);
-      padding: 2rem 1.5rem;
-      box-shadow: inset 0 0 0 2px #140d07, inset 0 0 0 3px #b8893a;
-    }
-    .phone-gate-icon { font-size: 1.6rem; font-weight: 800; color: #ff8a1f; margin-bottom: 0.75rem; letter-spacing: 0.1em; }
-    .phone-gate-card h1 { font-size: 1.15rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.9rem; color: #f0d08a; }
-    .phone-gate-card p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem; }
-    .phone-gate-btn {
-      font-family: inherit;
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
-      color: #ffe3b0;
-      background: #2a1d12;
-      border: 1px solid #b8893a;
-      padding: 0.7rem 1.2rem;
-      cursor: pointer;
-    }
-  </style>
-  <script>
-    (function () {
-      var phoneAgent = /Android.+Mobile|iPhone|iPod|Windows Phone|Mobi/i.test(navigator.userAgent || '');
-      var mq = window.matchMedia ? window.matchMedia('(pointer: coarse) and (max-width: 900px)') : null;
-      function apply() {
-        var blocked = phoneAgent || (mq && mq.matches);
-        document.documentElement.classList.toggle('phone-blocked', !!blocked);
-      }
-      apply();
-      if (mq && mq.addEventListener) mq.addEventListener('change', apply);
-    })();
-  </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
 <body>
   <a class="skip-link" href="#media">Skip to the gallery</a>
-
-  <div id="phoneGate" role="alert" aria-live="assertive">
-    <div class="phone-gate-card">
-      <div class="phone-gate-icon">[ DESKTOP ONLY ]</div>
-      <h1>Please switch to a laptop or PC</h1>
-      <p>This CoreStall portfolio is built for desktop and is not available on phones. Open this link on a laptop or PC to browse the gallery and download media.</p>
-      <button type="button" class="phone-gate-btn" id="phoneGateCopy">COPY LINK</button>
-    </div>
-  </div>
-  <script>
-    (function () {
-      var btn = document.getElementById('phoneGateCopy');
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var url = window.location.href;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function () { btn.textContent = 'LINK COPIED'; }, function () { btn.textContent = url; });
-        } else {
-          btn.textContent = url;
-        }
-      });
-    })();
-  </script>
 
   <!-- Ant Crew Trash Removal Squad -->
   <div id="antTrashCrew" class="ant-trash-crew">
@@ -14629,6 +14571,25 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
     renderMonth();
     renderPanel();
+  })();
+  </script>
+  <script>
+  // PERFORMANCE 1: pause looping CSS animations in sections that are off screen,
+  // and in the whole page while the tab is hidden. Resumes automatically.
+  (function () {
+    var root = document.documentElement;
+    var targets = document.querySelectorAll('#pageContent > section, #pageContent > footer');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          entry.target.classList.toggle('anim-paused', !entry.isIntersecting);
+        });
+      }, { rootMargin: '200px 0px' });
+      targets.forEach(function (t) { io.observe(t); });
+    }
+    function tabCheck() { root.classList.toggle('tab-hidden', !!document.hidden); }
+    document.addEventListener('visibilitychange', tabCheck);
+    tabCheck();
   })();
   </script>
 </body>
