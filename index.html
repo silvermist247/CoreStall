@@ -5210,6 +5210,38 @@
     .nav-links a.is-active, .nav-links a[aria-current="true"] { color: var(--hazard-orange); box-shadow: inset 0 -3px 0 var(--hazard-orange); }
     /* q07 footer: flat, no shadow */
     footer { background: #151920; box-shadow: none; }
+    /* =========================================================================
+       REMAINING PICKS (q01-q21). Phone and desktop.
+       ========================================================================= */
+    /* Button text: white on a deeper teal (was near-black) */
+    .btn, .btn .btn-core { background: #0f7f75 !important; color: #ffffff !important; border-color: #0f7f75 !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35) !important; }
+    .btn:hover, .btn:hover .btn-core { color: #ffffff !important; }
+    /* q19 toast */
+    .site-toast { background: #1f252f !important; border: 1px solid #2e3442 !important; border-radius: 999px !important; color: #ffffff !important; box-shadow: none !important; }
+    .site-toast::before { content: "\2713"; color: var(--hazard-orange); font-weight: 700; margin-right: 0.5rem; }
+    /* q12 contact tiles */
+    .contact-card { background: #1f252f; border: none; border-radius: 14px; }
+    .contact-card span { color: var(--hazard-orange); }
+    /* q13 section divider */
+    .pick-divider { position: relative; height: 1px; width: min(70%, 720px); margin: 2.5rem auto; background: linear-gradient(90deg, transparent, var(--hazard-orange), transparent); }
+    .pick-divider::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; background: var(--hazard-orange); transform: translate(-50%, -50%) rotate(45deg); }
+    /* q14 category icons */
+    .cat-icon { flex: none; }
+    /* q20 scroll cue: teal chevron */
+    .hero-scroll-cue i { color: var(--hazard-orange); }
+    /* q21 hero background: soft teal glow top right */
+    .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 92% 0%, rgba(46, 196, 182, 0.22), transparent 55%); }
+    /* q17 booked tag and legend pills */
+    .avail-legend span { border: 1px solid #2e3442; border-radius: 999px; padding: 0.3rem 0.7rem; }
+    .av-free { background: transparent; border: 1.5px solid var(--hazard-orange); }
+    .av-booked { background: #f0924a; }
+    /* q18 call-to-action block */
+    .pick-cta { padding: 3rem 1.25rem; text-align: center; background: #1b2029; }
+    .pick-cta h2 { font-size: 1.6rem; letter-spacing: 0.04em; color: #ffffff; margin: 0 0 0.6rem; }
+    .pick-cta p { color: #b8c0cc; margin: 0 0 1.4rem; }
+    /* q10 upload zone */
+    .studio-dropzone { border: 2px dashed #5b6372 !important; background: #1b2029 !important; border-radius: 14px; }
+    .studio-dropzone:hover, .studio-dropzone.dragover { border-color: var(--hazard-orange) !important; }
     /* PERFORMANCE 1: looping animations pause while their section is off screen,
        and everything in the page pauses while the tab is hidden. */
     .anim-paused *, .tab-hidden #pageContent * { animation-play-state: paused !important; }
@@ -5388,6 +5420,7 @@
     </section>
 
     <!-- Digital Media & Category Filter Section -->
+    <div class="pick-divider" aria-hidden="true"></div>
     <section id="media">
       <div class="section-header">
         <span class="section-tag">[ DIGITAL ASSET VAULT ]</span>
@@ -5400,10 +5433,10 @@
         <!-- Primary MediaType Filters -->
         <div class="primary-filters">
           <button class="filter-btn active" onclick="filterCategory('all', this)"><span class="btn-core">All Media</span></button>
-          <button class="filter-btn" onclick="filterCategory('action', this)"><span class="btn-core">Action</span></button>
-          <button class="filter-btn" onclick="filterCategory('wildlife', this)"><span class="btn-core">Wildlife</span></button>
-          <button class="filter-btn" onclick="filterCategory('landscape', this)"><span class="btn-core">Landscape</span></button>
-          <button class="filter-btn" onclick="filterCategory('drone', this)"><span class="btn-core">Drone Footage</span></button>
+          <button class="filter-btn" onclick="filterCategory('action', this)"><span class="btn-core"><svg class="cat-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="3" r="1.5"/><path d="M8 6 6 9l3 2-1 4M6 9 3 10M10 7l3 0"/></svg>Action</span></button>
+          <button class="filter-btn" onclick="filterCategory('wildlife', this)"><span class="btn-core"><svg class="cat-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9c2-4 6-5 9-3l2-1-1 2c0 4-3 6-7 6-2 0-3-1-3-4z"/></svg>Wildlife</span></button>
+          <button class="filter-btn" onclick="filterCategory('landscape', this)"><span class="btn-core"><svg class="cat-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 14 6 5l3 5 2-3 4 7z"/></svg>Landscape</span></button>
+          <button class="filter-btn" onclick="filterCategory('drone', this)"><span class="btn-core"><svg class="cat-icon" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="3" cy="4" r="1.6"/><circle cx="13" cy="4" r="1.6"/><circle cx="3" cy="12" r="1.6"/><circle cx="13" cy="12" r="1.6"/><path d="M4.5 5.5 6.5 7M11.5 5.5 9.5 7M4.5 10.5 6.5 9M11.5 10.5 9.5 9"/><rect x="6.5" y="7" width="3" height="2"/></svg>Drone Footage</span></button>
         </div>
 
         <!-- STACKED WP XCO EXPANDER HUB (WITH CUSTOM COLOR SPARKS) -->
@@ -5744,6 +5777,7 @@
 
     <!-- Contact Section -->
     <!-- AVAILABILITY: a client picks a date and sees whether it is free -->
+    <div class="pick-divider" aria-hidden="true"></div>
     <section id="availability" class="availability-section">
       <div class="section-header">
         <span class="section-tag">[ AVAILABILITY ]</span>
@@ -5810,6 +5844,12 @@
         </div>
 
       </div>
+    </section>
+
+    <section class="pick-cta" aria-label="Licence enquiry">
+      <h2>READY TO LICENSE A SHOT?</h2>
+      <p>Pick a photo and email for a quote.</p>
+      <a href="#media" class="btn">Browse the library</a>
     </section>
 
     <!-- Footer -->
