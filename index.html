@@ -5299,6 +5299,15 @@
     @media (min-width: 551px) {
       .footer-legal { display: list-item; }
     }
+  
+    /* CART POSITION (desktop): the header had a backdrop blur, and a blur makes the header
+       the containing block for fixed children, so the cart sat at the top-left.
+       The header blur is removed so the cart floats bottom-left in the viewport. */
+    header, header.is-scrolled { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+    /* SIDEWAYS SCROLL BAR: hidden on the phone product row. Swiping still works. */
+    .shop-grid { scrollbar-width: none; }
+    .shop-grid::-webkit-scrollbar { display: none; width: 0; height: 0; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
