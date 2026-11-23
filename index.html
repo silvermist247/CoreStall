@@ -5189,6 +5189,27 @@
       /* Hidden Deep touch buttons: bigger, kept to the bottom corners */
       .world-touch-btn { min-width: 84px; min-height: 76px; }
     }
+    /* =========================================================================
+       DESIGN PICKS (image questions q01-q21 and button choice A).
+       Applies to phone and desktop. Colour and styling only; layout unchanged.
+       ========================================================================= */
+    :root {
+      --bg-void: #151920; --bg-surface: #1b2029; --bg-card: #1f252f;
+      --hazard-orange: #2ec4b6; --text-industrial: #8e98a8;
+    }
+    /* q04 filters: teal fill when active, plain outline otherwise */
+    .filter-btn { background: transparent; border: 1px solid #5b6372; box-shadow: none; }
+    .filter-btn.active { background: var(--hazard-orange); border-color: var(--hazard-orange); color: #0b0d10; }
+    /* q05 hero card: flat panel with a thin teal border */
+    .hero-hud-frame { background: #1b2029; background-image: none; border: 1px solid var(--hazard-orange); box-shadow: none; }
+    /* Button choice A: solid teal pipe */
+    .btn { background: var(--hazard-orange); color: #0b0d10; border-color: var(--hazard-orange); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25); }
+    /* q06 calendar: square outline on the selected day */
+    .avail-day.av-selected { background: transparent; outline: 2px solid var(--hazard-orange); outline-offset: -2px; }
+    /* q16 nav: teal text and underline on the current page */
+    .nav-links a.is-active, .nav-links a[aria-current="true"] { color: var(--hazard-orange); box-shadow: inset 0 -3px 0 var(--hazard-orange); }
+    /* q07 footer: flat, no shadow */
+    footer { background: #151920; box-shadow: none; }
     /* PERFORMANCE 1: looping animations pause while their section is off screen,
        and everything in the page pauses while the tab is hidden. */
     .anim-paused *, .tab-hidden #pageContent * { animation-play-state: paused !important; }
