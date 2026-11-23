@@ -5293,6 +5293,12 @@
     @media (min-width: 551px) {
       .nav-right .cart-trigger-btn { position: fixed; left: 24px; bottom: 24px; z-index: 90; min-height: 48px; padding: 0.7rem 1.2rem; }
     }
+  
+    /* LEGAL LINKS: License and Privacy show in the footer on desktop only (phones keep the three original links) */
+    .footer-legal { display: none; }
+    @media (min-width: 551px) {
+      .footer-legal { display: list-item; }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5908,6 +5914,8 @@
           <li><a href="mailto:lionbarton@gmail.com">Email</a></li>
           <li><a href="tel:+27607073275">Phone</a></li>
           <li><a href="https://instagram.com/corestall" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li class="footer-legal"><a href="license.html">License</a></li>
+          <li class="footer-legal"><a href="privacy.html">Privacy</a></li>
         </ul>
         <p class="copyright">&copy; 2026 Seth Barton &bull; All Rights Reserved</p>
       </div>
