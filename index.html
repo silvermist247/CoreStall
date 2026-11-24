@@ -5402,6 +5402,12 @@
       .primary-filters .filter-btn { width: 100%; justify-content: center; }
       .primary-filters .filter-btn:first-child { grid-column: 1 / -1; }
     }
+  
+    /* PHONE CATEGORY SPACING: the hero category pills and the library filter buttons get more room between them */
+    @media (max-width: 550px) {
+      .hero .hero-cats { gap: 1rem 1.25rem; }
+      .primary-filters { gap: 16px; }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
