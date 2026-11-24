@@ -5291,7 +5291,7 @@
     .cart-trigger-btn { background: #2a2f3a !important; border: 1px solid #3a404e !important; color: #ffffff !important; border-radius: 999px !important; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55) !important; }
     .cart-trigger-btn .cart-count-badge { position: relative; top: -10px; right: -6px; margin-left: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #2ec4b6; color: #0b0d10; box-shadow: none; font-size: 0.7rem; }
     @media (min-width: 551px) {
-      .nav-right .cart-trigger-btn { position: fixed; left: 24px; bottom: 24px; z-index: 90; min-height: 48px; padding: 0.7rem 1.2rem; }
+      .nav-right .cart-trigger-btn { position: static; min-height: 44px; padding: 0.6rem 1.1rem; }
     }
   
     /* LEGAL LINKS: License and Privacy show in the footer on desktop only (phones keep the three original links) */
@@ -5328,16 +5328,6 @@
       content: ""; position: absolute; inset: 6px;
       border: 1px solid rgba(216, 201, 163, 0.5); border-radius: 10px; pointer-events: none;
     }
-    .hero .hero-hud-frame::after {
-      content: ""; position: absolute; left: 18px; right: 18px; top: -1px; height: 3px;
-      border-radius: 0 0 3px 3px; background: #7aa2f7; pointer-events: none;
-    }
-    .hero {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.14' stroke-width='1.2'%3E%3Ccircle cx='400' cy='400' r='360'/%3E%3Ccircle cx='400' cy='400' r='332'/%3E%3Ccircle cx='400' cy='400' r='250' stroke-dasharray='2 10'/%3E%3Cpolygon points='400,90 668,556 132,556'/%3E%3Cpolygon points='400,710 132,244 668,244'/%3E%3C/g%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: center 42%;
-      background-size: min(820px, 120vw) auto;
-    }
   
     /* GAP FIX: the hero's bottom padding was 8rem, and a divider sat in the space above the library.
        The divider above the library is removed and the hero gap is tightened. */
@@ -5350,6 +5340,37 @@
     .pick-cta > * { margin-left: auto !important; margin-right: auto !important; max-width: 100%; }
     .pick-cta h2, .pick-cta p { width: 100%; text-align: center; }
     .pick-cta .btn { align-self: center; }
+  
+    /* =========================================================================
+       HERO SIGIL AND EDGE (interactive). Hover the frame line: the sigil circles glow
+       a faint fire orange. Click the frame line: the lines glow until the page is refreshed.
+       Nothing is saved, so a refresh resets it.
+       ========================================================================= */
+    .hero-sigil {
+      position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
+      width: min(820px, 120vw); height: min(820px, 120vw);
+      pointer-events: none; z-index: 0;
+    }
+    .hero-sigil svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .hero-sigil g { stroke: rgb(216, 201, 163); stroke-opacity: 0.14; transition: stroke 0.4s ease, stroke-opacity 0.4s ease, filter 0.4s ease; }
+    .hero-sigil.is-hot g { stroke: rgb(255, 122, 42); stroke-opacity: 0.42; filter: drop-shadow(0 0 6px rgba(255, 122, 42, 0.45)); }
+    .hero-edge {
+      position: absolute; inset: -3px; border: 9px solid transparent; border-radius: inherit;
+      z-index: 16; cursor: pointer;
+    }
+    .hero .hero-hud-frame.edge-lit {
+      border-color: rgba(240, 214, 160, 0.95) !important;
+      border-top-color: rgba(240, 214, 160, 0.95) !important;
+      border-bottom-color: rgba(240, 214, 160, 0.95) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(240, 214, 160, 0.35), 0 0 22px rgba(240, 214, 160, 0.45), inset 0 0 40px rgba(122, 162, 247, 0.05) !important;
+    }
+    .hero .hero-hud-frame.edge-lit::before {
+      border-color: rgba(240, 214, 160, 0.95);
+      box-shadow: 0 0 12px rgba(240, 214, 160, 0.5);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-sigil g { transition: none; }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5503,10 +5524,12 @@
 
     <!-- Hero Section with Floating Space, Stars & Celestial Objects -->
     <section class="hero" id="hero">
+      <div class="hero-sigil" aria-hidden="true"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.14' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg></div>
       <canvas id="spaceCanvas" aria-hidden="true"></canvas>
       <div class="space-nebula-glow"></div>
 
       <div class="hero-hud-frame">
+        <span class="hero-edge" aria-hidden="true"></span>
         <div class="hero-tag">[ DIGITAL LICENSING // HIGH-RES MEDIA ]</div>
         <h1>Seth Barton</h1>
         <div class="hero-sub">// Action &amp; wildlife photographer</div>
@@ -14831,5 +14854,17 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       document.querySelectorAll('img:not([loading])').forEach(function (img) { img.loading = 'lazy'; });
     })();
   </script>
+<script>
+/* Hero edge: hover glows the sigil (faint fire orange); click keeps the frame lines lit until refresh. */
+(function () {
+  var frame = document.querySelector('.hero-hud-frame');
+  var sigil = document.querySelector('.hero-sigil');
+  var edge = document.querySelector('.hero-edge');
+  if (!frame || !sigil || !edge) return;
+  edge.addEventListener('mouseenter', function () { sigil.classList.add('is-hot'); });
+  edge.addEventListener('mouseleave', function () { sigil.classList.remove('is-hot'); });
+  edge.addEventListener('click', function () { frame.classList.add('edge-lit'); sigil.classList.add('is-hot'); });
+})();
+</script>
 </body>
 </html>
