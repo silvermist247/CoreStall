@@ -5313,6 +5313,43 @@
        scrolls with the mouse wheel, trackpad, touch and keyboard. The top progress line stays. */
     html, body { scrollbar-width: none; }
     html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  
+    /* =========================================================================
+       HERO: picked border (double sand rule + blue top bar) and a faint arcane sigil.
+       Subtle. Hero card and background only.
+       ========================================================================= */
+    .hero .hero-hud-frame {
+      border: 1px solid rgba(216, 201, 163, 0.85) !important;
+      border-top-color: rgba(216, 201, 163, 0.85) !important;
+      border-bottom-color: rgba(216, 201, 163, 0.85) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(122, 162, 247, 0.05) !important;
+    }
+    .hero .hero-hud-frame::before {
+      content: ""; position: absolute; inset: 6px;
+      border: 1px solid rgba(216, 201, 163, 0.5); border-radius: 10px; pointer-events: none;
+    }
+    .hero .hero-hud-frame::after {
+      content: ""; position: absolute; left: 18px; right: 18px; top: -1px; height: 3px;
+      border-radius: 0 0 3px 3px; background: #7aa2f7; pointer-events: none;
+    }
+    .hero {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.14' stroke-width='1.2'%3E%3Ccircle cx='400' cy='400' r='360'/%3E%3Ccircle cx='400' cy='400' r='332'/%3E%3Ccircle cx='400' cy='400' r='250' stroke-dasharray='2 10'/%3E%3Cpolygon points='400,90 668,556 132,556'/%3E%3Cpolygon points='400,710 132,244 668,244'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center 42%;
+      background-size: min(820px, 120vw) auto;
+    }
+  
+    /* GAP FIX: the hero's bottom padding was 8rem, and a divider sat in the space above the library.
+       The divider above the library is removed and the hero gap is tightened. */
+    .hero { padding-bottom: 4.5rem; }
+    @media (max-width: 550px) {
+      .hero { padding-bottom: 4rem; }
+    }
+    /* CTA: centred column, text above the button */
+    .pick-cta { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .pick-cta > * { margin-left: auto !important; margin-right: auto !important; max-width: 100%; }
+    .pick-cta h2, .pick-cta p { width: 100%; text-align: center; }
+    .pick-cta .btn { align-self: center; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5489,7 +5526,6 @@
     </section>
 
     <!-- Digital Media & Category Filter Section -->
-    <div class="pick-divider" aria-hidden="true"></div>
     <section id="media">
       <div class="section-header">
         <span class="section-tag">[ DIGITAL ASSET VAULT ]</span>
