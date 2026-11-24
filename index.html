@@ -5338,6 +5338,18 @@
       background-position: center 42%;
       background-size: min(820px, 120vw) auto;
     }
+  
+    /* GAP FIX: the hero's bottom padding was 8rem, and a divider sat in the space above the library.
+       The divider above the library is removed and the hero gap is tightened. */
+    .hero { padding-bottom: 4.5rem; }
+    @media (max-width: 550px) {
+      .hero { padding-bottom: 4rem; }
+    }
+    /* CTA: centred column, text above the button */
+    .pick-cta { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .pick-cta > * { margin-left: auto !important; margin-right: auto !important; max-width: 100%; }
+    .pick-cta h2, .pick-cta p { width: 100%; text-align: center; }
+    .pick-cta .btn { align-self: center; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5514,7 +5526,6 @@
     </section>
 
     <!-- Digital Media & Category Filter Section -->
-    <div class="pick-divider" aria-hidden="true"></div>
     <section id="media">
       <div class="section-header">
         <span class="section-tag">[ DIGITAL ASSET VAULT ]</span>
