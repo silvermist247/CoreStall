@@ -5392,15 +5392,21 @@
     }
   
     /* PHONE HEADER AND FILTERS (latest):
-       The cart sits in the page-link row, the same as desktop. The filter pills form a tidy
+       The cart sits top-right beside the logo, filling its height. The filter pills form a tidy
        two-column grid, with All Media across the full width. */
     @media (max-width: 550px) {
-      .nav-container { grid-template-columns: 1fr auto; grid-template-areas: "logo logo" "nav cart"; align-items: center; }
-      .nav-right .cart-trigger-btn { position: static; grid-area: cart; justify-self: end; min-height: 44px; padding: 0.5rem 0.8rem; gap: 0.45rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+      .nav-container { grid-template-columns: 1fr auto; grid-template-areas: "logo cart" "nav nav"; align-items: center; }
+      .nav-right .cart-trigger-btn { position: static; grid-area: cart; justify-self: end; align-self: stretch; min-height: 56px; padding: 0.5rem 1rem; gap: 0.45rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
       .nav-right .nav-links { gap: 0.25rem; }
       .primary-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 360px; margin: 0 auto; }
       .primary-filters .filter-btn { width: 100%; justify-content: center; }
       .primary-filters .filter-btn:first-child { grid-column: 1 / -1; }
+    }
+  
+    /* PHONE CATEGORY SPACING: the hero category pills and the library filter buttons get more room between them */
+    @media (max-width: 550px) {
+      .hero .hero-cats { gap: 1rem 1.25rem; }
+      .primary-filters { gap: 16px; }
     }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
@@ -14885,7 +14891,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     })();
   </script>
 <script>
-/* Hero frame line: hovering near the line glows the sigil (fire); clicking near the line keeps the lines lit until refresh. */
+/* Hero card: hovering over the card glows the sigil (fire); clicking near the frame line keeps the lines lit until refresh. */
 (function () {
   var frame = document.querySelector('.hero-hud-frame');
   var sigil = document.querySelector('.hero-sigil');
@@ -14897,8 +14903,12 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var inside = x > r.left + 12 && x < r.right - 12 && y > r.top + 12 && y < r.bottom - 12;
     return !inside;
   }
+  function overCard(x, y) {
+    var r = frame.getBoundingClientRect();
+    return x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6;
+  }
   document.addEventListener('mousemove', function (e) {
-    sigil.classList.toggle('is-hot', nearLine(e.clientX, e.clientY));
+    sigil.classList.toggle('is-hot', overCard(e.clientX, e.clientY));
   });
   document.documentElement.addEventListener('mouseleave', function () {
     sigil.classList.remove('is-hot');
