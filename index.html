@@ -14885,7 +14885,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     })();
   </script>
 <script>
-/* Hero frame line: hovering near the line glows the sigil (fire); clicking near the line keeps the lines lit until refresh. */
+/* Hero card: hovering over the card glows the sigil (fire); clicking near the frame line keeps the lines lit until refresh. */
 (function () {
   var frame = document.querySelector('.hero-hud-frame');
   var sigil = document.querySelector('.hero-sigil');
@@ -14897,8 +14897,12 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var inside = x > r.left + 12 && x < r.right - 12 && y > r.top + 12 && y < r.bottom - 12;
     return !inside;
   }
+  function overCard(x, y) {
+    var r = frame.getBoundingClientRect();
+    return x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6;
+  }
   document.addEventListener('mousemove', function (e) {
-    sigil.classList.toggle('is-hot', nearLine(e.clientX, e.clientY));
+    sigil.classList.toggle('is-hot', overCard(e.clientX, e.clientY));
   });
   document.documentElement.addEventListener('mouseleave', function () {
     sigil.classList.remove('is-hot');
