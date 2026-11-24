@@ -5354,10 +5354,6 @@
     .hero-sigil svg { width: 100%; height: 100%; display: block; overflow: visible; }
     .hero-sigil g { stroke: rgb(216, 201, 163); stroke-opacity: 0.14; transition: stroke 0.4s ease, stroke-opacity 0.4s ease, filter 0.4s ease; }
     .hero-sigil.is-hot g { stroke: rgb(255, 122, 42); stroke-opacity: 0.42; filter: drop-shadow(0 0 6px rgba(255, 122, 42, 0.45)); }
-    .hero-edge {
-      position: absolute; inset: -3px; border: 9px solid transparent; border-radius: inherit;
-      z-index: 16; cursor: pointer;
-    }
     .hero .hero-hud-frame.edge-lit {
       border-color: rgba(240, 214, 160, 0.95) !important;
       border-top-color: rgba(240, 214, 160, 0.95) !important;
@@ -5370,6 +5366,29 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .hero-sigil g { transition: none; }
+    }
+  
+    /* SIGIL FIRE (hover): gradient stroke, displaced flame edge, layered glow, slow flicker */
+    .hero-sigil g { stroke: rgb(216, 201, 163); stroke-opacity: 0.22; transition: stroke 0.4s ease, stroke-opacity 0.4s ease; }
+    .hero-sigil.is-hot g {
+      stroke: url(#sigilFire); stroke-opacity: 1; stroke-width: 1.6;
+      filter: url(#sigilFireFx);
+      animation: sigilFlicker 2.6s ease-in-out infinite;
+    }
+    @keyframes sigilFlicker {
+      0%, 100% { opacity: 0.92; }
+      18% { opacity: 1; }
+      36% { opacity: 0.86; }
+      55% { opacity: 0.98; }
+      74% { opacity: 0.9; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-sigil g, .hero-sigil.is-hot g { transition: none; animation: none; }
+    }
+    /* PHONE CART: top-right of the header (was floating bottom-left) */
+    @media (max-width: 550px) {
+      .nav-container { grid-template-columns: 1fr auto; grid-template-areas: "logo cart" "nav nav"; }
+      .nav-right .cart-trigger-btn { position: static; grid-area: cart; justify-self: end; min-height: 44px; padding: 0.5rem 0.9rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
     }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
@@ -5524,12 +5543,11 @@
 
     <!-- Hero Section with Floating Space, Stars & Celestial Objects -->
     <section class="hero" id="hero">
-      <div class="hero-sigil" aria-hidden="true"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.14' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg></div>
+      <div class="hero-sigil" aria-hidden="true"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><defs><linearGradient id='sigilFire' x1='0' y1='1' x2='0' y2='0'><stop offset='0' stop-color='rgb(170,20,0)'/><stop offset='0.4' stop-color='rgb(255,80,10)'/><stop offset='0.75' stop-color='rgb(255,150,40)'/><stop offset='1' stop-color='rgb(255,226,140)'/></linearGradient><filter id='sigilFireFx' x='-10%' y='-10%' width='120%' height='120%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.045 0.09' numOctaves='2' seed='7' result='noise'/><feDisplacementMap in='SourceGraphic' in2='noise' scale='16' xChannelSelector='R' yChannelSelector='G' result='wobble'/><feGaussianBlur in='wobble' stdDeviation='11' result='haze'/><feGaussianBlur in='wobble' stdDeviation='3.5' result='glow'/><feMerge><feMergeNode in='haze'/><feMergeNode in='glow'/><feMergeNode in='wobble'/></feMerge></filter></defs><g fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.22' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg></div>
       <canvas id="spaceCanvas" aria-hidden="true"></canvas>
       <div class="space-nebula-glow"></div>
 
       <div class="hero-hud-frame">
-        <span class="hero-edge" aria-hidden="true"></span>
         <div class="hero-tag">[ DIGITAL LICENSING // HIGH-RES MEDIA ]</div>
         <h1>Seth Barton</h1>
         <div class="hero-sub">// Action &amp; wildlife photographer</div>
@@ -14855,15 +14873,30 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     })();
   </script>
 <script>
-/* Hero edge: hover glows the sigil (faint fire orange); click keeps the frame lines lit until refresh. */
+/* Hero frame line: hovering near the line glows the sigil (fire); clicking near the line keeps the lines lit until refresh. */
 (function () {
   var frame = document.querySelector('.hero-hud-frame');
   var sigil = document.querySelector('.hero-sigil');
-  var edge = document.querySelector('.hero-edge');
-  if (!frame || !sigil || !edge) return;
-  edge.addEventListener('mouseenter', function () { sigil.classList.add('is-hot'); });
-  edge.addEventListener('mouseleave', function () { sigil.classList.remove('is-hot'); });
-  edge.addEventListener('click', function () { frame.classList.add('edge-lit'); sigil.classList.add('is-hot'); });
+  if (!frame || !sigil) return;
+  function nearLine(x, y) {
+    var r = frame.getBoundingClientRect();
+    var near = x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6;
+    if (!near) return false;
+    var inside = x > r.left + 12 && x < r.right - 12 && y > r.top + 12 && y < r.bottom - 12;
+    return !inside;
+  }
+  document.addEventListener('mousemove', function (e) {
+    sigil.classList.toggle('is-hot', nearLine(e.clientX, e.clientY));
+  });
+  document.documentElement.addEventListener('mouseleave', function () {
+    sigil.classList.remove('is-hot');
+  });
+  document.addEventListener('click', function (e) {
+    if (nearLine(e.clientX, e.clientY)) {
+      frame.classList.add('edge-lit');
+      sigil.classList.add('is-hot');
+    }
+  });
 })();
 </script>
 </body>
