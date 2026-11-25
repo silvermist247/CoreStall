@@ -15269,7 +15269,8 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
       target.click(); // applies the filter; no page jump here
       var tr = target.getBoundingClientRect();
-      var landX = tr.left, landY = tr.top + window.scrollY;
+      // Land centred on the matching filter button, which may sit in a different column from the hero button
+      var landX = tr.left + (tr.width - from.width) / 2, landY = tr.top + window.scrollY;
 
       var hop = 34;
       var fallStartY = startY - hop;
@@ -15316,7 +15317,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function hopFrame(now) {
         var t = Math.min(1, (now - tH) / 240);
         var e = 1 - (1 - t) * (1 - t);
-        placePage(clone, startX, startY - hop * e);
+        placePage(clone, startX + (landX - startX) * e, startY - hop * e); // the hop also slides it over the target column
         clone.style.transform = 'rotate(' + (-6 * Math.sin(t * Math.PI)) + 'deg) scale(' + (1 + 0.04 * Math.sin(t * Math.PI)) + ')';
         if (t < 1) { requestAnimationFrame(hopFrame); return; }
         clone.style.transform = 'none';
@@ -15328,7 +15329,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function fallFrame(now) {
         var t = Math.max(0, Math.min(1, (now - fallT0) / T1));
         var y = fallStartY + (landY - fallStartY) * t * t; // accelerates like gravity
-        placePage(clone, startX, y);
+        placePage(clone, landX, y);
         follow(y);
         if (t < 1) { requestAnimationFrame(fallFrame); return; }
         impact();
