@@ -6305,21 +6305,6 @@
           </div>
         </article>
 
-        <!-- Placeholder tile: swap for a real photo later -->
-        <article class="product-card placeholder-card" data-category="placeholder">
-          <div class="product-image-wrap"></div>
-        </article>
-
-        <!-- Placeholder tile: swap for a real photo later -->
-        <article class="product-card placeholder-card" data-category="placeholder">
-          <div class="product-image-wrap"></div>
-        </article>
-
-        <!-- Placeholder tile: swap for a real photo later -->
-        <article class="product-card placeholder-card" data-category="placeholder">
-          <div class="product-image-wrap"></div>
-        </article>
-
       </div>
     </section>
 
@@ -16098,9 +16083,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var ROW_H = 0.5 * R;               // height of one row of photos (fitted in rebuild)
     var ROW_GAP = 0.05 * R;
     var FIT = 0.84;                    // share of the visible height the wall may use
-    var COL_STEP = Math.PI * 0.28;     // 50 degrees between column centres
+    var COL_COUNT = 9;                 // nine columns make a full ring, so the wall never ends
+    var COL_STEP = Math.PI * 2 / COL_COUNT;
     var COL_ARC = COL_STEP - 0.12;     // arc covered by one photo, with a gap
-    var MAX_YAW = 0.3;                 // drag range: never reveal the empty edge of the wall
     var FLIP_U = -1;                   // the photos face inward, so the image is mirrored once
     var VFOV = 77;
 
@@ -16217,25 +16202,29 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function rebuild() {
       clearWorld();
       var cards = visibleCards();
-      var rows = Math.max(1, Math.ceil(cards.length / 3));
+      var n = cards.length;
+      if (!n) return;
+      var rows = Math.max(1, Math.ceil(n / 3));
       // fit the whole wall inside the visible height, so no row is cut off
       var visibleHalf = R * Math.tan(VFOV * Math.PI / 360);
       ROW_H = Math.min(0.5 * R, (2 * FIT * visibleHalf - (rows - 1) * ROW_GAP) / rows);
       var totalH = rows * ROW_H + (rows - 1) * ROW_GAP;
       var slotAspect = (R * COL_ARC) / ROW_H;
-      cards.forEach(function (card, idx) {
-        var c = idx % 3, r = Math.floor(idx / 3);
-        var phi = (c - 1) * COL_STEP;                    // + is to the right
-        var y = totalH / 2 - ROW_H / 2 - r * (ROW_H + ROW_GAP);
-        var geo = new THREE.CylinderGeometry(R, R, ROW_H, 40, 1, true, (Math.PI - phi) - COL_ARC / 2, COL_ARC);
-        var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.DoubleSide });
-        var mesh = new THREE.Mesh(geo, mat);
-        mesh.position.y = y;
-        mesh.userData.card = card;
-        world.add(mesh);
-        var img = card.querySelector('.product-image-wrap img');
-        if (img && img.src) fitTexture(img.src, mat, slotAspect);
-      });
+      for (var c = 0; c < COL_COUNT; c++) {
+        var phi = c * COL_STEP;                          // around the full ring
+        for (var r = 0; r < rows; r++) {
+          var card = cards[(c * rows + r) % n];          // the same photos repeat around the ring
+          var y = totalH / 2 - ROW_H / 2 - r * (ROW_H + ROW_GAP);
+          var geo = new THREE.CylinderGeometry(R, R, ROW_H, 40, 1, true, (Math.PI - phi) - COL_ARC / 2, COL_ARC);
+          var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.DoubleSide });
+          var mesh = new THREE.Mesh(geo, mat);
+          mesh.position.y = y;
+          mesh.userData.card = card;
+          world.add(mesh);
+          var img = card.querySelector('.product-image-wrap img');
+          if (img && img.src) fitTexture(img.src, mat, slotAspect);
+        }
+      }
       scene.updateMatrixWorld(true);
     }
 
@@ -16268,7 +16257,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       if (dragging) {
         var dx = e.clientX - lastX;
         lastX = e.clientX;
-        yawTarget = Math.max(-MAX_YAW, Math.min(MAX_YAW, yawTarget - dx * 0.0035));
+        yawTarget -= dx * 0.0035;                       // no limit: drag round forever
       } else {
         el.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : 'grab';
       }
