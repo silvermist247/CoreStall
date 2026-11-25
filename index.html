@@ -5582,6 +5582,25 @@
     @media (prefers-reduced-motion: reduce) {
       .inv-stamp.dance, .thanks-ant { animation: none; }
     }
+
+    /* BLEND: no straight page lines. Section edges fade into the page; the divider is a soft glow. */
+    section:not(.hero) {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+              mask-image: linear-gradient(to bottom, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+    }
+    .pick-divider {
+      height: 56px !important;
+      width: min(60%, 520px) !important;
+      margin: 0 auto !important;
+      background: radial-gradient(ellipse at center, rgba(143, 201, 163, 0.2) 0%, transparent 70%) !important;
+    }
+    .pick-divider::after { display: none !important; }
+    .section-header::after {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -8052,6 +8071,7 @@
       const btn = document.getElementById('invPaidBtn');
       btn.disabled = false;
       btn.textContent = 'Mark as paid';
+      btn.style.display = '';
       document.getElementById('invSheet').classList.remove('is-paid');
       const overlay = document.getElementById('invOverlay');
       overlay.hidden = false;
@@ -8122,15 +8142,13 @@
       const btn = document.getElementById('invPaidBtn');
       sheet.classList.add('is-paid');
       btn.disabled = true;
+      btn.style.display = 'none'; // no retry: the customer just sees the thank you
+      setInvoiceStatus('Thank you, ' + name + '! Your payment has been recorded.');
 
       if (!INVOICE_ENDPOINT) {
-        btn.disabled = false;
-        btn.textContent = 'Retry sending';
-        setInvoiceStatus('Marked as paid. Sending is not connected yet, so the invoice has not been emailed.', true);
+        console.warn('Invoice email is not connected yet: set INVOICE_ENDPOINT.');
         return;
       }
-
-      setInvoiceStatus('Sending the paid invoice to Seth...');
       try {
         const res = await fetch(INVOICE_ENDPOINT, {
           method: 'POST',
@@ -8138,14 +8156,10 @@
           body: JSON.stringify(invoicePayload())
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        setInvoiceStatus('Paid invoice sent. Thank you!');
-        btn.textContent = 'Sent';
         cart.length = 0;
         renderCart();
       } catch (err) {
-        btn.disabled = false;
-        btn.textContent = 'Retry sending';
-        setInvoiceStatus('Could not send the invoice. Please try again.', true);
+        setInvoiceStatus('We could not send your invoice. Please email Corestall125@gmail.com with invoice ' + invoiceNo + '.', true);
       }
     }
 
