@@ -832,10 +832,15 @@
       left: 0;
       width: 100%;
       height: 260px;
-      background: linear-gradient(to bottom, 
-        rgba(12, 14, 18, 0) 0%, 
-        rgba(12, 14, 18, 0.45) 40%, 
-        rgba(12, 14, 18, 0.85) 75%, 
+      background: linear-gradient(to bottom,
+        rgba(12, 14, 18, 0) 0%,
+        rgba(12, 14, 18, 0.04) 15%,
+        rgba(12, 14, 18, 0.14) 30%,
+        rgba(12, 14, 18, 0.3) 42%,
+        rgba(12, 14, 18, 0.5) 55%,
+        rgba(12, 14, 18, 0.68) 67%,
+        rgba(12, 14, 18, 0.8) 79%,
+        rgba(12, 14, 18, 0.86) 89%,
         rgba(12, 14, 18, 0) 100%
       );
       pointer-events: none;
@@ -856,6 +861,33 @@
       position: relative;
       z-index: 15; /* Buttons & links stay clickable */
       pointer-events: auto;
+    }
+
+
+    /* Stars inside the hero's lower fade. JS moves them down as the page scrolls,
+       so the space appears to travel down the page into the next section. */
+    .hero-drift {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 240px;
+      pointer-events: none;
+      z-index: 3;
+      background-color: transparent;
+      background-image:
+        radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 255, 255, 0.85), transparent 60%),
+        radial-gradient(1px 1px at 37% 64%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1.4px 1.4px at 58% 30%, rgba(143, 201, 163, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 71% 84%, rgba(255, 176, 112, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 88% 42%, rgba(255, 255, 255, 0.5), transparent 60%),
+        radial-gradient(1.2px 1.2px at 24% 92%, rgba(255, 255, 255, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 46% 8%, rgba(255, 176, 112, 0.6), transparent 60%);
+      background-size: 360px 240px;
+      background-repeat: repeat;
+      background-position: 0 0;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
     }
 
     /* Ambient Nebular Clouds in Space */
@@ -5749,6 +5781,7 @@
     <section class="hero" id="hero">
       <div class="hero-sigil" aria-hidden="true"><svg class='sigil-base' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><defs><linearGradient id='sigilFire' x1='0' y1='1' x2='0' y2='0'><stop offset='0' stop-color='rgb(170,20,0)'/><stop offset='0.4' stop-color='rgb(255,80,10)'/><stop offset='0.75' stop-color='rgb(255,150,40)'/><stop offset='1' stop-color='rgb(255,226,140)'/></linearGradient><filter id='sigilFireFx' x='-10%' y='-10%' width='120%' height='120%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.045 0.09' numOctaves='2' seed='7' result='noise'/><feDisplacementMap in='SourceGraphic' in2='noise' scale='16' xChannelSelector='R' yChannelSelector='G' result='wobble'/><feGaussianBlur in='wobble' stdDeviation='11' result='haze'/><feGaussianBlur in='wobble' stdDeviation='3.5' result='glow'/><feMerge><feMergeNode in='haze'/><feMergeNode in='glow'/><feMergeNode in='wobble'/></feMerge></filter></defs><g fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.22' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg><svg class='sigil-fire' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g class='fire-g' fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.22' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg></div>
       <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+      <div class="hero-drift" id="heroDrift" aria-hidden="true"></div>
       <div class="space-nebula-glow"></div>
 
       <div class="hero-hud-frame">
@@ -15704,6 +15737,23 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       }
       requestAnimationFrame(flight);
     };
+  })();
+  </script>
+<script>
+  // Hero drift: the stars in the lower fade move down the page as you scroll (slower than the page, so it reads as depth).
+  (function initHeroDrift() {
+    var layer = document.getElementById('heroDrift');
+    if (!layer) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      layer.style.backgroundPositionY = (window.scrollY * 0.45) + 'px';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    apply();
   })();
   </script>
 </body>
