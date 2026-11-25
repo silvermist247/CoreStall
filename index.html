@@ -831,7 +831,7 @@
       bottom: -40px;
       left: 0;
       width: 100%;
-      height: 260px;
+      height: 400px;
       background: linear-gradient(to bottom,
         rgba(12, 14, 18, 0) 0%,
         rgba(12, 14, 18, 0.04) 15%,
@@ -871,7 +871,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 240px;
+      height: 320px;
       pointer-events: none;
       z-index: 3;
       background-color: transparent;
@@ -5617,14 +5617,94 @@
 
     /* BLEND: no straight page lines. Section edges fade into the page; the divider is a soft glow. */
     section:not(.hero) {
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
-              mask-image: linear-gradient(to bottom, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) 60px, #000 160px, #000 calc(100% - 160px), rgba(0,0,0,0.35) calc(100% - 60px), transparent 100%);
+              mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) 60px, #000 160px, #000 calc(100% - 160px), rgba(0,0,0,0.35) calc(100% - 60px), transparent 100%);
       border-top: 0 !important;
       border-bottom: 0 !important;
     }
     .section-header::after {
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
               mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+    }
+
+    /* =========================================================================
+       DIVIDER ENERGY: the diamond charges, light runs out along the line both
+       ways, the line pulses, then a drop of energy falls from above and charges
+       the diamond again. One cycle is 7 seconds.
+       ========================================================================= */
+    .pick-divider { overflow: visible; }
+    .pick-divider::after {
+      animation: pdDiamond 7s ease-in-out infinite;
+    }
+    .pick-divider {
+      animation: pdLine 7s ease-in-out infinite;
+    }
+    .pd-drop {
+      position: absolute; left: 50%; top: -70px; width: 2px; height: 40px;
+      transform: translateX(-50%); border-radius: 2px; opacity: 0; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(191, 255, 224, 0), #bfffe0 70%, #ffffff);
+      box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.8);
+      animation: pdDrop 7s ease-in infinite;
+    }
+    .pd-spark {
+      position: absolute; top: -1px; width: 110px; height: 3px; border-radius: 2px;
+      opacity: 0; pointer-events: none;
+      box-shadow: 0 0 6px 1px rgba(143, 201, 163, 0.7);
+    }
+    .pd-spark-r {
+      background: linear-gradient(90deg, rgba(191, 255, 224, 0.95), rgba(143, 201, 163, 0));
+      animation: pdSparkR 7s ease-out infinite;
+    }
+    .pd-spark-l {
+      background: linear-gradient(270deg, rgba(191, 255, 224, 0.95), rgba(143, 201, 163, 0));
+      animation: pdSparkL 7s ease-out infinite;
+    }
+    @keyframes pdDiamond {
+      0%   { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+      8%   { box-shadow: 0 0 6px 2px rgba(143, 201, 163, 0.45); }
+      11%  { box-shadow: 0 0 18px 7px rgba(143, 201, 163, 0.9), 0 0 4px 1px #bfffe0; }
+      22%  { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.4); }
+      34%  { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+    }
+    @keyframes pdLine {
+      0%, 46%  { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+      52%      { box-shadow: 0 0 12px 2px rgba(143, 201, 163, 0.55); }
+      60%      { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+      100%     { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+    }
+    @keyframes pdDrop {
+      0%   { top: -70px; opacity: 0; }
+      2%   { opacity: 1; }
+      7%   { top: -4px; opacity: 1; }
+      8%   { top: -4px; opacity: 0; }
+      100% { top: -70px; opacity: 0; }
+    }
+    @keyframes pdSparkR {
+      0%, 9%  { left: 50%; opacity: 0; }
+      11%     { left: 50%; opacity: 1; }
+      34%     { left: calc(100% - 110px); opacity: 0.6; }
+      40%,100%{ left: calc(100% - 110px); opacity: 0; }
+    }
+    @keyframes pdSparkL {
+      0%, 9%  { left: calc(50% - 110px); opacity: 0; }
+      11%     { left: calc(50% - 110px); opacity: 1; }
+      34%     { left: 0; opacity: 0.6; }
+      40%,100%{ left: 0; opacity: 0; }
+    }
+    /* the footer diamond glows slowly */
+    .footer-content::before {
+      animation: footDiamond 3.6s ease-in-out infinite;
+    }
+    @keyframes footDiamond {
+      0%, 100% { box-shadow: 0 0 6px 1px rgba(143, 201, 163, 0.3); }
+      50%      { box-shadow: 0 0 16px 4px rgba(143, 201, 163, 0.75); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pick-divider, .pick-divider::after, .pd-drop, .pd-spark, .footer-content::before { animation: none !important; }
+      .pd-drop, .pd-spark { display: none; }
+      .pick-divider::after { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.5); }
+      .footer-content::before { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.5); }
     }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
@@ -6187,7 +6267,7 @@
 
     <!-- Contact Section -->
     <!-- AVAILABILITY: a client picks a date and sees whether it is free -->
-    <div class="pick-divider" aria-hidden="true"></div>
+    <div class="pick-divider" aria-hidden="true"><span class="pd-drop"></span><span class="pd-spark pd-spark-l"></span><span class="pd-spark pd-spark-r"></span></div>
     <section id="availability" class="availability-section">
       <div class="section-header">
         <span class="section-tag">[ AVAILABILITY ]</span>
