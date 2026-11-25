@@ -5628,8 +5628,10 @@
     }
 
     /* =========================================================================
-       DIVIDER LIGHT (neon and light-trail look): one SVG per divider. Glow filters
-       use fixed user-space regions so nothing clips. Cycle: 7 seconds.
+       DIVIDER LIGHT: one 23-second cycle. The diamond charges, energy runs out
+       along the line, the line pulses, and the highlight travels down through
+       the section text, fading over about 20 seconds. Then it recharges.
+       Glow filters use fixed user-space regions so nothing clips.
        ========================================================================= */
     .pick-divider { overflow: visible; }
     .pick-divider::after { display: none !important; }
@@ -5642,102 +5644,96 @@
     .pd-fx line, .pd-fx path, .pd-fx circle, .pd-fx ellipse { stroke-linecap: round; stroke-linejoin: round; }
 
     /* ambient haze and neon tube */
-    .pd-haze { opacity: 0.12; animation: pdHaze 7s ease-in-out infinite; }
+    .pd-haze { animation: pdHaze 23s ease-in-out infinite; }
     @keyframes pdHaze {
       0%      { opacity: 0.1; }
-      8%      { opacity: 0.5; }
-      22%,100%{ opacity: 0.14; }
+      4%      { opacity: 0.45; }
+      14%     { opacity: 0.16; }
+      100%    { opacity: 0.1; }
     }
-    .pd-tube-glow { opacity: 0.3; animation: pdTube 7s ease-in-out infinite; }
+    .pd-tube-glow { opacity: 0.3; animation: pdTube 23s ease-in-out infinite; }
     .pd-tube { opacity: 0.85; }
     @keyframes pdTube {
-      0%, 44% { opacity: 0.3; }
-      52%     { opacity: 1; }
-      62%,100%{ opacity: 0.3; }
+      0%      { opacity: 0.3; }
+      12%     { opacity: 0.35; }
+      15%     { opacity: 1; }
+      20%,100%{ opacity: 0.3; }
     }
 
-    /* light runners: a dash of 160 units travels out along the line */
-    .pd-run { fill: none; stroke-linecap: round; stroke-dasharray: 160 2000; opacity: 0; animation: pdRun 7s linear infinite; }
+    /* light runners: start at 0.6 s, reach the ends by 2.8 s */
+    .pd-run { fill: none; stroke-linecap: round; stroke-dasharray: 160 2000; opacity: 0; animation: pdRun 23s linear infinite; }
     .pd-run-haze { stroke: #8fc9a3; stroke-width: 14; }
     .pd-run-body { stroke: #8fc9a3; stroke-width: 4.5; }
     .pd-run-core { stroke: #ffffff; stroke-width: 1.5; }
     .pd-run-l { animation-name: pdRunL; }
     @keyframes pdRun {
       0%      { stroke-dashoffset: 160; opacity: 0; }
-      8%      { stroke-dashoffset: 160; opacity: 1; }
-      36%     { stroke-dashoffset: -360; opacity: 1; }
-      42%,100%{ stroke-dashoffset: -360; opacity: 0; }
+      2.6%    { stroke-dashoffset: 160; opacity: 1; }
+      12.2%   { stroke-dashoffset: -360; opacity: 1; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
     }
     @keyframes pdRunL {
       0%      { stroke-dashoffset: 160; opacity: 0; }
-      8%      { stroke-dashoffset: 160; opacity: 1; }
-      36%     { stroke-dashoffset: -360; opacity: 1; }
-      42%,100%{ stroke-dashoffset: -360; opacity: 0; }
+      2.6%    { stroke-dashoffset: 160; opacity: 1; }
+      12.2%   { stroke-dashoffset: -360; opacity: 1; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
     }
-    /* long-exposure streaks: a longer dash (320) that trails the runners */
-    .pd-streak { fill: none; stroke: #eafff5; stroke-width: 0.9; stroke-linecap: round; stroke-dasharray: 320 2000; opacity: 0; }
-    .pd-streak-r { animation: pdStreakR 7s linear infinite; }
-    .pd-streak-l { animation: pdStreakL 7s linear infinite; }
+    /* long streaks trail the runners */
+    .pd-streak { fill: none; stroke: #eafff5; stroke-width: 0.9; stroke-linecap: round; stroke-dasharray: 320 2000; opacity: 0; animation: pdStreakR 23s linear infinite; }
+    .pd-streak-l { animation-name: pdStreakL; }
     @keyframes pdStreakR {
       0%      { stroke-dashoffset: 320; opacity: 0; }
-      9%      { stroke-dashoffset: 320; opacity: 0.85; }
-      40%     { stroke-dashoffset: -360; opacity: 0.85; }
-      46%,100%{ stroke-dashoffset: -360; opacity: 0; }
+      3%      { stroke-dashoffset: 320; opacity: 0.85; }
+      12.2%   { stroke-dashoffset: -360; opacity: 0.85; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
     }
     @keyframes pdStreakL {
       0%      { stroke-dashoffset: 320; opacity: 0; }
-      9%      { stroke-dashoffset: 320; opacity: 0.85; }
-      40%     { stroke-dashoffset: -360; opacity: 0.85; }
-      46%,100%{ stroke-dashoffset: -360; opacity: 0; }
+      3%      { stroke-dashoffset: 320; opacity: 0.85; }
+      12.2%   { stroke-dashoffset: -360; opacity: 0.85; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
     }
 
-    /* the whole line pulses once after the runners leave */
-    .pd-pulse { opacity: 0; animation: pdPulse 7s ease-in-out infinite; }
+    /* the whole line pulses once when the runners leave */
+    .pd-pulse { opacity: 0; animation: pdPulse 23s ease-in-out infinite; }
     @keyframes pdPulse {
-      0%, 44% { opacity: 0; }
-      52%     { opacity: 1; }
-      62%,100%{ opacity: 0; }
+      0%, 12%   { opacity: 0; }
+      15%       { opacity: 1; }
+      19%,100%  { opacity: 0; }
     }
 
-    /* charge: a column of light falls from above (length 116 from y -50 to y 66) */
-    .pd-beam { fill: none; stroke-linecap: round; stroke-dasharray: 116 200; opacity: 0; animation: pdBeam 7s linear infinite; }
-    .pd-beam-haze { stroke: #8fc9a3; stroke-width: 26; stroke-opacity: 0.1; }
-    .pd-beam-body { stroke: #8fc9a3; stroke-width: 5; stroke-opacity: 0.18; }
-    .pd-beam-core { stroke: #ffffff; stroke-width: 1.4; stroke-opacity: 0.3; }
-    @keyframes pdBeam {
-      0%      { stroke-dashoffset: 116; opacity: 1; }
-      6%      { stroke-dashoffset: 0; opacity: 1; }
-      9%      { stroke-dashoffset: 0; opacity: 0.5; }
-      14%,100%{ stroke-dashoffset: 0; opacity: 0; }
-    }
-
-    /* shock ring on landing */
-    .pd-ring { opacity: 0; animation: pdRing 7s ease-out infinite; }
-    @keyframes pdRing {
-      0%, 6%  { transform: scale(1); opacity: 0; }
-      7%      { transform: scale(1); opacity: 0.35; }
-      17%,100%{ transform: scale(6.5); opacity: 0; }
-    }
-
-    /* gem flares on landing, then settles */
-    .pd-gem { transform: rotate(45deg); animation: pdGem 7s ease-in-out infinite; }
-    .pd-gem-core { transform: rotate(45deg); animation: pdGemCore 7s ease-in-out infinite; }
+    /* the gem charges at the start of the cycle, then settles */
+    .pd-gem { transform: rotate(45deg); animation: pdGem 23s ease-in-out infinite; }
+    .pd-gem-core { transform: rotate(45deg); animation: pdGemCore 23s ease-in-out infinite; }
     @keyframes pdGem {
-      0%      { opacity: 0.6; transform: rotate(45deg) scale(0.9); }
-      7%      { opacity: 0.95; transform: rotate(45deg) scale(1.12); }
-      16%,100%{ opacity: 0.85; transform: rotate(45deg) scale(1); }
+      0%      { opacity: 0.6;  transform: rotate(45deg) scale(0.9); }
+      3.5%    { opacity: 0.95; transform: rotate(45deg) scale(1.12); }
+      9%,100% { opacity: 0.85; transform: rotate(45deg) scale(1); }
     }
     @keyframes pdGemCore {
-      0%      { opacity: 0.7; transform: rotate(45deg) scale(0.9); }
-      7%      { opacity: 0.95; transform: rotate(45deg) scale(1.08); }
-      16%,100%{ opacity: 0.9; transform: rotate(45deg) scale(1); }
+      0%      { opacity: 0.7;  transform: rotate(45deg) scale(0.9); }
+      3.5%    { opacity: 0.95; transform: rotate(45deg) scale(1.08); }
+      9%,100% { opacity: 0.9;  transform: rotate(45deg) scale(1); }
     }
-    .pd-halo { opacity: 0.35; animation: pdHalo 7s ease-in-out infinite; }
+    .pd-halo { opacity: 0.35; animation: pdHalo 23s ease-in-out infinite; }
     @keyframes pdHalo {
       0%      { opacity: 0.35; transform: scale(0.8); }
-      7%      { opacity: 0.55; transform: scale(1.2); }
-      20%,100%{ opacity: 0.35; transform: scale(1); }
+      3.5%    { opacity: 0.55; transform: scale(1.2); }
+      10%,100%{ opacity: 0.35; transform: scale(1); }
     }
+
+    /* the highlight travels down the section text: each line lights a little
+       later, then fades over about 20 seconds. The text colour rules use
+       !important, so the glow is a filter. */
+    @keyframes pdWave {
+      0%   { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
+      1.5% { filter: drop-shadow(0 0 3px rgba(212, 255, 230, 0.95)) drop-shadow(0 0 12px rgba(143, 201, 163, 0.75)); }
+      88%  { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
+      100% { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
+    }
+    #availability .section-tag { animation: pdWave 23s ease-out 3.0s infinite; }
+    #availability .section-title { animation: pdWave 23s ease-out 3.4s infinite; }
+    #availability .avail-intro { animation: pdWave 23s ease-out 3.8s infinite; }
 
     /* the footer diamond glows slowly */
     .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
@@ -5746,8 +5742,9 @@
       50%      { box-shadow: 0 0 16px 4px rgba(143, 201, 163, 0.75); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .pd-run, .pd-streak, .pd-beam, .pd-ring, .pd-pulse, .pd-haze, .pd-tube-glow, .pd-gem, .pd-gem-core, .pd-halo, .footer-content::before { animation: none !important; }
-      .pd-run, .pd-streak, .pd-beam, .pd-ring { display: none; }
+      .pd-run, .pd-streak, .pd-pulse, .pd-haze, .pd-tube-glow, .pd-gem, .pd-gem-core, .pd-halo,
+      #availability .section-tag, #availability .section-title, #availability .avail-intro, .footer-content::before { animation: none !important; }
+      .pd-run, .pd-streak { display: none; }
       .pd-pulse { opacity: 0.6; }
       .pd-tube-glow { opacity: 0.6; }
       .pd-haze { opacity: 0.2; }
@@ -6334,11 +6331,6 @@
             <stop offset="0.5" stop-color="#d4ffe6" stop-opacity="1"/>
             <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
           </linearGradient>
-          <linearGradient id="pdBeam" gradientUnits="userSpaceOnUse" x1="0" y1="-50" x2="0" y2="66">
-            <stop offset="0" stop-color="#8fc9a3" stop-opacity="0"/>
-            <stop offset="0.65" stop-color="#8fc9a3" stop-opacity="0.7"/>
-            <stop offset="1" stop-color="#ffffff" stop-opacity="1"/>
-          </linearGradient>
           <radialGradient id="pdHalo">
             <stop offset="0" stop-color="#d4ffe6" stop-opacity="0.9"/>
             <stop offset="0.35" stop-color="#8fc9a3" stop-opacity="0.35"/>
@@ -6346,17 +6338,12 @@
           </radialGradient>
         </defs>
 
-        <!-- ambient haze spilling along the line (neon-tunnel bloom) -->
         <ellipse class="pd-haze" cx="360" cy="70" rx="300" ry="8" fill="#8fc9a3" filter="url(#pdHaze)" />
 
-        <!-- neon tube: the line itself glows -->
         <line class="pd-tube-glow" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="6" filter="url(#pdGlow)" />
         <line class="pd-tube" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="1.2" filter="url(#pdBloom)" />
-
-        <!-- energy pulse along the whole line -->
         <line class="pd-pulse" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="2.5" filter="url(#pdBloom)" />
 
-        <!-- light runners, out from the gem, both ways: haze, body, white core, long streak -->
         <path class="pd-run pd-run-r pd-run-haze" d="M360 70 H720" filter="url(#pdGlow)" />
         <path class="pd-run pd-run-r pd-run-body" d="M360 70 H720" filter="url(#pdBloom)" />
         <path class="pd-run pd-run-r pd-run-core" d="M360 70 H720" />
@@ -6366,15 +6353,6 @@
         <path class="pd-run pd-run-l pd-run-core" d="M360 70 H0" />
         <path class="pd-streak pd-streak-l" d="M360 70 H0" filter="url(#pdBloom)" />
 
-        <!-- charge: a light column falls from above onto the gem -->
-        <path class="pd-beam pd-beam-haze" d="M360 -50 V66" filter="url(#pdHaze)" />
-        <path class="pd-beam pd-beam-body" d="M360 -50 V66" filter="url(#pdBloom)" />
-        <path class="pd-beam pd-beam-core" d="M360 -50 V66" />
-
-        <!-- shock ring on landing -->
-        <circle class="pd-ring" cx="360" cy="70" r="4" fill="none" stroke="#d4ffe6" stroke-width="1.2" filter="url(#pdBloom)" />
-
-        <!-- the gem: halo, sage body, white-hot centre -->
         <circle class="pd-halo" cx="360" cy="70" r="30" fill="url(#pdHalo)" />
         <rect class="pd-gem" x="355.5" y="65.5" width="9" height="9" fill="#8fc9a3" filter="url(#pdBloom)" />
         <rect class="pd-gem-core" x="358" y="68" width="4" height="4" fill="#ffffff" />
