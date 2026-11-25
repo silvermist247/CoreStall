@@ -15114,6 +15114,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       }
       dst.style.transition = 'none';
       dst.style.animation = 'none';
+      dst.style.visibility = 'visible';
       for (var j = 0; j < src.children.length; j++) freeze(src.children[j], dst.children[j]);
     }
     function copyOf(el, w, h) {
@@ -15190,6 +15191,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       if (p.chute) p.chute.remove();
       p.chute = null;
       p.ant = makeAnt();
+      p.ant.style.pointerEvents = 'auto';
+      p.ant.style.cursor = 'pointer';
+      p.ant.addEventListener('click', function () { flipAnt(p); });
       p.clean = {
         t0: now, spawnX: spawnX, exitX: exitX,
         pickX: p.x + p.w / 2 - ANT / 2, approachMs: 1400
@@ -15199,24 +15203,95 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function cleanTick(p, now) {
       var c = p.clean;
       var el = now - c.t0;
-      var antX, top = window.innerHeight - GROUND_OFFSET;
+      var top = window.innerHeight - GROUND_OFFSET;
       if (el < c.approachMs) {
         var t = el / c.approachMs;
         var e = 1 - (1 - t) * (1 - t);
-        antX = c.spawnX + (c.pickX - c.spawnX) * e;
-        setAnt(p, antX);
-        p.el.style.opacity = '1';
+        p.antX = c.spawnX + (c.pickX - c.spawnX) * e;
+        setAnt(p, p.antX);
         return;
       }
-      var t2 = Math.min(1, (el - c.approachMs) / (CLEAN_MS - c.approachMs));
-      antX = c.pickX + (c.exitX - c.pickX) * t2;
-      setAnt(p, antX);
+      if (!c.carry) c.carry = { x0: c.pickX, x1: c.exitX, t0: c.t0 + c.approachMs, dur: CLEAN_MS - c.approachMs };
+      var t2 = Math.min(1, (now - c.carry.t0) / c.carry.dur);
+      var s2 = t2 * t2 * (3 - 2 * t2);
+      p.antX = c.carry.x0 + (c.carry.x1 - c.carry.x0) * s2;
+      setAnt(p, p.antX);
       // the piece rides above the ant
-      p.x = antX + ANT / 2 - p.w / 2;
+      p.x = p.antX + ANT / 2 - p.w / 2;
       p.y = top - p.h - 6;
       p.rot = Math.sin(el / 180) * 3;
       drawPiece(p);
       if (t2 >= 1) finish(p);
+    }
+
+    // Clicking a carrying ant turns it round: it heads back for the opposite edge.
+    function flipAnt(p) {
+      var c = p.clean;
+      if (!c || !c.carry || p.dead) return;
+      var vw = window.innerWidth;
+      var newExit = (c.carry.x1 < vw / 2) ? vw + ANT + 10 : -ANT - 10;
+      c.carry = { x0: p.antX, x1: newExit, t0: performance.now(), dur: 2200 };
+      c.exitX = newExit;
+    }
+
+    // A group of ants carries the button back in from the nearest side, then it fades in where it sits.
+    function bringBack(el) {
+      var r = el.getBoundingClientRect();
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var onScreen = r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
+      if (!onScreen || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.style.visibility = '';
+        return;
+      }
+      var w = r.width, h = r.height, N = 4;
+      var side = (r.left + w / 2 < vw / 2) ? -1 : 1;
+      var spawnX = side < 0 ? -w - 20 : vw + 20;
+      var targetX = r.left, targetY = r.top;
+
+      var ghost = copyOf(el, w, h);
+      ghost.style.top = targetY + 'px';
+      ghost.style.left = spawnX + 'px';
+      document.body.appendChild(ghost);
+      var ants = [];
+      for (var i = 0; i < N; i++) ants.push(makeAnt());
+      function antOffset(i) { return 8 + (w - 16 - ANT) * (i / (N - 1)); }
+
+      var ENTER = 1800, EXIT = 1500, t0 = performance.now(), revealed = false;
+      function frame(now) {
+        var t = now - t0;
+        if (t < ENTER) {
+          var u = t / ENTER;
+          var e = 1 - Math.pow(1 - u, 3);
+          var gx = spawnX + (targetX - spawnX) * e;
+          ghost.style.left = gx + 'px';
+          ants.forEach(function (a, i) {
+            a.style.left = (gx + antOffset(i)) + 'px';
+            a.style.top = (targetY + h - 8) + 'px';
+          });
+          requestAnimationFrame(frame);
+          return;
+        }
+        if (!revealed) {
+          revealed = true;
+          el.style.visibility = '';
+          el.style.transition = 'opacity .4s ease';
+          el.style.opacity = '0';
+          requestAnimationFrame(function () { el.style.opacity = '1'; });
+          ghost.style.transition = 'opacity .4s ease';
+          ghost.style.opacity = '0';
+          setTimeout(function () { el.style.transition = ''; el.style.opacity = ''; }, 450);
+        }
+        var u2 = Math.min(1, (t - ENTER) / EXIT);
+        var e2 = u2 * u2;
+        ants.forEach(function (a, i) {
+          a.style.left = (targetX + antOffset(i) + (spawnX - targetX) * e2) + 'px';
+          a.style.top = (targetY + h - 8) + 'px';
+        });
+        if (u2 < 1) { requestAnimationFrame(frame); return; }
+        ghost.remove();
+        ants.forEach(function (a) { a.remove(); });
+      }
+      requestAnimationFrame(frame);
     }
 
     function finish(p) {
@@ -15377,7 +15452,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
         var left = quads.length;
         function onPieceDone() {
           left--;
-          if (left === 0) el.style.visibility = '';
+          if (left === 0) bringBack(el);
         }
         // The pieces are copies of the falling button itself, so they look exactly the same
         clone.style.transform = 'none';
