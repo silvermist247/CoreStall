@@ -15066,14 +15066,17 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
   })();
   </script>
   <script>
-  /* HERO DROP: the clicked hero button gives a startled hop, falls onto the matching filter button and breaks.
-     The pieces land on the bottom of the screen. You can drag them. A piece left alone for 7 seconds
-     fades and sinks away over 5 seconds. Own code. */
+  /* HERO DROP: the clicked hero button hides, hops, falls onto the matching filter button and breaks.
+     The pieces float down under small parachutes and land on the bottom of the screen. You can drag them.
+     A piece left alone for 7 seconds fades away over 5 seconds. Own code. */
   (function () {
     var busy = false;
     var pieces = [];
     var loopOn = false, lastT = 0;
-    var IDLE_MS = 7000, CLEAN_MS = 5000;
+    var IDLE_MS = 7000, CLEAN_MS = 5000, CHUTE_FALL = 140;
+    var CHUTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="84" height="56" viewBox="0 0 84 56">' +
+      '<path d="M4 30 Q42 -10 80 30 Z" fill="#8fc9a3" fill-opacity="0.92" stroke="#ff7a2a" stroke-width="1.5"/>' +
+      '<path d="M4 30 L30 56 M22 30 L34 56 M42 30 L42 56 M62 30 L50 56 M80 30 L54 56" stroke="#ff7a2a" stroke-width="1" fill="none" opacity="0.85"/></svg>';
 
     function freeze(src, dst) {
       var cs = getComputedStyle(src);
@@ -15092,6 +15095,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       freeze(el, c);
       c.style.position = 'fixed';
       c.style.margin = '0';
+      c.style.visibility = 'visible';
       c.style.width = w + 'px';
       c.style.height = h + 'px';
       c.style.pointerEvents = 'none';
@@ -15104,29 +15108,111 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       node.style.top = (pageY - window.scrollY) + 'px';
     }
 
-    function drawPiece(p) {
-      p.el.style.left = p.x + 'px';
+    function drawPiece(p, sway) {
+      var x = p.x + (p.chuteOpen ? Math.sin(p.swayT * 2.2) * 8 : 0);
+      p.el.style.left = x + 'px';
       p.el.style.top = p.y + 'px';
       p.el.style.transform = 'rotate(' + p.rot + 'deg)';
+      if (p.chute) {
+        p.chute.style.left = (x + p.w / 2 - 42) + 'px';
+        p.chute.style.top = (p.y - 50) + 'px';
+      }
     }
 
-    // One loop runs the physics, the idle timers and the clean-up for every piece.
+    function closeChute(p) {
+      if (!p.chute || !p.chuteOpen) return;
+      p.chuteOpen = false;
+      var c = p.chute;
+      c.style.opacity = '0';
+      setTimeout(function () { c.remove(); }, 320);
+      p.chute = null;
+    }
+
+    var ANT_SVG = '<svg class="ant-crew-legs-walk" viewBox="0 0 28 28" width="26" height="26">' +
+      '<ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827"/><ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937"/>' +
+      '<ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827"/><path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2"/>' +
+      '<path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8"/>' +
+      '<polygon points="12,5 16,5 14,1" fill="#8fc9a3"/></svg>';
+    var ANT = 26, GROUND_OFFSET = 30;
+
+    function makeAnt() {
+      var a = document.createElement('div');
+      a.innerHTML = ANT_SVG;
+      a.style.position = 'fixed';
+      a.style.width = ANT + 'px';
+      a.style.height = ANT + 'px';
+      a.style.pointerEvents = 'none';
+      a.style.zIndex = '9999';
+      document.body.appendChild(a);
+      return a;
+    }
+    function setAnt(p, x) {
+      p.ant.style.left = x + 'px';
+      p.ant.style.top = (window.innerHeight - GROUND_OFFSET) + 'px';
+    }
+
+    // Clean-up: an ant walks in from the nearest edge, picks the piece up, and carries it back out.
+    function startClean(p, now) {
+      var vw = window.innerWidth;
+      var side = (p.x + p.w / 2 < vw / 2) ? -1 : 1;
+      var spawnX = side < 0 ? -ANT - 10 : vw + 10;
+      var exitX = spawnX;
+      p.state = 'clean';
+      p.el.style.pointerEvents = 'none';
+      if (p.chute) p.chute.remove();
+      p.chute = null;
+      p.ant = makeAnt();
+      p.clean = {
+        t0: now, spawnX: spawnX, exitX: exitX,
+        pickX: p.x + p.w / 2 - ANT / 2, approachMs: 1400
+      };
+      setAnt(p, spawnX);
+    }
+    function cleanTick(p, now) {
+      var c = p.clean;
+      var el = now - c.t0;
+      var antX, top = window.innerHeight - GROUND_OFFSET;
+      if (el < c.approachMs) {
+        var t = el / c.approachMs;
+        var e = 1 - (1 - t) * (1 - t);
+        antX = c.spawnX + (c.pickX - c.spawnX) * e;
+        setAnt(p, antX);
+        p.el.style.opacity = '1';
+        return;
+      }
+      var t2 = Math.min(1, (el - c.approachMs) / (CLEAN_MS - c.approachMs));
+      antX = c.pickX + (c.exitX - c.pickX) * t2;
+      setAnt(p, antX);
+      // the piece rides above the ant
+      p.x = antX + ANT / 2 - p.w / 2;
+      p.y = top - p.h - 6;
+      p.rot = Math.sin(el / 180) * 3;
+      drawPiece(p);
+      if (t2 >= 1) finish(p);
+    }
+
+    function finish(p) {
+      p.dead = true;
+      if (p.chute) p.chute.remove();
+      if (p.ant) p.ant.remove();
+      p.el.remove();
+      if (p.onDone) p.onDone();
+    }
+
+    // One loop runs the physics, the parachutes, the idle timers and the clean-up for every piece.
     function tick(now) {
       var dt = Math.min(0.033, (now - lastT) / 1000);
       lastT = now;
       pieces.forEach(function (p) {
         if (p.dead) return;
-        if (p.state === 'clean') {
-          var t = Math.min(1, (now - p.cleanStart) / CLEAN_MS);
-          p.el.style.opacity = String(1 - t);
-          p.el.style.transform = 'translateY(' + (t * 40) + 'px) scale(' + (1 - 0.2 * t) + ') rotate(' + p.rot + 'deg)';
-          if (t >= 1) { p.el.remove(); p.dead = true; }
-          return;
-        }
+        p.swayT += dt;
+        if (p.state === 'clean') { cleanTick(p, now); return; }
         if (p.state === 'drag') { p.lastTouch = now; drawPiece(p); return; }
 
         var floor = window.innerHeight - p.h - 8;
         p.vy += 1400 * dt;
+        if (p.chuteOpen && p.vy > CHUTE_FALL) p.vy = CHUTE_FALL; // the parachute caps the fall speed
+        if (p.chuteOpen) p.vx *= Math.pow(0.3, dt);               // and the drift dies out
         p.x += p.vx * dt;
         p.y += p.vy * dt;
         p.rot += p.vr * dt;
@@ -15144,12 +15230,8 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
         var settled = p.y >= floor && p.vy === 0 && Math.abs(p.vx) < 8;
         if (settled) {
-          if (p.state !== 'rest') { p.state = 'rest'; p.lastTouch = now; }
-          if (now - p.lastTouch > IDLE_MS) {
-            p.state = 'clean';
-            p.cleanStart = now;
-            p.el.style.pointerEvents = 'none';
-          }
+          if (p.state !== 'rest') { p.state = 'rest'; p.lastTouch = now; closeChute(p); }
+          if (now - p.lastTouch > IDLE_MS) startClean(p, now);
         } else {
           p.state = 'fall';
         }
@@ -15165,15 +15247,27 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       requestAnimationFrame(tick);
     }
 
-    function addPiece(el, w, h, x, y, vx, vy, vr, clip) {
+    function addPiece(el, w, h, x, y, vx, vy, vr, clip, onDone) {
       var f = copyOf(el, w, h);
       if (clip) { f.style.clipPath = clip; f.style.webkitClipPath = clip; }
       f.style.pointerEvents = 'auto';
       f.style.touchAction = 'none';
       f.style.cursor = 'grab';
       document.body.appendChild(f);
+
+      var chute = document.createElement('div');
+      chute.innerHTML = CHUTE_SVG;
+      chute.style.position = 'fixed';
+      chute.style.width = '84px';
+      chute.style.height = '56px';
+      chute.style.pointerEvents = 'none';
+      chute.style.zIndex = '9999';
+      chute.style.transition = 'opacity 0.3s ease';
+      document.body.appendChild(chute);
+
       var p = {
-        el: f, x: x, y: y, w: w, h: h, vx: vx, vy: vy, rot: 0, vr: vr,
+        el: f, chute: chute, chuteOpen: true, onDone: onDone,
+        x: x, y: y, w: w, h: h, vx: vx, vy: vy, rot: 0, vr: vr, swayT: Math.random() * 6,
         state: 'fall', lastTouch: performance.now(), trail: [], dead: false
       };
       f.addEventListener('pointerdown', function (e) {
@@ -15193,7 +15287,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
         p.trail.push({ x: e.clientX, y: e.clientY, t: performance.now() });
         if (p.trail.length > 6) p.trail.shift();
       });
-      function release(e) {
+      function release() {
         if (p.state !== 'drag') return;
         var first = p.trail[0], last = p.trail[p.trail.length - 1];
         var secs = Math.max(0.016, (last.t - first.t) / 1000);
@@ -15225,10 +15319,12 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var clone = copyOf(el, from.width, from.height);
       document.body.appendChild(clone);
       placePage(clone, startX, startY);
+      el.style.visibility = 'hidden'; // the clicked button disappears; it returns once its pieces are gone
 
       target.click(); // applies the filter; no page jump here
       var tr = target.getBoundingClientRect();
-      var landX = tr.left, landY = tr.top + window.scrollY;
+      // Land centred on the matching filter button, which may sit in a different column from the hero button
+      var landX = tr.left + (tr.width - from.width) / 2, landY = tr.top + window.scrollY;
 
       var hop = 34;
       var fallStartY = startY - hop;
@@ -15256,10 +15352,16 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
           'polygon(58% 52%, 100% 44%, 100% 100%, 52% 100%)'
         ];
         var viewY = landY - window.scrollY;
+        var left = quads.length;
+        function onPieceDone() {
+          left--;
+          if (left === 0) el.style.visibility = '';
+        }
         quads.forEach(function (q, i) {
           var dir = i % 2 ? 1 : -1;
           addPiece(el, from.width, from.height, landX, viewY,
-            dir * (40 + Math.random() * 60), -(40 + Math.random() * 60), dir * (90 + Math.random() * 120), q);
+            dir * (40 + Math.random() * 60), -(40 + Math.random() * 60), dir * (90 + Math.random() * 120),
+            q, onPieceDone);
         });
         clone.remove();
       }
@@ -15269,7 +15371,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function hopFrame(now) {
         var t = Math.min(1, (now - tH) / 240);
         var e = 1 - (1 - t) * (1 - t);
-        placePage(clone, startX, startY - hop * e);
+        placePage(clone, startX + (landX - startX) * e, startY - hop * e); // the hop also slides it over the target column
         clone.style.transform = 'rotate(' + (-6 * Math.sin(t * Math.PI)) + 'deg) scale(' + (1 + 0.04 * Math.sin(t * Math.PI)) + ')';
         if (t < 1) { requestAnimationFrame(hopFrame); return; }
         clone.style.transform = 'none';
@@ -15281,7 +15383,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function fallFrame(now) {
         var t = Math.max(0, Math.min(1, (now - fallT0) / T1));
         var y = fallStartY + (landY - fallStartY) * t * t; // accelerates like gravity
-        placePage(clone, startX, y);
+        placePage(clone, landX, y);
         follow(y);
         if (t < 1) { requestAnimationFrame(fallFrame); return; }
         impact();
