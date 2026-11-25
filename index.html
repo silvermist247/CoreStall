@@ -5412,18 +5412,22 @@
     /* FIXES: no sideways overflow from the sigil (the blank strip on phones) */
     .hero { overflow-x: clip; }
   
-    /* SEAM BETWEEN PAGES: no solid edge. The divider is a short fade from the section above into the
-       page colour, and the teal line sits up at the seam. */
+    /* SEAM BETWEEN PAGES: the open archive section fades into the page colour at its bottom edge,
+       so there is no hard band edge. The teal line sits on that seam. */
+    .secret-favorites-section.unlocked-open {
+      margin-bottom: 0 !important;
+      border-bottom-color: transparent !important;
+      box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.05) !important;
+      background:
+        linear-gradient(to bottom, rgba(21, 25, 32, 0) 0%, #151920 100%) bottom / 100% 180px no-repeat,
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%) !important;
+    }
     .pick-divider {
-      position: relative; display: block; width: 100%; height: 96px; margin: -24px 0 0;
-      background: linear-gradient(to bottom, rgba(21, 25, 32, 0) 0%, #151920 100%) !important;
+      position: relative; display: block; height: 1px; width: min(70%, 720px); margin: 0 auto;
+      background: linear-gradient(90deg, transparent, #2ec4b6, transparent) !important;
     }
-    .pick-divider::before {
-      content: ""; position: absolute; left: 50%; top: 40px; transform: translateX(-50%);
-      width: min(70%, 720px); height: 1px;
-      background: linear-gradient(90deg, transparent, #2ec4b6, transparent);
-    }
-    .pick-divider::after { top: 40px !important; }
+    .pick-divider::before { content: none; }
+    .pick-divider::after { top: 50% !important; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
