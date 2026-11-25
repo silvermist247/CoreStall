@@ -15128,9 +15128,73 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       p.chute = null;
     }
 
+    var ANT_SVG = '<svg class="ant-crew-legs-walk" viewBox="0 0 28 28" width="26" height="26">' +
+      '<ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827"/><ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937"/>' +
+      '<ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827"/><path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2"/>' +
+      '<path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8"/>' +
+      '<polygon points="12,5 16,5 14,1" fill="#8fc9a3"/></svg>';
+    var ANT = 26, GROUND_OFFSET = 30;
+
+    function makeAnt() {
+      var a = document.createElement('div');
+      a.innerHTML = ANT_SVG;
+      a.style.position = 'fixed';
+      a.style.width = ANT + 'px';
+      a.style.height = ANT + 'px';
+      a.style.pointerEvents = 'none';
+      a.style.zIndex = '9999';
+      document.body.appendChild(a);
+      return a;
+    }
+    function setAnt(p, x) {
+      p.ant.style.left = x + 'px';
+      p.ant.style.top = (window.innerHeight - GROUND_OFFSET) + 'px';
+    }
+
+    // Clean-up: an ant walks in from the nearest edge, picks the piece up, and carries it back out.
+    function startClean(p, now) {
+      var vw = window.innerWidth;
+      var side = (p.x + p.w / 2 < vw / 2) ? -1 : 1;
+      var spawnX = side < 0 ? -ANT - 10 : vw + 10;
+      var exitX = spawnX;
+      p.state = 'clean';
+      p.el.style.pointerEvents = 'none';
+      if (p.chute) p.chute.remove();
+      p.chute = null;
+      p.ant = makeAnt();
+      p.clean = {
+        t0: now, spawnX: spawnX, exitX: exitX,
+        pickX: p.x + p.w / 2 - ANT / 2, approachMs: 1400
+      };
+      setAnt(p, spawnX);
+    }
+    function cleanTick(p, now) {
+      var c = p.clean;
+      var el = now - c.t0;
+      var antX, top = window.innerHeight - GROUND_OFFSET;
+      if (el < c.approachMs) {
+        var t = el / c.approachMs;
+        var e = 1 - (1 - t) * (1 - t);
+        antX = c.spawnX + (c.pickX - c.spawnX) * e;
+        setAnt(p, antX);
+        p.el.style.opacity = '1';
+        return;
+      }
+      var t2 = Math.min(1, (el - c.approachMs) / (CLEAN_MS - c.approachMs));
+      antX = c.pickX + (c.exitX - c.pickX) * t2;
+      setAnt(p, antX);
+      // the piece rides above the ant
+      p.x = antX + ANT / 2 - p.w / 2;
+      p.y = top - p.h - 6;
+      p.rot = Math.sin(el / 180) * 3;
+      drawPiece(p);
+      if (t2 >= 1) finish(p);
+    }
+
     function finish(p) {
       p.dead = true;
       if (p.chute) p.chute.remove();
+      if (p.ant) p.ant.remove();
       p.el.remove();
       if (p.onDone) p.onDone();
     }
@@ -15142,12 +15206,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       pieces.forEach(function (p) {
         if (p.dead) return;
         p.swayT += dt;
-        if (p.state === 'clean') {
-          var t = Math.min(1, (now - p.cleanStart) / CLEAN_MS);
-          p.el.style.opacity = String(1 - t); // a plain fade, nothing else moves
-          if (t >= 1) finish(p);
-          return;
-        }
+        if (p.state === 'clean') { cleanTick(p, now); return; }
         if (p.state === 'drag') { p.lastTouch = now; drawPiece(p); return; }
 
         var floor = window.innerHeight - p.h - 8;
@@ -15172,12 +15231,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
         var settled = p.y >= floor && p.vy === 0 && Math.abs(p.vx) < 8;
         if (settled) {
           if (p.state !== 'rest') { p.state = 'rest'; p.lastTouch = now; closeChute(p); }
-          if (now - p.lastTouch > IDLE_MS) {
-            p.state = 'clean';
-            p.cleanStart = now;
-            p.el.style.pointerEvents = 'none';
-            if (p.chute) p.chute.remove();
-          }
+          if (now - p.lastTouch > IDLE_MS) startClean(p, now);
         } else {
           p.state = 'fall';
         }
