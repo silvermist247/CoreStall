@@ -15341,14 +15341,16 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
       target.click(); // applies the filter; no page jump here
       var tr = target.getBoundingClientRect();
-      // Land centred on the matching filter button, which may sit in a different column from the hero button
+      // Land centred on the matching filter button, which may sit in a different column
       var landX = tr.left + (tr.width - from.width) / 2, landY = tr.top + window.scrollY;
 
-      var hop = 34;
-      var fallStartY = startY - hop;
-      var dist = Math.max(40, landY - fallStartY);
-      var T1 = Math.min(2600, Math.max(1000, Math.sqrt(dist) * 45));
-      var fallT0 = 0;
+      // A real jump from where the button sits: it goes up first, then arcs over to the target.
+      var G = 1400, JUMP = 42;
+      var vy0 = -Math.sqrt(2 * G * JUMP);
+      var tApex = -vy0 / G;
+      var fallDist = Math.max(10, landY - (startY - JUMP));
+      var T = tApex + Math.sqrt(2 * fallDist / G);
+      var vx = (landX - startX) / T;
       var chute = null;
 
       var camY = window.scrollY;
@@ -15377,42 +15379,35 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
           left--;
           if (left === 0) el.style.visibility = '';
         }
+        // The pieces are copies of the falling button itself, so they look exactly the same
+        clone.style.transform = 'none';
         quads.forEach(function (q, i) {
           var dir = i % 2 ? 1 : -1;
-          addPiece(el, from.width, from.height, landX, viewY,
+          addPiece(clone, from.width, from.height, landX, viewY,
             dir * (40 + Math.random() * 60), -(40 + Math.random() * 60), dir * (90 + Math.random() * 120),
             q, onPieceDone);
         });
         clone.remove();
       }
 
-      // Step 1: the startled hop
-      var tH = performance.now();
-      function hopFrame(now) {
-        var t = Math.min(1, (now - tH) / 240);
-        var e = 1 - (1 - t) * (1 - t);
-        placePage(clone, startX + (landX - startX) * e, startY - hop * e); // the hop also slides it over the target column
-        clone.style.transform = 'rotate(' + (-6 * Math.sin(t * Math.PI)) + 'deg) scale(' + (1 + 0.04 * Math.sin(t * Math.PI)) + ')';
-        if (t < 1) { requestAnimationFrame(hopFrame); return; }
-        clone.style.transform = 'none';
-        fallT0 = performance.now() + 110; // a short hang before the fall
-        requestAnimationFrame(fallFrame);
-      }
-
-      // Step 2: the fall
-      function fallFrame(now) {
-        var t = Math.max(0, Math.min(1, (now - fallT0) / T1));
-        var y = fallStartY + (landY - fallStartY) * t * t; // accelerates like gravity
-        var sway = Math.sin((now - fallT0) / 260) * 10 * (1 - t); // the parachute rocks it gently
-        var x = landX + sway;
-        if (!chute) chute = makeChute(from.width);
+      var t0 = performance.now();
+      function flight(now) {
+        var t = Math.min(T, (now - t0) / 1000);
+        var x = startX + vx * t;
+        var y = startY + vy0 * t + 0.5 * G * t * t;
+        var descending = t > tApex;
+        var tilt = Math.max(-10, Math.min(10, vx * 0.02));
         placePage(clone, x, y);
-        placeChute(chute, x, from.width, y, sway * 0.6);
+        clone.style.transform = 'rotate(' + (descending ? tilt : tilt * 0.5) + 'deg)';
+        if (descending) {
+          if (!chute) chute = makeChute(from.width); // the parachute opens on the way down
+          placeChute(chute, x, from.width, y, Math.sin((t - tApex) * 6) * 6);
+        }
         follow(y);
-        if (t < 1) { requestAnimationFrame(fallFrame); return; }
+        if (t < T) { requestAnimationFrame(flight); return; }
         impact();
       }
-      requestAnimationFrame(hopFrame);
+      requestAnimationFrame(flight);
     };
   })();
   </script>
