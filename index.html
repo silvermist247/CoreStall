@@ -5795,8 +5795,8 @@
       .shop-grid.vr-on { display: none !important; }
       .vr-stage {
         position: relative;
-        height: min(80vh, 760px);
-        min-height: 520px;
+        height: min(84vh, 860px);
+        min-height: 540px;
         margin: 2.5rem auto 0;
         max-width: 1400px;
         border-radius: 18px;
@@ -16080,8 +16080,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     var R = 10;                        // radius of the cylinder
-    var ROW_H = 0.5 * R;               // height of one row of photos
+    var ROW_H = 0.5 * R;               // height of one row of photos (fitted in rebuild)
     var ROW_GAP = 0.05 * R;
+    var FIT = 0.84;                    // share of the visible height the wall may use
     var COL_STEP = Math.PI * 0.28;     // 50 degrees between column centres
     var COL_ARC = COL_STEP - 0.12;     // arc covered by one photo, with a gap
     var MAX_YAW = 0.3;                 // drag range: never reveal the empty edge of the wall
@@ -16202,6 +16203,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       clearWorld();
       var cards = visibleCards();
       var rows = Math.max(1, Math.ceil(cards.length / 3));
+      // fit the whole wall inside the visible height, so no row is cut off
+      var visibleHalf = R * Math.tan(VFOV * Math.PI / 360);
+      ROW_H = Math.min(0.5 * R, (2 * FIT * visibleHalf - (rows - 1) * ROW_GAP) / rows);
       var totalH = rows * ROW_H + (rows - 1) * ROW_GAP;
       var slotAspect = (R * COL_ARC) / ROW_H;
       cards.forEach(function (card, idx) {
