@@ -5267,7 +5267,6 @@
     .product-card .add-to-cart-btn:hover { background: #13968a !important; color: #ffffff !important; }
     .product-card .add-to-cart-btn::before, .product-card .add-to-cart-btn::after { display: none !important; }
     /* q13 section divider */
-    .pick-divider { background: linear-gradient(90deg, transparent, #2ec4b6, transparent) !important; }
     .pick-divider::after { background: #2ec4b6 !important; }
     /* q20 scroll cue */
     .hero-scroll-cue i { color: #2ec4b6 !important; }
@@ -5412,6 +5411,19 @@
   
     /* FIXES: no sideways overflow from the sigil (the blank strip on phones) */
     .hero { overflow-x: clip; }
+  
+    /* SEAM BETWEEN PAGES: no solid edge. The divider is a short fade from the section above into the
+       page colour, and the teal line sits up at the seam. */
+    .pick-divider {
+      position: relative; display: block; width: 100%; height: 96px; margin: -24px 0 0;
+      background: linear-gradient(to bottom, rgba(21, 25, 32, 0) 0%, #151920 100%) !important;
+    }
+    .pick-divider::before {
+      content: ""; position: absolute; left: 50%; top: 40px; transform: translateX(-50%);
+      width: min(70%, 720px); height: 1px;
+      background: linear-gradient(90deg, transparent, #2ec4b6, transparent);
+    }
+    .pick-divider::after { top: 40px !important; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
