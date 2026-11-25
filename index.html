@@ -15074,10 +15074,38 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var pieces = [];
     var loopOn = false, lastT = 0;
     var IDLE_MS = 7000, CLEAN_MS = 5000, CHUTE_FALL = 140;
-    var CHUTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="84" height="56" viewBox="0 0 84 56">' +
-      '<path d="M4 30 Q42 -10 80 30 Z" fill="#8fc9a3" fill-opacity="0.92" stroke="#ff7a2a" stroke-width="1.5"/>' +
-      '<path d="M4 30 L30 56 M22 30 L34 56 M42 30 L42 56 M62 30 L50 56 M80 30 L54 56" stroke="#ff7a2a" stroke-width="1" fill="none" opacity="0.85"/></svg>';
-
+    var CHUTE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70" width="100%" height="100%" style="display:block;overflow:visible">' +
+      '<defs><linearGradient id="meChuteG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c4e8d0"/><stop offset="1" stop-color="#5f9c76"/></linearGradient></defs>' +
+      '<path d="M3 34 C14 4 86 4 97 34 Q50 46 3 34 Z" fill="url(#meChuteG)" stroke="#2f4a3a" stroke-width="1"/>' +
+      '<path d="M50 6 L20 40 M50 6 L35 42 M50 6 L50 44 M50 6 L65 42 M50 6 L80 40" stroke="#2f4a3a" stroke-width="0.8" fill="none" opacity="0.55"/>' +
+      '<path d="M14 22 Q30 12 46 15" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.35" stroke-linecap="round"/>' +
+      '<path d="M20 40 L30 68 M50 44 L50 68 M80 40 L70 68" stroke="#ff7a2a" stroke-width="0.9" fill="none" opacity="0.9"/>' +
+      '<circle cx="30" cy="68" r="1.8" fill="#ff7a2a"/><circle cx="50" cy="68" r="1.8" fill="#ff7a2a"/><circle cx="70" cy="68" r="1.8" fill="#ff7a2a"/></svg>';
+    function makeChute(w) {
+      var W = Math.max(110, Math.round(w * 0.95)), H = Math.round(W * 0.7);
+      var el = document.createElement('div');
+      el.style.position = 'fixed';
+      el.style.width = W + 'px';
+      el.style.height = H + 'px';
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = '9999';
+      el.innerHTML = '<div style="width:100%;height:100%;transform-origin:50% 100%;transform:scale(0.4);opacity:0;transition:transform .35s ease-out,opacity .35s ease-out">' + CHUTE_SVG + '</div>';
+      document.body.appendChild(el);
+      var inner = el.firstChild;
+      requestAnimationFrame(function () { inner.style.transform = 'scale(1)'; inner.style.opacity = '1'; }); // opens
+      return { el: el, inner: inner, W: W, H: H };
+    }
+    function placeChute(c, x, w, pageY, sway) {
+      c.el.style.left = (x + w / 2 - c.W / 2) + 'px';
+      c.el.style.top = (pageY - window.scrollY - c.H) + 'px';
+      c.el.style.transform = 'rotate(' + sway + 'deg)';
+      c.el.style.transformOrigin = '50% 100%';
+    }
+    function cutLoose(c) {
+      c.inner.style.transform = 'scale(0.6) translateY(-10px)';
+      c.inner.style.opacity = '0';
+      setTimeout(function () { c.el.remove(); }, 450);
+    }
     function freeze(src, dst) {
       var cs = getComputedStyle(src);
       for (var i = 0; i < cs.length; i++) {
@@ -15255,18 +15283,8 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       f.style.cursor = 'grab';
       document.body.appendChild(f);
 
-      var chute = document.createElement('div');
-      chute.innerHTML = CHUTE_SVG;
-      chute.style.position = 'fixed';
-      chute.style.width = '84px';
-      chute.style.height = '56px';
-      chute.style.pointerEvents = 'none';
-      chute.style.zIndex = '9999';
-      chute.style.transition = 'opacity 0.3s ease';
-      document.body.appendChild(chute);
-
       var p = {
-        el: f, chute: chute, chuteOpen: true, onDone: onDone,
+        el: f, chute: null, chuteOpen: false, onDone: onDone,
         x: x, y: y, w: w, h: h, vx: vx, vy: vy, rot: 0, vr: vr, swayT: Math.random() * 6,
         state: 'fall', lastTouch: performance.now(), trail: [], dead: false
       };
@@ -15331,6 +15349,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var dist = Math.max(40, landY - fallStartY);
       var T1 = Math.min(2600, Math.max(1000, Math.sqrt(dist) * 45));
       var fallT0 = 0;
+      var chute = null;
 
       var camY = window.scrollY;
       function follow(pageY) {
@@ -15342,6 +15361,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function impact() {
         // The camera stops here: it followed the button only until it hit the next one.
         busy = false;
+        if (chute) { cutLoose(chute); chute = null; }
         target.classList.add('is-broken');
         setTimeout(function () { target.classList.remove('is-broken'); }, 600);
 
@@ -15383,7 +15403,11 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       function fallFrame(now) {
         var t = Math.max(0, Math.min(1, (now - fallT0) / T1));
         var y = fallStartY + (landY - fallStartY) * t * t; // accelerates like gravity
-        placePage(clone, landX, y);
+        var sway = Math.sin((now - fallT0) / 260) * 10 * (1 - t); // the parachute rocks it gently
+        var x = landX + sway;
+        if (!chute) chute = makeChute(from.width);
+        placePage(clone, x, y);
+        placeChute(chute, x, from.width, y, sway * 0.6);
         follow(y);
         if (t < 1) { requestAnimationFrame(fallFrame); return; }
         impact();
