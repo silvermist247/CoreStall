@@ -5628,82 +5628,98 @@
     }
 
     /* =========================================================================
-       DIVIDER ENERGY: the diamond charges, light runs out along the line both
-       ways, the line pulses, then a drop of energy falls from above and charges
-       the diamond again. One cycle is 7 seconds.
+       DIVIDER ENERGY (Tron-style light): one SVG per divider. Filters use fixed
+       user-space regions so the glow is never clipped. Cycle: 7 seconds.
        ========================================================================= */
     .pick-divider { overflow: visible; }
-    .pick-divider::after {
-      animation: pdDiamond 7s ease-in-out infinite;
+    .pick-divider::after { display: none !important; }
+    .pd-fx {
+      position: absolute; left: 0; top: 50%;
+      width: 100%; height: auto; aspect-ratio: 720 / 140;
+      transform: translateY(-50%); overflow: visible; pointer-events: none;
     }
-    .pick-divider {
-      animation: pdLine 7s ease-in-out infinite;
+    .pd-fx * { transform-box: view-box; transform-origin: 360px 70px; }
+
+    /* light runners: a dash of 160 units travels out along the line */
+    .pd-run {
+      fill: none; stroke-linecap: round; stroke-dasharray: 160 2000;
+      animation: pdRun 7s linear infinite;
     }
+    .pd-run-soft { stroke: #8fc9a3; stroke-width: 8; opacity: 0.55; }
+    .pd-run-r:not(.pd-run-soft) { stroke: #eafff5; stroke-width: 1.6; }
+    .pd-run-l:not(.pd-run-soft) { stroke: #eafff5; stroke-width: 1.6; }
+    @keyframes pdRun {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      8%      { stroke-dashoffset: 160; opacity: 1; }
+      36%     { stroke-dashoffset: -360; opacity: 1; }
+      42%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    .pd-run-l { animation-name: pdRunL; }
+    @keyframes pdRunL {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      8%      { stroke-dashoffset: 160; opacity: 1; }
+      36%     { stroke-dashoffset: -360; opacity: 1; }
+      42%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+
+    /* the whole line pulses once after the runners leave */
+    .pd-pulse { animation: pdPulse 7s ease-in-out infinite; }
+    @keyframes pdPulse {
+      0%, 44% { opacity: 0; }
+      52%     { opacity: 1; }
+      62%,100%{ opacity: 0; }
+    }
+
+    /* charge: a drop falls from above (stroke-dasharray 70 200) */
     .pd-drop {
-      position: absolute; left: 50%; top: -70px; width: 2px; height: 40px;
-      transform: translateX(-50%); border-radius: 2px; opacity: 0; pointer-events: none;
-      background: linear-gradient(to bottom, rgba(191, 255, 224, 0), #bfffe0 70%, #ffffff);
-      box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.8);
-      animation: pdDrop 7s ease-in infinite;
-    }
-    .pd-spark {
-      position: absolute; top: -1px; width: 110px; height: 3px; border-radius: 2px;
-      opacity: 0; pointer-events: none;
-      box-shadow: 0 0 6px 1px rgba(143, 201, 163, 0.7);
-    }
-    .pd-spark-r {
-      background: linear-gradient(90deg, rgba(191, 255, 224, 0.95), rgba(143, 201, 163, 0));
-      animation: pdSparkR 7s ease-out infinite;
-    }
-    .pd-spark-l {
-      background: linear-gradient(270deg, rgba(191, 255, 224, 0.95), rgba(143, 201, 163, 0));
-      animation: pdSparkL 7s ease-out infinite;
-    }
-    @keyframes pdDiamond {
-      0%   { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
-      8%   { box-shadow: 0 0 6px 2px rgba(143, 201, 163, 0.45); }
-      11%  { box-shadow: 0 0 18px 7px rgba(143, 201, 163, 0.9), 0 0 4px 1px #bfffe0; }
-      22%  { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.4); }
-      34%  { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
-    }
-    @keyframes pdLine {
-      0%, 46%  { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
-      52%      { box-shadow: 0 0 12px 2px rgba(143, 201, 163, 0.55); }
-      60%      { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
-      100%     { box-shadow: 0 0 0 0 rgba(143, 201, 163, 0); }
+      fill: none; stroke: #d9fff0; stroke-width: 2; stroke-linecap: round;
+      stroke-dasharray: 70 200; opacity: 0;
+      animation: pdDrop 7s linear infinite;
     }
     @keyframes pdDrop {
-      0%   { top: -70px; opacity: 0; }
-      2%   { opacity: 1; }
-      7%   { top: -4px; opacity: 1; }
-      8%   { top: -4px; opacity: 0; }
-      100% { top: -70px; opacity: 0; }
+      0%      { stroke-dashoffset: 70; opacity: 1; }
+      6%      { stroke-dashoffset: 0; opacity: 1; }
+      7%,100% { stroke-dashoffset: 0; opacity: 0; }
     }
-    @keyframes pdSparkR {
-      0%, 9%  { left: 50%; opacity: 0; }
-      11%     { left: 50%; opacity: 1; }
-      34%     { left: calc(100% - 110px); opacity: 0.6; }
-      40%,100%{ left: calc(100% - 110px); opacity: 0; }
+
+    /* shock ring on landing */
+    .pd-ring { opacity: 0; animation: pdRing 7s ease-out infinite; }
+    @keyframes pdRing {
+      0%, 6%  { transform: scale(1); opacity: 0; }
+      7%      { transform: scale(1); opacity: 0.95; }
+      17%,100%{ transform: scale(6.5); opacity: 0; }
     }
-    @keyframes pdSparkL {
-      0%, 9%  { left: calc(50% - 110px); opacity: 0; }
-      11%     { left: calc(50% - 110px); opacity: 1; }
-      34%     { left: 0; opacity: 0.6; }
-      40%,100%{ left: 0; opacity: 0; }
+
+    /* gem flares on charge, then settles */
+    .pd-gem {
+      transform: rotate(45deg);
+      animation: pdGem 7s ease-in-out infinite;
     }
+    @keyframes pdGem {
+      0%      { opacity: 0.55; transform: rotate(45deg) scale(0.85); filter: url(#pdBloom); }
+      7%      { opacity: 1;    transform: rotate(45deg) scale(1.35); }
+      16%     { opacity: 0.8;  transform: rotate(45deg) scale(1); }
+      100%    { opacity: 0.8;  transform: rotate(45deg) scale(1); }
+    }
+    .pd-halo { opacity: 0.3; animation: pdHalo 7s ease-in-out infinite; }
+    @keyframes pdHalo {
+      0%      { opacity: 0.3; transform: scale(0.8); }
+      7%      { opacity: 1;   transform: scale(1.5); }
+      20%,100%{ opacity: 0.3; transform: scale(1); }
+    }
+
     /* the footer diamond glows slowly */
-    .footer-content::before {
-      animation: footDiamond 3.6s ease-in-out infinite;
-    }
+    .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
     @keyframes footDiamond {
       0%, 100% { box-shadow: 0 0 6px 1px rgba(143, 201, 163, 0.3); }
       50%      { box-shadow: 0 0 16px 4px rgba(143, 201, 163, 0.75); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .pick-divider, .pick-divider::after, .pd-drop, .pd-spark, .footer-content::before { animation: none !important; }
-      .pd-drop, .pd-spark { display: none; }
-      .pick-divider::after { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.5); }
+      .pd-run, .pd-drop, .pd-ring, .pd-pulse, .pd-gem, .pd-halo, .footer-content::before { animation: none !important; }
+      .pd-run, .pd-drop, .pd-ring { display: none; }
+      .pd-pulse { opacity: 0.6; }
+      .pd-gem { opacity: 0.9; }
+      .pd-halo { opacity: 0.5; }
       .footer-content::before { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.5); }
     }
   </style>
@@ -6267,7 +6283,44 @@
 
     <!-- Contact Section -->
     <!-- AVAILABILITY: a client picks a date and sees whether it is free -->
-    <div class="pick-divider" aria-hidden="true"><span class="pd-drop"></span><span class="pd-spark pd-spark-l"></span><span class="pd-spark pd-spark-r"></span></div>
+    <div class="pick-divider" aria-hidden="true">
+      <svg class="pd-fx" viewBox="0 0 720 140" focusable="false">
+        <defs>
+          <filter id="pdBloom" filterUnits="userSpaceOnUse" x="-120" y="-120" width="960" height="380">
+            <feGaussianBlur stdDeviation="3.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="pdSoft" filterUnits="userSpaceOnUse" x="-120" y="-120" width="960" height="380">
+            <feGaussianBlur stdDeviation="8"/>
+          </filter>
+          <linearGradient id="pdLine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+            <stop offset="0" stop-color="#8fc9a3" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#bfffe0" stop-opacity="0.95"/>
+            <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="pdHalo">
+            <stop offset="0" stop-color="#8fc9a3" stop-opacity="0.85"/>
+            <stop offset="0.45" stop-color="#8fc9a3" stop-opacity="0.25"/>
+            <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- soft halo behind the gem -->
+        <circle class="pd-halo" cx="360" cy="70" r="26" fill="url(#pdHalo)" />
+        <!-- energy pulse along the whole line -->
+        <line class="pd-pulse" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="2" filter="url(#pdBloom)" />
+        <!-- light runners: out from the gem, both ways -->
+        <path class="pd-run pd-run-r pd-run-soft" d="M360 70 H720" filter="url(#pdSoft)" />
+        <path class="pd-run pd-run-r" d="M360 70 H720" filter="url(#pdBloom)" />
+        <path class="pd-run pd-run-l pd-run-soft" d="M360 70 H0" filter="url(#pdSoft)" />
+        <path class="pd-run pd-run-l" d="M360 70 H0" filter="url(#pdBloom)" />
+        <!-- charge: energy falls from above onto the gem -->
+        <path class="pd-drop" d="M360 0 V66" filter="url(#pdBloom)" />
+        <!-- shock ring when the charge lands -->
+        <circle class="pd-ring" cx="360" cy="70" r="4" fill="none" stroke="#8fc9a3" stroke-width="1.4" />
+        <!-- the gem -->
+        <rect class="pd-gem" x="356" y="66" width="8" height="8" fill="#8fc9a3" filter="url(#pdBloom)" />
+      </svg>
+    </div>
     <section id="availability" class="availability-section">
       <div class="section-header">
         <span class="section-tag">[ AVAILABILITY ]</span>
