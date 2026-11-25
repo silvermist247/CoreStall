@@ -5786,6 +5786,28 @@
       100% { opacity: 0; transform: scale(1.8); }
     }
 
+
+    /* =========================================================================
+       PAPER SHEET: on desktop the nine photos sit on one landscape A4 sheet
+       (297 x 210 ratio), sized to fit the screen. The sheet bends into a half
+       cylinder that wraps toward the viewer. The layout is set by script with the
+       translate and rotate properties, so the hover tilt (transform) still works.
+       ========================================================================= */
+    @media (min-width: 900px) {
+      .shop-grid.sheet-mode {
+        display: block;
+        position: relative;
+        gap: 0;
+        margin: 2.5rem auto 0;
+        perspective: 1900px;
+        perspective-origin: 50% 50%;
+        transform-style: preserve-3d;
+      }
+      .shop-grid.sheet-mode .product-card {
+        will-change: translate, rotate;
+      }
+    }
+
     /* the footer diamond glows slowly */
     .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
     @keyframes footDiamond {
@@ -16020,6 +16042,108 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       setTimeout(function () { made.forEach(function (el) { el.remove(); }); }, 2900);
     }
     hit.addEventListener('click', fire);
+  })();
+  </script>
+  <script>
+  // Paper sheet: lays the photos on a landscape A4 sheet, then bends the sheet into a half cylinder.
+  (function initPaperSheet() {
+    var grid = document.getElementById('mediaGrid');
+    if (!grid) return;
+    var GAP = 14;
+    var desktop = window.matchMedia('(min-width: 900px)');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var bend = 0;       // 0 = flat sheet, 1 = bent into a half cylinder
+    var bendStarted = false;
+    var frame = 0;
+
+    function cardsList() {
+      return Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
+    }
+    function visibleCards() {
+      return cardsList().filter(function (c) { return !c.classList.contains('hidden'); });
+    }
+    function dims(n) {
+      var rows = Math.max(1, Math.ceil(n / 3));
+      var H = Math.min(window.innerHeight * 0.72, 780);
+      var W = H * Math.SQRT2;                       // A4 landscape ratio
+      var maxW = window.innerWidth * 0.94;
+      if (W > maxW) { W = maxW; H = W / Math.SQRT2; }
+      return { W: W, H: H, rows: rows, cw: (W - 2 * GAP) / 3, ch: (H - (rows - 1) * GAP) / rows };
+    }
+    function reset() {
+      grid.classList.remove('sheet-mode');
+      grid.style.height = '';
+      cardsList().forEach(function (card) {
+        ['position', 'left', 'top', 'width', 'height', 'marginLeft', 'marginTop', 'aspectRatio', 'translate', 'rotate']
+          .forEach(function (p) { card.style[p] = ''; });
+      });
+    }
+    function layout() {
+      frame = 0;
+      if (!desktop.matches) { reset(); return; }
+      grid.classList.add('sheet-mode');
+      var cards = visibleCards();
+      var d = dims(cards.length);
+      var R = d.W / Math.PI;                        // half cylinder: half a circle has arc length pi*R = W
+      grid.style.height = d.H + 'px';
+      cards.forEach(function (card, i) {
+        var c = i % 3, r = Math.floor(i / 3);
+        var xf = -d.W / 2 + d.cw / 2 + c * (d.cw + GAP);
+        var yf = -d.H / 2 + d.ch / 2 + r * (d.ch + GAP);
+        var th = xf / R;                            // angle around the cylinder
+        var t = bend;
+        var X = (1 - t) * xf + t * R * Math.sin(th);
+        var Z = t * R * (1 - Math.cos(th));         // edges curve toward the viewer
+        var deg = -t * th * 180 / Math.PI;          // each photo turns to face the centre
+        card.style.position = 'absolute';
+        card.style.left = '50%';
+        card.style.top = '50%';
+        card.style.width = d.cw.toFixed(1) + 'px';
+        card.style.height = d.ch.toFixed(1) + 'px';
+        card.style.marginLeft = (-d.cw / 2).toFixed(1) + 'px';
+        card.style.marginTop = (-d.ch / 2).toFixed(1) + 'px';
+        card.style.aspectRatio = 'auto';
+        card.style.translate = X.toFixed(1) + 'px ' + yf.toFixed(1) + 'px ' + Z.toFixed(1) + 'px';
+        card.style.rotate = '0 1 0 ' + deg.toFixed(2) + 'deg';
+      });
+    }
+    function scheduleLayout() {
+      if (!frame) frame = requestAnimationFrame(layout);
+    }
+    function playBend() {
+      if (bendStarted) return;
+      bendStarted = true;
+      if (reduce.matches) { bend = 1; layout(); return; }
+      var start = null, dur = 1900;
+      function step(ts) {
+        if (start === null) start = ts;
+        var p = Math.min(1, (ts - start) / dur);
+        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // ease in-out
+        bend = e;
+        layout();
+        if (p < 1) requestAnimationFrame(step);
+        else { bend = 1; layout(); }
+      }
+      requestAnimationFrame(step);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting && desktop.matches) playBend();
+        });
+      }, { threshold: 0.35 });
+      io.observe(grid);
+    } else {
+      bend = 1;
+    }
+    desktop.addEventListener && desktop.addEventListener('change', function () { bendStarted = false; bend = 0; scheduleLayout(); });
+    window.addEventListener('resize', scheduleLayout);
+    // filters (class changes) and new photos (added cards) both re-lay the sheet
+    if (window.MutationObserver) {
+      new MutationObserver(scheduleLayout).observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
+    layout();
   })();
   </script>
 </body>
