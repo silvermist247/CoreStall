@@ -5788,24 +5788,49 @@
 
 
     /* =========================================================================
-       PAPER SHEET: on desktop the nine photos sit on one landscape A4 sheet
-       (297 x 210 ratio), sized to fit the screen. The sheet bends into a half
-       cylinder that wraps toward the viewer. The layout is set by script with the
-       translate and rotate properties, so the hover tilt (transform) still works.
+       HYPERSPACE CYLINDER (desktop): the photos wrap around the viewer inside a
+       half cylinder, drawn in WebGL. The viewer stands on the axis and drags to look around.
        ========================================================================= */
     @media (min-width: 900px) {
-      .shop-grid.sheet-mode {
-        display: block;
+      .shop-grid.vr-on { display: none !important; }
+      .vr-stage {
         position: relative;
-        gap: 0;
+        height: min(80vh, 760px);
+        min-height: 520px;
         margin: 2.5rem auto 0;
-        perspective: 1900px;
-        perspective-origin: 50% 50%;
-        transform-style: preserve-3d;
+        max-width: 1400px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: radial-gradient(ellipse at 50% 45%, #0f2b2b 0%, #0a1419 42%, #04070a 100%);
+        box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.75);
       }
-      .shop-grid.sheet-mode .product-card {
-        will-change: translate, rotate;
+      .vr-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+      .vr-hint {
+        position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; pointer-events: none;
+        font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: rgba(143, 201, 163, 0.75);
       }
+      .vr-detail {
+        position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+        background: rgba(3, 6, 9, 0.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      }
+      .vr-detail[hidden] { display: none; }
+      .vr-detail-card {
+        width: min(560px, 90%); display: grid; gap: 0.9rem; padding: 1rem; border-radius: 16px;
+        background: #1b2029; border: 1.5px solid rgba(143, 201, 163, 0.55);
+        box-shadow: 0 0 36px rgba(143, 201, 163, 0.25);
+      }
+      .vr-detail-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; }
+      .vr-detail-card h3 { margin: 0; color: #ffffff; font-size: 1.2rem; }
+      .vr-detail-card .vr-price { margin: 0; color: #8fc9a3; font-family: var(--font-mono); }
+      .vr-detail-card .vr-desc { margin: 0; color: #b8c0cc; }
+      .vr-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+      .vr-actions button {
+        font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+        padding: 0.6rem 0.9rem; border-radius: 10px; cursor: pointer; color: #ffffff;
+        background: #0f7f75; border: 1px solid #0f7f75;
+      }
+      .vr-actions .vr-close { background: transparent; border-color: rgba(255, 255, 255, 0.25); }
     }
 
     /* the footer diamond glows slowly */
@@ -16044,106 +16069,298 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     hit.addEventListener('click', fire);
   })();
   </script>
-  <script>
-  // Paper sheet: lays the photos on a landscape A4 sheet, then bends the sheet into a half cylinder.
-  (function initPaperSheet() {
+  <script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
+
+  // The photos wrap around the viewer. The viewer stands on the axis of a half cylinder.
+  (function initHyperCylinder() {
     var grid = document.getElementById('mediaGrid');
     if (!grid) return;
-    var GAP = 14;
     var desktop = window.matchMedia('(min-width: 900px)');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var bend = 0;       // 0 = flat sheet, 1 = bent into a half cylinder
-    var bendStarted = false;
-    var frame = 0;
 
-    function cardsList() {
-      return Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
+    var R = 10;                        // radius of the cylinder
+    var ROW_H = 0.5 * R;               // height of one row of photos
+    var ROW_GAP = 0.05 * R;
+    var COL_STEP = Math.PI * 0.28;     // 50 degrees between column centres
+    var COL_ARC = COL_STEP - 0.12;     // arc covered by one photo, with a gap
+    var MAX_YAW = 0.3;                 // drag range: never reveal the empty edge of the wall
+    var FLIP_U = -1;                   // the photos face inward, so the image is mirrored once
+    var VFOV = 77;
+
+    var stage = document.createElement('div');
+    stage.className = 'vr-stage';
+    stage.hidden = true;
+    stage.setAttribute('role', 'region');
+    stage.setAttribute('aria-label', 'Photo gallery. Drag to look around, click a photo for details.');
+    stage.innerHTML = '<div class="vr-hint">Drag to look around &middot; click a photo</div>';
+    grid.parentNode.insertBefore(stage, grid);
+
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (err) {
+      stage.remove();
+      return;                          // no WebGL: the normal grid stays
     }
-    function visibleCards() {
-      return cardsList().filter(function (c) { return !c.classList.contains('hidden'); });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0);
+    var el = renderer.domElement;
+    el.style.cursor = 'grab';
+    stage.insertBefore(el, stage.firstChild);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(VFOV, 1, 0.5, 500);
+    camera.position.set(0, 0, 0);
+    var world = new THREE.Group();
+    scene.add(world);
+
+    // hyperspace: stars streak outward past the cylinder
+    var N = 900;
+    var dirs = [], sArr = new Float32Array(N), spArr = new Float32Array(N), isEmber = new Array(N);
+    var starPos = new Float32Array(N * 6), starCol = new Float32Array(N * 6);
+    for (var i = 0; i < N; i++) {
+      var uz = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, k = Math.sqrt(1 - uz * uz);
+      dirs.push(new THREE.Vector3(k * Math.cos(th), uz, k * Math.sin(th)));
+      sArr[i] = 16 + Math.random() * 56;
+      spArr[i] = 6 + Math.random() * 18;
+      isEmber[i] = Math.random() < 0.12;
     }
-    function dims(n) {
-      var rows = Math.max(1, Math.ceil(n / 3));
-      var H = Math.min(window.innerHeight * 0.72, 780);
-      var W = H * Math.SQRT2;                       // A4 landscape ratio
-      var maxW = window.innerWidth * 0.94;
-      if (W > maxW) { W = maxW; H = W / Math.SQRT2; }
-      return { W: W, H: H, rows: rows, cw: (W - 2 * GAP) / 3, ch: (H - (rows - 1) * GAP) / rows };
-    }
-    function reset() {
-      grid.classList.remove('sheet-mode');
-      grid.style.height = '';
-      cardsList().forEach(function (card) {
-        ['position', 'left', 'top', 'width', 'height', 'marginLeft', 'marginTop', 'aspectRatio', 'translate', 'rotate']
-          .forEach(function (p) { card.style[p] = ''; });
-      });
-    }
-    function layout() {
-      frame = 0;
-      if (!desktop.matches) { reset(); return; }
-      grid.classList.add('sheet-mode');
-      var cards = visibleCards();
-      var d = dims(cards.length);
-      var R = d.W / Math.PI;                        // half cylinder: half a circle has arc length pi*R = W
-      grid.style.height = d.H + 'px';
-      cards.forEach(function (card, i) {
-        var c = i % 3, r = Math.floor(i / 3);
-        var xf = -d.W / 2 + d.cw / 2 + c * (d.cw + GAP);
-        var yf = -d.H / 2 + d.ch / 2 + r * (d.ch + GAP);
-        var th = xf / R;                            // angle around the cylinder
-        var t = bend;
-        var X = (1 - t) * xf + t * R * Math.sin(th);
-        var Z = t * R * (1 - Math.cos(th));         // edges curve toward the viewer
-        var deg = -t * th * 180 / Math.PI;          // each photo turns to face the centre
-        card.style.position = 'absolute';
-        card.style.left = '50%';
-        card.style.top = '50%';
-        card.style.width = d.cw.toFixed(1) + 'px';
-        card.style.height = d.ch.toFixed(1) + 'px';
-        card.style.marginLeft = (-d.cw / 2).toFixed(1) + 'px';
-        card.style.marginTop = (-d.ch / 2).toFixed(1) + 'px';
-        card.style.aspectRatio = 'auto';
-        card.style.translate = X.toFixed(1) + 'px ' + yf.toFixed(1) + 'px ' + Z.toFixed(1) + 'px';
-        card.style.rotate = '0 1 0 ' + deg.toFixed(2) + 'deg';
-      });
-    }
-    function scheduleLayout() {
-      if (!frame) frame = requestAnimationFrame(layout);
-    }
-    function playBend() {
-      if (bendStarted) return;
-      bendStarted = true;
-      if (reduce.matches) { bend = 1; layout(); return; }
-      var start = null, dur = 1900;
-      function step(ts) {
-        if (start === null) start = ts;
-        var p = Math.min(1, (ts - start) / dur);
-        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // ease in-out
-        bend = e;
-        layout();
-        if (p < 1) requestAnimationFrame(step);
-        else { bend = 1; layout(); }
+    var starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+    var stars = new THREE.LineSegments(starGeo, new THREE.LineBasicMaterial({
+      vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false
+    }));
+    scene.add(stars);
+
+    function updateStars(dt) {
+      for (var i = 0; i < N; i++) {
+        sArr[i] += spArr[i] * dt;
+        if (sArr[i] > 72) sArr[i] = 15 + Math.random() * 5;
+        var s = sArr[i], d = dirs[i], tl = 0.6 + spArr[i] * 0.16, b = i * 6;
+        var s2 = Math.max(s - tl, 0.5);
+        var fade = Math.min(1, (s - 15) / 8) * Math.min(1, (72 - s) / 10);
+        starPos[b] = d.x * s; starPos[b + 1] = d.y * s; starPos[b + 2] = d.z * s;
+        starPos[b + 3] = d.x * s2; starPos[b + 4] = d.y * s2; starPos[b + 5] = d.z * s2;
+        var hr = isEmber[i] ? 1 : 0.7, hg = isEmber[i] ? 0.6 : 1, hb = isEmber[i] ? 0.3 : 1;
+        fade *= 1.6;
+        starCol[b] = hr * fade; starCol[b + 1] = hg * fade; starCol[b + 2] = hb * fade;
+        starCol[b + 3] = 0; starCol[b + 4] = 0; starCol[b + 5] = 0;
       }
-      requestAnimationFrame(step);
+      starGeo.attributes.position.needsUpdate = true;
+      starGeo.attributes.color.needsUpdate = true;
     }
 
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (en.isIntersecting && desktop.matches) playBend();
-        });
-      }, { threshold: 0.35 });
-      io.observe(grid);
-    } else {
-      bend = 1;
+    // photo textures: loaded once per source, fitted to each photo (cover, no stretching)
+    var loader = new THREE.TextureLoader();
+    loader.setCrossOrigin('anonymous');
+    var texCache = {};
+    function fitTexture(src, mat, slotAspect) {
+      function apply(base) {
+        var t = base.clone();
+        t.needsUpdate = true;
+        t.wrapS = THREE.ClampToEdgeWrapping;
+        t.wrapT = THREE.ClampToEdgeWrapping;
+        t.colorSpace = THREE.SRGBColorSpace;
+        var a = base.image.width / base.image.height, m = slotAspect;
+        if (a > m) {
+          var s = m / a;
+          t.repeat.set(FLIP_U * s, 1);
+          t.offset.set(FLIP_U < 0 ? (1 + s) / 2 : (1 - s) / 2, 0);
+        } else {
+          var s2 = a / m;
+          t.repeat.set(FLIP_U, s2);
+          t.offset.set(FLIP_U < 0 ? 1 : 0, (1 - s2) / 2);
+        }
+        mat.map = t;
+        mat.color.set(0xffffff);
+        mat.needsUpdate = true;
+      }
+      if (texCache[src]) { if (texCache[src].image) apply(texCache[src]); else texCache[src].wait.push(apply); return; }
+      var entry = { wait: [] };
+      texCache[src] = entry;
+      loader.load(src, function (tex) {
+        texCache[src] = tex;
+        apply(tex);
+        entry.wait.forEach(function (fn) { fn(tex); });
+      }, undefined, function () { /* keep the plain colour if a photo fails */ });
     }
-    desktop.addEventListener && desktop.addEventListener('change', function () { bendStarted = false; bend = 0; scheduleLayout(); });
-    window.addEventListener('resize', scheduleLayout);
-    // filters (class changes) and new photos (added cards) both re-lay the sheet
+
+    function visibleCards() {
+      return Array.prototype.slice.call(grid.querySelectorAll('.product-card'))
+        .filter(function (c) { return !c.classList.contains('hidden'); });
+    }
+    function clearWorld() {
+      while (world.children.length) {
+        var m = world.children.pop();
+        m.geometry.dispose();
+        m.material.dispose();
+      }
+    }
+    function rebuild() {
+      clearWorld();
+      var cards = visibleCards();
+      var rows = Math.max(1, Math.ceil(cards.length / 3));
+      var totalH = rows * ROW_H + (rows - 1) * ROW_GAP;
+      var slotAspect = (R * COL_ARC) / ROW_H;
+      cards.forEach(function (card, idx) {
+        var c = idx % 3, r = Math.floor(idx / 3);
+        var phi = (c - 1) * COL_STEP;                    // + is to the right
+        var y = totalH / 2 - ROW_H / 2 - r * (ROW_H + ROW_GAP);
+        var geo = new THREE.CylinderGeometry(R, R, ROW_H, 40, 1, true, (Math.PI - phi) - COL_ARC / 2, COL_ARC);
+        var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.DoubleSide });
+        var mesh = new THREE.Mesh(geo, mat);
+        mesh.position.y = y;
+        mesh.userData.card = card;
+        world.add(mesh);
+        var img = card.querySelector('.product-image-wrap img');
+        if (img && img.src) fitTexture(img.src, mat, slotAspect);
+      });
+      scene.updateMatrixWorld(true);
+    }
+
+    function resize() {
+      var w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    // look around by dragging; click a photo for its details
+    var yaw = 0, yawTarget = 0, dragging = false, lastX = 0, downX = 0, downY = 0;
+    var raycaster = new THREE.Raycaster();
+    function pickAt(clientX, clientY) {
+      var rect = el.getBoundingClientRect();
+      var ndc = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
+      raycaster.setFromCamera(ndc, camera);
+      var hits = raycaster.intersectObjects(world.children, false);
+      return hits.length ? hits[0].object : null;
+    }
+    el.addEventListener('pointerdown', function (e) {
+      dragging = true;
+      lastX = downX = e.clientX;
+      downY = e.clientY;
+      el.setPointerCapture(e.pointerId);
+      el.style.cursor = 'grabbing';
+    });
+    el.addEventListener('pointermove', function (e) {
+      if (dragging) {
+        var dx = e.clientX - lastX;
+        lastX = e.clientX;
+        yawTarget = Math.max(-MAX_YAW, Math.min(MAX_YAW, yawTarget - dx * 0.0035));
+      } else {
+        el.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : 'grab';
+      }
+    });
+    el.addEventListener('pointerup', function (e) {
+      dragging = false;
+      el.style.cursor = 'grab';
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) < 6) {
+        var mesh = pickAt(e.clientX, e.clientY);
+        if (mesh) openDetail(mesh.userData.card);
+      }
+    });
+
+    // detail panel: uses the card's own buttons, so cart and like stay in one place
+    var detail = null;
+    function text(tag, cls, value) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      n.textContent = value;
+      return n;
+    }
+    function openDetail(card) {
+      if (!detail) {
+        detail = document.createElement('div');
+        detail.className = 'vr-detail';
+        detail.hidden = true;
+        stage.appendChild(detail);
+      }
+      var img = card.querySelector('.product-image-wrap img');
+      var title = card.querySelector('.typewriter-title');
+      var price = card.querySelector('.product-price');
+      var desc = card.querySelector('.typewriter-desc');
+      var box = document.createElement('div');
+      box.className = 'vr-detail-card';
+      if (img) { var pic = document.createElement('img'); pic.src = img.src; pic.alt = img.alt || ''; box.appendChild(pic); }
+      box.appendChild(text('h3', '', title ? (title.getAttribute('data-text') || title.textContent) : ''));
+      box.appendChild(text('p', 'vr-price', price ? price.textContent : ''));
+      box.appendChild(text('p', 'vr-desc', desc ? (desc.getAttribute('data-text') || desc.textContent) : ''));
+      var actions = document.createElement('div');
+      actions.className = 'vr-actions';
+      var add = text('button', 'vr-add', '+ Add to Cart');
+      add.type = 'button';
+      add.addEventListener('click', function () { var b = card.querySelector('.add-to-cart-btn'); if (b) b.click(); });
+      var like = text('button', 'vr-like', 'Like');
+      like.type = 'button';
+      like.addEventListener('click', function () { var b = card.querySelector('.like-btn'); if (b) b.click(); });
+      var close = text('button', 'vr-close', 'Close');
+      close.type = 'button';
+      close.addEventListener('click', function () { detail.hidden = true; });
+      actions.appendChild(add); actions.appendChild(like); actions.appendChild(close);
+      box.appendChild(actions);
+      detail.innerHTML = '';
+      detail.appendChild(box);
+      detail.hidden = false;
+    }
+
+    // animation: the cylinder rushes in on entry, the stars stream, the view eases
+    var running = false, last = 0, diveStart = null, DIVE_MS = 2400;
+    function frame(now) {
+      if (!running) return;
+      var dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (diveStart === null) diveStart = now;
+      var p = Math.min(1, (now - diveStart) / DIVE_MS);
+      var ease = 1 - Math.pow(1 - p, 3);
+      world.scale.setScalar(3 - 2 * ease);
+      var sway = reduce.matches ? 0 : Math.sin(now / 1000 * 0.25) * 0.05;
+      yaw += (yawTarget + sway - yaw) * Math.min(1, dt * 6);
+      world.rotation.y = yaw;
+      if (!reduce.matches) updateStars(dt);
+      renderer.render(scene, camera);
+      requestAnimationFrame(frame);
+    }
+    function setRunning(on) {
+      if (on && !running) {
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(frame);
+      } else if (!on) {
+        running = false;
+      }
+    }
+
+    function applyMode() {
+      var on = desktop.matches;
+      stage.hidden = !on;
+      grid.classList.toggle('vr-on', on);
+      if (on) { resize(); rebuild(); }
+    }
+
+    applyMode();
+    if (desktop.matches) {
+      grid.classList.add('vr-on');
+      stage.hidden = false;
+      resize();
+      rebuild();
+    }
+    desktop.addEventListener('change', applyMode);
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
     if (window.MutationObserver) {
-      new MutationObserver(scheduleLayout).observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(function () { if (desktop.matches) rebuild(); })
+        .observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
     }
-    layout();
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { setRunning(en.isIntersecting && desktop.matches); });
+      }, { threshold: 0.05 }).observe(stage);
+    } else {
+      setRunning(desktop.matches);
+    }
+    if (reduce.matches) { world.scale.setScalar(1); }
   })();
   </script>
 </body>
