@@ -5554,6 +5554,34 @@
     .inv-sheet.is-paid .inv-stamp { display: block; }
     .inv-actions .btn { width: 100%; }
     @media (max-width: 560px) { .inv-meta, .inv-parties { grid-template-columns: 1fr; } }
+
+    /* THANK YOU stamp: stays on the paid invoice; clicking it dances, and the ants dance too */
+    .inv-stamp { appearance: none; background: rgba(143, 201, 163, 0.06); font: inherit; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; }
+    .inv-stamp.dance { animation: stampDance 0.9s ease-in-out 1; }
+    @keyframes stampDance {
+      0% { transform: rotate(-8deg) scale(1); }
+      15% { transform: rotate(-14deg) scale(1.18) translateY(-6px); }
+      30% { transform: rotate(6deg) scale(1.05); }
+      45% { transform: rotate(-10deg) scale(1.12) translateY(-4px); }
+      60% { transform: rotate(4deg) scale(1); }
+      75% { transform: rotate(-6deg) scale(1.06); }
+      100% { transform: rotate(-8deg) scale(1); }
+    }
+    .thanks-crew { position: fixed; left: 50%; bottom: 12vh; transform: translateX(-50%); z-index: 10060;
+      pointer-events: none; width: min(560px, 94vw); text-align: center; transition: opacity 0.6s ease; }
+    .thanks-crew.leaving { opacity: 0; }
+    .thanks-bubble { display: inline-block; background: #1c2430; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.5);
+      border-radius: 12px; padding: 10px 16px; font-size: 0.95rem; line-height: 1.4; margin-bottom: 14px; }
+    .thanks-row { display: flex; justify-content: center; gap: 14px; }
+    .thanks-ant { width: 30px; height: 30px; animation: thanksBob 0.5s ease-in-out infinite alternate; }
+    .thanks-ant:nth-child(even) { animation-name: thanksSway; }
+    .thanks-ant svg { width: 30px; height: 30px; display: block; }
+    @keyframes thanksBob { 0% { transform: translateY(0) rotate(-12deg); } 100% { transform: translateY(-22px) rotate(12deg); } }
+    @keyframes thanksSway { 0% { transform: translateY(-6px) rotate(14deg); } 100% { transform: translateY(0) rotate(-14deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .inv-stamp.dance, .thanks-ant { animation: none; }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -6030,7 +6058,7 @@
 
     <div class="inv-overlay" id="invOverlay" hidden>
       <div class="inv-sheet" id="invSheet" role="dialog" aria-modal="true" aria-labelledby="invTitle">
-        <div class="inv-stamp">PAID</div>
+        <button class="inv-stamp" type="button" onclick="thankYouDance()" aria-label="Thank you">THANK YOU</button>
         <div class="inv-head"><h2 id="invTitle">INVOICE</h2><button class="inv-close" type="button" onclick="closeInvoice()" aria-label="Close invoice">&times;</button></div>
         <div class="inv-meta">
           <div><span>Invoice no.</span><strong id="invNo"></strong></div>
@@ -6149,7 +6177,7 @@
         <div class="contact-grid">
           <div class="contact-card">
             <span>EMAIL</span>
-            <a href="mailto:lionbarton@gmail.com">lionbarton@gmail.com</a>
+            <a href="mailto:Corestall125@gmail.com">Corestall125@gmail.com</a>
           </div>
           <div class="contact-card">
             <span>WHATSAPP</span>
@@ -6193,7 +6221,7 @@
     <footer>
       <div class="footer-content">
         <ul class="footer-links">
-          <li><a href="mailto:lionbarton@gmail.com">Email</a></li>
+          <li><a href="mailto:Corestall125@gmail.com">Email</a></li>
           <li><a href="tel:+27607073275">Phone</a></li>
           <li><a href="https://instagram.com/corestall" target="_blank" rel="noopener noreferrer">Instagram</a></li>
           <li class="footer-legal"><a href="license.html">License</a></li>
@@ -7993,7 +8021,7 @@
     // Seller details printed on every invoice. Fill in the blanks before going live.
     const SELLER = {
       name: 'Seth Barton / CoreStall',
-      email: 'lionbarton@gmail.com',
+      email: 'Corestall125@gmail.com',
       address: '',
       regNumber: '',
       vatNumber: '',
@@ -8028,6 +8056,32 @@
       const overlay = document.getElementById('invOverlay');
       overlay.hidden = false;
       document.getElementById('invBuyerName').focus();
+    }
+
+    // THANK YOU: the stamp dances and a crew of ants dances on screen for 10 seconds
+    const THANKS_ANT_SVG = '<svg class="ant-crew-legs-walk" viewBox="0 0 28 28">' +
+      '<ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827"/><ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937"/>' +
+      '<ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827"/><path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2"/>' +
+      '<path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8"/>' +
+      '<polygon points="12,5 16,5 14,1" fill="#8fc9a3"/></svg>';
+    function thankYouDance() {
+      const stamp = document.querySelector('#invSheet .inv-stamp');
+      if (stamp) {
+        stamp.classList.remove('dance');
+        void stamp.offsetWidth;
+        stamp.classList.add('dance');
+      }
+      if (document.getElementById('thankYouCrew')) return;
+      const crew = document.createElement('div');
+      crew.id = 'thankYouCrew';
+      crew.className = 'thanks-crew';
+      const ants = [0, 1, 2, 3, 4, 5].map(i => `<div class="thanks-ant" style="animation-delay:${i * 0.08}s">${THANKS_ANT_SVG}</div>`).join('');
+      crew.innerHTML = `<div class="thanks-bubble">Thank you for your purchase! I will get back to you soon.</div><div class="thanks-row">${ants}</div>`;
+      document.body.appendChild(crew);
+      setTimeout(() => {
+        crew.classList.add('leaving');
+        setTimeout(() => crew.remove(), 650);
+      }, 10000);
     }
 
     function closeInvoice() {
@@ -14966,7 +15020,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       // '2026-11-07',
       // ['2026-11-20', '2026-11-22'],
     ];
-    const BOOKING_EMAIL = 'lionbarton@gmail.com';
+    const BOOKING_EMAIL = 'Corestall125@gmail.com';
     const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const MONTHS_AHEAD = 18;
