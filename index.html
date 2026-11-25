@@ -5431,11 +5431,6 @@
     /* MASS EFFECT-STYLE ELEMENTS: our own CSS, no game assets. Accent = sage, warning = ember. */
     :root { --me-accent: #8fc9a3; --me-warm: #ff7a2a; }
 
-    /* 1. Codex labels on section headings: "[ TAG ] // ENTRY 01" */
-    html { counter-reset: entry; }
-    .section-header { counter-increment: entry; }
-    .section-tag::after { content: "  //  ENTRY " counter(entry, decimal-leading-zero); color: var(--me-warm); }
-
     /* 2. Segmented status bar under each section heading */
     .section-header::after {
       content: ""; display: block; width: min(60%, 420px); height: 4px; margin: 0.9rem auto 0;
@@ -5478,9 +5473,43 @@
       font-family: var(--font-mono); font-size: 0.6em; letter-spacing: 0.2em; color: var(--me-accent);
     }
 
-    /* 6. Chamfered button corners (focus ring kept square so it stays visible) */
-    .btn, .btn-core { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
-    .btn:focus-visible, .btn-core:focus-visible { clip-path: none; }
+
+    /* 4D STACK: the XCO button comes forward out of the screen; the layers sit behind it.
+       The pointer tilts the stack and scrolling drifts the back layers, each at its own depth (parallax).
+       Own CSS only. Reduced motion: the JS is skipped and the stack stays still. */
+    .wp-stack-btn-wrap {
+      perspective: 900px;
+      transform-style: preserve-3d;
+      padding: 10px 0 26px;
+      transform: rotateX(calc(var(--py, 0) * -7deg)) rotateY(calc(var(--px, 0) * 9deg));
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .wp-stack-layer-1, .wp-stack-layer-2 {
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+      box-shadow: 0 18px 24px -10px rgba(0, 0, 0, 0.75);
+    }
+    .wp-stack-layer-1 {
+      top: 16px;
+      transform: translate3d(calc(-50% + var(--px, 0) * 14px), calc(var(--py, 0) * 8px + var(--sy, 0) * -10px), -26px);
+    }
+    .wp-stack-layer-2 {
+      top: 28px;
+      transform: translate3d(calc(-50% + var(--px, 0) * 24px), calc(var(--py, 0) * 14px + var(--sy, 0) * -18px), -58px);
+    }
+    .wp-group-master-btn {
+      transform: translate3d(calc(var(--px, 0) * -6px), calc(var(--py, 0) * -4px), 42px);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), 0 26px 26px -12px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+    .wp-hub-container.expanded .wp-group-master-btn {
+      transform: translate3d(0, -2px, 42px);
+    }
+    .wp-hub-container.expanded .wp-stack-layer-1,
+    .wp-hub-container.expanded .wp-stack-layer-2 {
+      transform: translate3d(-50%, 0, -20px) scale(0.9);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wp-stack-btn-wrap, .wp-stack-layer-1, .wp-stack-layer-2, .wp-group-master-btn { transform: none !important; transition: none; }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -14994,5 +15023,35 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
   });
 })();
 </script>
+  <script>
+  /* 4D stack parallax: the pointer tilts the stack and scrolling drifts the back layers. */
+  (function () {
+    var wrap = document.querySelector('.wp-stack-btn-wrap');
+    if (!wrap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var px = 0, py = 0, sy = 0, queued = false;
+    function paint() {
+      queued = false;
+      wrap.style.setProperty('--px', px.toFixed(3));
+      wrap.style.setProperty('--py', py.toFixed(3));
+      wrap.style.setProperty('--sy', sy.toFixed(3));
+    }
+    function queue() { if (!queued) { queued = true; requestAnimationFrame(paint); } }
+    wrap.addEventListener('pointermove', function (e) {
+      var r = wrap.getBoundingClientRect();
+      px = ((e.clientX - r.left) / r.width) * 2 - 1;
+      py = ((e.clientY - r.top) / r.height) * 2 - 1;
+      queue();
+    });
+    wrap.addEventListener('pointerleave', function () { px = 0; py = 0; queue(); });
+    function onScroll() {
+      var r = wrap.getBoundingClientRect();
+      sy = Math.max(-1, Math.min(1, (r.top + r.height / 2 - window.innerHeight / 2) / window.innerHeight));
+      queue();
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  })();
+  </script>
 </body>
 </html>
