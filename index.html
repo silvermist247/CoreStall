@@ -5755,6 +5755,37 @@
       88%,100%{ opacity: 0; }
     }
 
+
+    /* ember pulse on a click of the gem (Mass Effect orange). Runs once, then is removed by the script. */
+    .pd-ember-run { fill: none; stroke-linecap: round; stroke-dasharray: 160 2000; opacity: 0; animation: pdEmberRun 2.6s linear forwards; }
+    .pd-ember-run-l { animation-name: pdEmberRunL; }
+    .pd-ember-haze { stroke: #ff7a2a; stroke-width: 14; }
+    .pd-ember-body { stroke: #ff8a1f; stroke-width: 4.5; }
+    .pd-ember-core { stroke: #ffe3c4; stroke-width: 1.5; }
+    @keyframes pdEmberRun {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2%      { stroke-dashoffset: 160; opacity: 1; }
+      70%     { stroke-dashoffset: -360; opacity: 1; }
+      72%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    @keyframes pdEmberRunL {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2%      { stroke-dashoffset: 160; opacity: 1; }
+      70%     { stroke-dashoffset: -360; opacity: 1; }
+      72%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    .pd-ember-line { opacity: 0; animation: pdEmberLine 2.6s ease-in-out forwards; }
+    @keyframes pdEmberLine {
+      0%, 70% { opacity: 0; }
+      80%     { opacity: 1; }
+      100%    { opacity: 0; }
+    }
+    .pd-ember-halo { opacity: 0; transform-box: view-box; transform-origin: 360px 70px; animation: pdEmberHalo 1.4s ease-out forwards; }
+    @keyframes pdEmberHalo {
+      0%   { opacity: 1; transform: scale(0.6); }
+      100% { opacity: 0; transform: scale(1.8); }
+    }
+
     /* the footer diamond glows slowly */
     .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
     @keyframes footDiamond {
@@ -15959,53 +15990,34 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }, { passive: true });
     apply();
   })();
+  </script>
   <script>
   // Click the gem: an extra pulse, drawn in ember orange, that runs the same way as the timed pulse.
+  // The pulse is CSS keyframes (classes), the same method as the timed pulse.
   (function initGemClick() {
     var svg = document.querySelector('.pd-fx');
     var hit = svg && svg.querySelector('.pd-hit');
     var gem = svg && svg.querySelector('.pd-gem');
     if (!hit || !gem) return;
     var NS = 'http://www.w3.org/2000/svg';
-    var DUR = 2600;
-    function make(tag, attrs, before) {
+    function make(tag, attrs) {
       var el = document.createElementNS(NS, tag);
       Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
-      svg.insertBefore(el, before || gem);
+      svg.insertBefore(el, gem);
       return el;
     }
     function fire() {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var made = [];
-      ['M360 70 H720', 'M360 70 H0'].forEach(function (d) {
-        var base = { d: d, fill: 'none', 'stroke-linecap': 'round', 'stroke-dasharray': '160 2000' };
-        var haze = make('path', Object.assign({ stroke: '#ff7a2a', 'stroke-width': 14, filter: 'url(#pdGlow)' }, base));
-        var body = make('path', Object.assign({ stroke: '#ff8a1f', 'stroke-width': 4.5, filter: 'url(#pdBloom)' }, base));
-        var core = make('path', Object.assign({ stroke: '#ffe3c4', 'stroke-width': 1.5 }, base));
-        [haze, body, core].forEach(function (el) {
-          made.push(el);
-          el.animate([
-            { strokeDashoffset: 160, opacity: 0, offset: 0 },
-            { strokeDashoffset: 160, opacity: 1, offset: 0.02 },
-            { strokeDashoffset: -360, opacity: 1, offset: 0.7 },
-            { strokeDashoffset: -360, opacity: 0, offset: 0.72 },
-            { strokeDashoffset: -360, opacity: 0, offset: 1 }
-          ], { duration: DUR, easing: 'linear', fill: 'forwards' });
-        });
+      ['M360 70 H720', 'M360 70 H0'].forEach(function (d, i) {
+        var cls = i ? ' pd-ember-run-l' : '';
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-haze' + cls, filter: 'url(#pdGlow)' }));
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-body' + cls, filter: 'url(#pdBloom)' }));
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-core' + cls }));
       });
-      var line = make('line', { x1: 0, y1: 70, x2: 720, y2: 70, stroke: 'url(#pdLineEmber)', 'stroke-width': 2.5, filter: 'url(#pdBloom)' });
-      made.push(line);
-      line.animate([
-        { opacity: 0, offset: 0 }, { opacity: 0, offset: 0.7 }, { opacity: 1, offset: 0.8 }, { opacity: 0, offset: 1 }
-      ], { duration: DUR, fill: 'forwards' });
-      var halo = make('circle', { cx: 360, cy: 70, r: 30, fill: 'url(#pdHaloEmber)' });
-      halo.style.transformBox = 'view-box';
-      halo.style.transformOrigin = '360px 70px';
-      made.push(halo);
-      halo.animate([
-        { opacity: 1, transform: 'scale(0.6)' }, { opacity: 0, transform: 'scale(1.8)' }
-      ], { duration: 1400, easing: 'ease-out', fill: 'forwards' });
-      setTimeout(function () { made.forEach(function (el) { el.remove(); }); }, DUR + 200);
+      made.push(make('line', { x1: 0, y1: 70, x2: 720, y2: 70, class: 'pd-ember-line', stroke: 'url(#pdLineEmber)', 'stroke-width': 2.5, filter: 'url(#pdBloom)' }));
+      made.push(make('circle', { cx: 360, cy: 70, r: 30, class: 'pd-ember-halo', fill: 'url(#pdHaloEmber)' }));
+      setTimeout(function () { made.forEach(function (el) { el.remove(); }); }, 2900);
     }
     hit.addEventListener('click', fire);
   })();
