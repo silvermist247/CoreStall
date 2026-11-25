@@ -831,12 +831,17 @@
       bottom: -40px;
       left: 0;
       width: 100%;
-      height: 260px;
-      background: linear-gradient(to bottom, 
-        rgba(12, 14, 18, 0) 0%, 
-        rgba(12, 14, 18, 0.45) 40%, 
-        rgba(12, 14, 18, 0.85) 75%, 
-        #0c0e12 100%
+      height: 400px;
+      background: linear-gradient(to bottom,
+        rgba(12, 14, 18, 0) 0%,
+        rgba(12, 14, 18, 0.04) 15%,
+        rgba(12, 14, 18, 0.14) 30%,
+        rgba(12, 14, 18, 0.3) 42%,
+        rgba(12, 14, 18, 0.5) 55%,
+        rgba(12, 14, 18, 0.68) 67%,
+        rgba(12, 14, 18, 0.8) 79%,
+        rgba(12, 14, 18, 0.86) 89%,
+        rgba(12, 14, 18, 0) 100%
       );
       pointer-events: none;
       z-index: 3;
@@ -856,6 +861,33 @@
       position: relative;
       z-index: 15; /* Buttons & links stay clickable */
       pointer-events: auto;
+    }
+
+
+    /* Stars inside the hero's lower fade. JS moves them down as the page scrolls,
+       so the space appears to travel down the page into the next section. */
+    .hero-drift {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 320px;
+      pointer-events: none;
+      z-index: 3;
+      background-color: transparent;
+      background-image:
+        radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 255, 255, 0.85), transparent 60%),
+        radial-gradient(1px 1px at 37% 64%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1.4px 1.4px at 58% 30%, rgba(143, 201, 163, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 71% 84%, rgba(255, 176, 112, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 88% 42%, rgba(255, 255, 255, 0.5), transparent 60%),
+        radial-gradient(1.2px 1.2px at 24% 92%, rgba(255, 255, 255, 0.7), transparent 60%),
+        radial-gradient(1px 1px at 46% 8%, rgba(255, 176, 112, 0.6), transparent 60%);
+      background-size: 360px 240px;
+      background-repeat: repeat;
+      background-position: 0 0;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0.35) 70%, transparent 100%);
     }
 
     /* Ambient Nebular Clouds in Space */
@@ -5522,6 +5554,304 @@
       100% { transform: none; }
     }
     .me-frag { position: fixed; margin: 0; pointer-events: none; z-index: 9999; transform-origin: center; }
+
+    /* IN-PAGE INVOICE: opens over the page from the cart; nothing leaves the site until "Mark as paid" */
+    .inv-overlay { position: fixed; inset: 0; z-index: 10050; background: rgba(8, 10, 14, 0.74);
+      display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .inv-overlay[hidden] { display: none; }
+    .inv-sheet { position: relative; width: min(580px, 100%); max-height: 92vh; overflow: auto; padding: 22px;
+      background: #1c2430; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.35); border-radius: 12px;
+      font-family: var(--font-main); }
+    .inv-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .inv-head h2 { margin: 0; font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.2em; color: #8fc9a3; }
+    .inv-close { background: none; border: 0; color: #e6edf3; font-size: 1.6rem; line-height: 1; cursor: pointer; min-width: 44px; min-height: 44px; }
+    .inv-meta, .inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .inv-meta span, .inv-parties h3 { display: block; font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: #9aa6b4; margin: 0 0 4px; font-weight: 600; }
+    .inv-meta strong { font-family: var(--font-mono); font-size: 0.95rem; }
+    .inv-parties > div { font-size: 0.9rem; line-height: 1.5; }
+    .inv-parties label { display: block; font-size: 0.8rem; color: #9aa6b4; margin-bottom: 8px; }
+    .inv-parties input { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; font-size: 16px;
+      background: #141a22; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.3); border-radius: 8px; box-sizing: border-box; }
+    .inv-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-bottom: 14px; }
+    .inv-table th, .inv-table td { padding: 10px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left; }
+    .inv-table th:last-child, .inv-table td:last-child { text-align: right; white-space: nowrap; }
+    .inv-table tfoot th { border-bottom: 0; font-family: var(--font-mono); letter-spacing: 0.1em; }
+    .inv-bank { font-size: 0.82rem; color: #9aa6b4; line-height: 1.5; margin-bottom: 14px; white-space: pre-line; }
+    .inv-status { min-height: 1.4em; font-size: 0.9rem; margin-bottom: 12px; color: #e6edf3; }
+    .inv-status.error { color: #ff7a2a; }
+    .inv-stamp { position: absolute; top: 74px; right: 22px; font-family: var(--font-mono); font-weight: 800;
+      letter-spacing: 0.2em; color: #8fc9a3; border: 3px solid #8fc9a3; padding: 4px 12px; border-radius: 6px;
+      transform: rotate(-8deg); display: none; }
+    .inv-sheet.is-paid .inv-stamp { display: block; }
+    .inv-actions .btn { width: 100%; }
+    @media (max-width: 560px) { .inv-meta, .inv-parties { grid-template-columns: 1fr; } }
+
+    /* THANK YOU stamp: stays on the paid invoice; clicking it dances, and the ants dance too */
+    .inv-stamp { appearance: none; background: rgba(143, 201, 163, 0.06); font: inherit; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; }
+    .inv-stamp.dance { animation: stampDance 0.9s ease-in-out 1; }
+    @keyframes stampDance {
+      0% { transform: rotate(-8deg) scale(1); }
+      15% { transform: rotate(-14deg) scale(1.18) translateY(-6px); }
+      30% { transform: rotate(6deg) scale(1.05); }
+      45% { transform: rotate(-10deg) scale(1.12) translateY(-4px); }
+      60% { transform: rotate(4deg) scale(1); }
+      75% { transform: rotate(-6deg) scale(1.06); }
+      100% { transform: rotate(-8deg) scale(1); }
+    }
+    .thanks-crew { position: fixed; left: 50%; bottom: 12vh; transform: translateX(-50%); z-index: 10060;
+      pointer-events: none; width: min(560px, 94vw); text-align: center; transition: opacity 0.6s ease; }
+    .thanks-crew.leaving { opacity: 0; }
+    .thanks-bubble { display: inline-block; background: #1c2430; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.5);
+      border-radius: 12px; padding: 10px 16px; font-size: 0.95rem; line-height: 1.4; margin-top: 14px; }
+    .thanks-row { display: flex; justify-content: center; gap: 14px; }
+    .thanks-ant { width: 30px; height: 30px; animation: thanksBob 0.5s ease-in-out infinite alternate; }
+    .thanks-ant:nth-child(even) { animation-name: thanksSway; }
+    .thanks-ant svg { width: 30px; height: 30px; display: block; }
+    @keyframes thanksBob { 0% { transform: translateY(0) rotate(-12deg); } 100% { transform: translateY(-22px) rotate(12deg); } }
+    @keyframes thanksSway { 0% { transform: translateY(-6px) rotate(14deg); } 100% { transform: translateY(0) rotate(-14deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .inv-stamp.dance, .thanks-ant { animation: none; }
+    }
+
+    /* the availability section has no background of its own, so it needs no edge mask.
+       The mask makes its text render soft. */
+    #availability { -webkit-mask-image: none; mask-image: none; }
+
+    /* BLEND: no straight page lines. Section edges fade into the page; the divider is a soft glow. */
+    section:not(.hero) {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) 60px, #000 160px, #000 calc(100% - 160px), rgba(0,0,0,0.35) calc(100% - 60px), transparent 100%);
+              mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) 60px, #000 160px, #000 calc(100% - 160px), rgba(0,0,0,0.35) calc(100% - 60px), transparent 100%);
+      border-top: 0 !important;
+      border-bottom: 0 !important;
+    }
+    .section-header::after {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+    }
+
+    /* =========================================================================
+       DIVIDER LIGHT: one 23-second cycle. The diamond charges, energy runs out
+       along the line, the line pulses, and the highlight travels down through
+       the section text, fading over about 20 seconds. Then it recharges.
+       Glow filters use fixed user-space regions so nothing clips.
+       ========================================================================= */
+    .pick-divider { overflow: visible; }
+    .pick-divider::after { display: none !important; }
+    .pd-fx {
+      position: absolute; left: 0; top: 50%;
+      width: 100%; height: auto; aspect-ratio: 720 / 240;
+      transform: translateY(-50%); overflow: visible; pointer-events: none;
+    }
+    .pd-fx * { transform-box: view-box; transform-origin: 360px 70px; }
+    .pd-fx line, .pd-fx path, .pd-fx circle, .pd-fx ellipse { stroke-linecap: round; stroke-linejoin: round; }
+    .pd-hit { pointer-events: all; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    /* ambient haze and neon tube */
+    .pd-haze { animation: pdHaze 23s ease-in-out infinite; }
+    @keyframes pdHaze {
+      0%      { opacity: 0.1; }
+      4%      { opacity: 0.45; }
+      14%     { opacity: 0.16; }
+      100%    { opacity: 0.1; }
+    }
+    .pd-tube-glow { opacity: 0.3; animation: pdTube 23s ease-in-out infinite; }
+    .pd-tube { opacity: 0.85; }
+    @keyframes pdTube {
+      0%      { opacity: 0.3; }
+      12%     { opacity: 0.35; }
+      15%     { opacity: 1; }
+      20%,100%{ opacity: 0.3; }
+    }
+
+    /* light runners: start at 0.6 s, reach the ends by 2.8 s */
+    .pd-run { fill: none; stroke-linecap: round; stroke-dasharray: 160 2000; opacity: 0; animation: pdRun 23s linear infinite; }
+    .pd-run-haze { stroke: #8fc9a3; stroke-width: 14; }
+    .pd-run-body { stroke: #8fc9a3; stroke-width: 4.5; }
+    .pd-run-core { stroke: #ffffff; stroke-width: 1.5; }
+    .pd-run-l { animation-name: pdRunL; }
+    @keyframes pdRun {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2.6%    { stroke-dashoffset: 160; opacity: 1; }
+      12.2%   { stroke-dashoffset: -360; opacity: 1; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    @keyframes pdRunL {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2.6%    { stroke-dashoffset: 160; opacity: 1; }
+      12.2%   { stroke-dashoffset: -360; opacity: 1; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    /* long streaks trail the runners */
+    .pd-streak { fill: none; stroke: #eafff5; stroke-width: 0.9; stroke-linecap: round; stroke-dasharray: 320 2000; opacity: 0; animation: pdStreakR 23s linear infinite; }
+    .pd-streak-l { animation-name: pdStreakL; }
+    @keyframes pdStreakR {
+      0%      { stroke-dashoffset: 320; opacity: 0; }
+      3%      { stroke-dashoffset: 320; opacity: 0.85; }
+      12.2%   { stroke-dashoffset: -360; opacity: 0.85; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    @keyframes pdStreakL {
+      0%      { stroke-dashoffset: 320; opacity: 0; }
+      3%      { stroke-dashoffset: 320; opacity: 0.85; }
+      12.2%   { stroke-dashoffset: -360; opacity: 0.85; }
+      13.5%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+
+    /* the whole line pulses once when the runners leave */
+    .pd-pulse { opacity: 0; animation: pdPulse 23s ease-in-out infinite; }
+    @keyframes pdPulse {
+      0%, 12%   { opacity: 0; }
+      15%       { opacity: 1; }
+      19%,100%  { opacity: 0; }
+    }
+
+    /* the gem charges at the start of the cycle, then settles */
+    .pd-gem { transform: rotate(45deg); animation: pdGem 23s ease-in-out infinite; }
+    .pd-gem-core { transform: rotate(45deg); animation: pdGemCore 23s ease-in-out infinite; }
+    @keyframes pdGem {
+      0%      { opacity: 0.6;  transform: rotate(45deg) scale(0.9); }
+      3.5%    { opacity: 0.95; transform: rotate(45deg) scale(1.12); }
+      9%,100% { opacity: 0.85; transform: rotate(45deg) scale(1); }
+    }
+    @keyframes pdGemCore {
+      0%      { opacity: 0.7;  transform: rotate(45deg) scale(0.9); }
+      3.5%    { opacity: 0.95; transform: rotate(45deg) scale(1.08); }
+      9%,100% { opacity: 0.9;  transform: rotate(45deg) scale(1); }
+    }
+    .pd-halo { opacity: 0.35; animation: pdHalo 23s ease-in-out infinite; }
+    @keyframes pdHalo {
+      0%      { opacity: 0.35; transform: scale(0.8); }
+      3.5%    { opacity: 0.55; transform: scale(1.2); }
+      10%,100%{ opacity: 0.35; transform: scale(1); }
+    }
+
+    /* the highlight travels down the section text: each line lights a little
+       later, then fades over about 20 seconds. The text colour rules use
+       !important, so the glow is a filter. */
+    @keyframes pdWave {
+      0%   { filter: none; }
+      1.5% { filter: drop-shadow(0 0 3px rgba(212, 255, 230, 0.95)) drop-shadow(0 0 12px rgba(143, 201, 163, 0.75)); }
+      88%  { filter: none; }
+      100% { filter: none; }
+    }
+    #availability .section-tag { animation: pdWave 23s ease-out 3.0s infinite; }
+    #availability .section-title { animation: pdWave 23s ease-out 3.4s infinite; }
+    #availability .avail-intro { animation: pdWave 23s ease-out 3.8s infinite; }
+
+    /* calendar and select-a-date panel: a glow ring that the wave passes through.
+       It is a pseudo-element, so the content inside stays sharp and the JS can rewrite it. */
+    .avail-panel { position: relative; }
+    .avail-cal::after, .avail-panel::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      opacity: 0; box-shadow: 0 0 0 1px rgba(143, 201, 163, 0.55), 0 0 22px rgba(143, 201, 163, 0.32);
+      animation: pdPanel 23s ease-out 4.2s infinite;
+    }
+    .avail-panel::after { animation-delay: 4.6s; }
+    @keyframes pdPanel {
+      0%      { opacity: 0; }
+      1.5%    { opacity: 1; }
+      88%,100%{ opacity: 0; }
+    }
+
+
+    /* ember pulse on a click of the gem (Mass Effect orange). Runs once, then is removed by the script. */
+    .pd-ember-run { fill: none; stroke-linecap: round; stroke-dasharray: 160 2000; opacity: 0; animation: pdEmberRun 2.6s linear forwards; }
+    .pd-ember-run-l { animation-name: pdEmberRunL; }
+    .pd-ember-haze { stroke: #ff7a2a; stroke-width: 14; }
+    .pd-ember-body { stroke: #ff8a1f; stroke-width: 4.5; }
+    .pd-ember-core { stroke: #ffe3c4; stroke-width: 1.5; }
+    @keyframes pdEmberRun {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2%      { stroke-dashoffset: 160; opacity: 1; }
+      70%     { stroke-dashoffset: -360; opacity: 1; }
+      72%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    @keyframes pdEmberRunL {
+      0%      { stroke-dashoffset: 160; opacity: 0; }
+      2%      { stroke-dashoffset: 160; opacity: 1; }
+      70%     { stroke-dashoffset: -360; opacity: 1; }
+      72%,100%{ stroke-dashoffset: -360; opacity: 0; }
+    }
+    .pd-ember-line { opacity: 0; animation: pdEmberLine 2.6s ease-in-out forwards; }
+    @keyframes pdEmberLine {
+      0%, 70% { opacity: 0; }
+      80%     { opacity: 1; }
+      100%    { opacity: 0; }
+    }
+    .pd-ember-halo { opacity: 0; transform-box: view-box; transform-origin: 360px 70px; animation: pdEmberHalo 1.4s ease-out forwards; }
+    @keyframes pdEmberHalo {
+      0%   { opacity: 1; transform: scale(0.6); }
+      100% { opacity: 0; transform: scale(1.8); }
+    }
+
+
+    /* =========================================================================
+       HYPERSPACE CYLINDER (desktop): the photos wrap around the viewer inside a
+       half cylinder, drawn in WebGL. The viewer stands on the axis and drags to look around.
+       ========================================================================= */
+    @media (min-width: 900px) {
+      .shop-grid.vr-on { display: none !important; }
+      .vr-stage {
+        position: relative;
+        height: min(84vh, 860px);
+        min-height: 540px;
+        margin: 2.5rem auto 0;
+        max-width: 1400px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: radial-gradient(ellipse at 50% 45%, #0f2b2b 0%, #0a1419 42%, #04070a 100%);
+        box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.75);
+      }
+      .vr-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+      .vr-hint {
+        position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; pointer-events: none;
+        font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: rgba(143, 201, 163, 0.75);
+      }
+      .vr-detail {
+        position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+        background: rgba(3, 6, 9, 0.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      }
+      .vr-detail[hidden] { display: none; }
+      .vr-detail-card {
+        width: min(560px, 90%); display: grid; gap: 0.9rem; padding: 1rem; border-radius: 16px;
+        background: #1b2029; border: 1.5px solid rgba(143, 201, 163, 0.55);
+        box-shadow: 0 0 36px rgba(143, 201, 163, 0.25);
+      }
+      .vr-detail-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; }
+      .vr-detail-card h3 { margin: 0; color: #ffffff; font-size: 1.2rem; }
+      .vr-detail-card .vr-price { margin: 0; color: #8fc9a3; font-family: var(--font-mono); }
+      .vr-detail-card .vr-desc { margin: 0; color: #b8c0cc; }
+      .vr-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+      .vr-actions button {
+        font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+        padding: 0.6rem 0.9rem; border-radius: 10px; cursor: pointer; color: #ffffff;
+        background: #0f7f75; border: 1px solid #0f7f75;
+      }
+      .vr-actions .vr-close { background: transparent; border-color: rgba(255, 255, 255, 0.25); }
+    }
+
+    /* the footer diamond glows slowly */
+    .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
+    @keyframes footDiamond {
+      0%, 100% { box-shadow: 0 0 6px 1px rgba(143, 201, 163, 0.3); }
+      50%      { box-shadow: 0 0 16px 4px rgba(143, 201, 163, 0.75); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pd-run, .pd-streak, .pd-pulse, .pd-haze, .pd-tube-glow, .pd-gem, .pd-gem-core, .pd-halo,
+      #availability .section-tag, #availability .section-title, #availability .avail-intro, .footer-content::before,
+      .avail-cal::after, .avail-panel::after { animation: none !important; }
+      .avail-cal::after, .avail-panel::after { opacity: 0; }
+      .pd-run, .pd-streak { display: none; }
+      .pd-pulse { opacity: 0.6; }
+      .pd-tube-glow { opacity: 0.6; }
+      .pd-haze { opacity: 0.2; }
+      .pd-gem, .pd-gem-core { opacity: 0.95; }
+      .pd-halo { opacity: 0.5; }
+      .footer-content::before { box-shadow: 0 0 8px 2px rgba(143, 201, 163, 0.5); }
+    }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5677,6 +6007,7 @@
     <section class="hero" id="hero">
       <div class="hero-sigil" aria-hidden="true"><svg class='sigil-base' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><defs><linearGradient id='sigilFire' x1='0' y1='1' x2='0' y2='0'><stop offset='0' stop-color='rgb(170,20,0)'/><stop offset='0.4' stop-color='rgb(255,80,10)'/><stop offset='0.75' stop-color='rgb(255,150,40)'/><stop offset='1' stop-color='rgb(255,226,140)'/></linearGradient><filter id='sigilFireFx' x='-10%' y='-10%' width='120%' height='120%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.045 0.09' numOctaves='2' seed='7' result='noise'/><feDisplacementMap in='SourceGraphic' in2='noise' scale='16' xChannelSelector='R' yChannelSelector='G' result='wobble'/><feGaussianBlur in='wobble' stdDeviation='11' result='haze'/><feGaussianBlur in='wobble' stdDeviation='3.5' result='glow'/><feMerge><feMergeNode in='haze'/><feMergeNode in='glow'/><feMergeNode in='wobble'/></feMerge></filter></defs><g fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.22' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg><svg class='sigil-fire' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'><g class='fire-g' fill='none' stroke='rgb(216,201,163)' stroke-opacity='0.22' stroke-width='1.2'><circle cx='400' cy='400' r='360'/><circle cx='400' cy='400' r='332'/><circle cx='400' cy='400' r='250' stroke-dasharray='2 10'/><polygon points='400,90 668,556 132,556'/><polygon points='400,710 132,244 668,244'/></g></svg></div>
       <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+      <div class="hero-drift" id="heroDrift" aria-hidden="true"></div>
       <div class="space-nebula-glow"></div>
 
       <div class="hero-hud-frame">
@@ -5996,6 +6327,33 @@
       </div>
     </aside>
 
+    <div class="inv-overlay" id="invOverlay" hidden>
+      <div class="inv-sheet" id="invSheet" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+        <button class="inv-stamp" type="button" onclick="thankYouDance()" aria-label="Thank you">THANK YOU</button>
+        <div class="inv-head"><h2 id="invTitle">INVOICE</h2><button class="inv-close" type="button" onclick="closeInvoice()" aria-label="Close invoice">&times;</button></div>
+        <div class="inv-meta">
+          <div><span>Invoice no.</span><strong id="invNo"></strong></div>
+          <div><span>Date</span><strong id="invDate"></strong></div>
+        </div>
+        <div class="inv-parties">
+          <div><h3>From</h3><div id="invSeller"></div></div>
+          <div>
+            <h3>Bill to</h3>
+            <label>Name<input id="invBuyerName" type="text" autocomplete="name" required></label>
+            <label>Email<input id="invBuyerEmail" type="email" autocomplete="email" required></label>
+          </div>
+        </div>
+        <table class="inv-table">
+          <thead><tr><th>Item</th><th>Price</th></tr></thead>
+          <tbody id="invItems"></tbody>
+          <tfoot><tr><th>TOTAL</th><th id="invTotal"></th></tr></tfoot>
+        </table>
+        <div class="inv-bank" id="invBank"></div>
+        <div class="inv-status" id="invStatus" role="status" aria-live="polite"></div>
+        <div class="inv-actions"><button class="btn" id="invPaidBtn" type="button" onclick="markPaid()">Mark as paid</button></div>
+      </div>
+    </div>
+
     <!-- About Section with 3D Holographic Tilt Portrait -->
     <section id="about">
       <div class="about-frame">
@@ -6055,7 +6413,63 @@
 
     <!-- Contact Section -->
     <!-- AVAILABILITY: a client picks a date and sees whether it is free -->
-    <div class="pick-divider" aria-hidden="true"></div>
+    <div class="pick-divider" aria-hidden="true">
+      <svg class="pd-fx" viewBox="0 -50 720 240" focusable="false">
+        <defs>
+          <filter id="pdBloom" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1120" height="520">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="pdGlow" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1120" height="520">
+            <feGaussianBlur stdDeviation="9"/>
+          </filter>
+          <filter id="pdHaze" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1120" height="520">
+            <feGaussianBlur stdDeviation="18"/>
+          </filter>
+          <linearGradient id="pdLine" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+            <stop offset="0" stop-color="#8fc9a3" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#d4ffe6" stop-opacity="1"/>
+            <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="pdLineEmber" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+            <stop offset="0" stop-color="#ff7a2a" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#ffd2a6" stop-opacity="1"/>
+            <stop offset="1" stop-color="#ff7a2a" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="pdHaloEmber">
+            <stop offset="0" stop-color="#ffd2a6" stop-opacity="0.95"/>
+            <stop offset="0.35" stop-color="#ff7a2a" stop-opacity="0.45"/>
+            <stop offset="1" stop-color="#ff7a2a" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="pdHalo">
+            <stop offset="0" stop-color="#d4ffe6" stop-opacity="0.9"/>
+            <stop offset="0.35" stop-color="#8fc9a3" stop-opacity="0.35"/>
+            <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <ellipse class="pd-haze" cx="360" cy="70" rx="300" ry="8" fill="#8fc9a3" filter="url(#pdHaze)" />
+
+        <line class="pd-tube-glow" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="6" filter="url(#pdGlow)" />
+        <line class="pd-tube" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="1.2" filter="url(#pdBloom)" />
+        <line class="pd-pulse" x1="0" y1="70" x2="720" y2="70" stroke="url(#pdLine)" stroke-width="2.5" filter="url(#pdBloom)" />
+
+        <path class="pd-run pd-run-r pd-run-haze" d="M360 70 H720" filter="url(#pdGlow)" />
+        <path class="pd-run pd-run-r pd-run-body" d="M360 70 H720" filter="url(#pdBloom)" />
+        <path class="pd-run pd-run-r pd-run-core" d="M360 70 H720" />
+        <path class="pd-streak pd-streak-r" d="M360 70 H720" filter="url(#pdBloom)" />
+        <path class="pd-run pd-run-l pd-run-haze" d="M360 70 H0" filter="url(#pdGlow)" />
+        <path class="pd-run pd-run-l pd-run-body" d="M360 70 H0" filter="url(#pdBloom)" />
+        <path class="pd-run pd-run-l pd-run-core" d="M360 70 H0" />
+        <path class="pd-streak pd-streak-l" d="M360 70 H0" filter="url(#pdBloom)" />
+
+        <circle class="pd-halo" cx="360" cy="70" r="30" fill="url(#pdHalo)" />
+        <rect class="pd-gem" x="355.5" y="65.5" width="9" height="9" fill="#8fc9a3" filter="url(#pdBloom)" />
+        <rect class="pd-gem-core" x="358" y="68" width="4" height="4" fill="#ffffff" />
+        <!-- click target for the gem: an invisible circle that catches the pointer -->
+        <circle class="pd-hit" cx="360" cy="70" r="18" fill="transparent" />
+      </svg>
+    </div>
     <section id="availability" class="availability-section">
       <div class="section-header">
         <span class="section-tag">[ AVAILABILITY ]</span>
@@ -6090,7 +6504,7 @@
         <div class="contact-grid">
           <div class="contact-card">
             <span>EMAIL</span>
-            <a href="mailto:lionbarton@gmail.com">lionbarton@gmail.com</a>
+            <a href="mailto:Corestall125@gmail.com">Corestall125@gmail.com</a>
           </div>
           <div class="contact-card">
             <span>WHATSAPP</span>
@@ -6134,7 +6548,7 @@
     <footer>
       <div class="footer-content">
         <ul class="footer-links">
-          <li><a href="mailto:lionbarton@gmail.com">Email</a></li>
+          <li><a href="mailto:Corestall125@gmail.com">Email</a></li>
           <li><a href="tel:+27607073275">Phone</a></li>
           <li><a href="https://instagram.com/corestall" target="_blank" rel="noopener noreferrer">Instagram</a></li>
           <li class="footer-legal"><a href="license.html">License</a></li>
@@ -7928,12 +8342,133 @@
       `).join('');
     }
 
+    // ----- Invoice -----
+    // Where the paid invoice is sent. Set this once the email service is connected (see the notes on the PR).
+    const INVOICE_ENDPOINT = '';
+    // Seller details printed on every invoice. Fill in the blanks before going live.
+    const SELLER = {
+      name: 'Seth Barton / CoreStall',
+      email: 'Corestall125@gmail.com',
+      address: '',
+      regNumber: '',
+      vatNumber: '',
+      bank: ''
+    };
+    let invoiceNo = '';
+
     function checkout() {
-      if (cart.length === 0) return alert('Your cart is empty.');
-      const lines = cart.map(i => `- ${i.title} (R ${i.price})`).join('\n');
-      const total = cart.reduce((s, i) => s + Number(i.price || 0), 0);
-      const body = `Hi Seth,\n\nI would like to purchase and download the following digital files:\n${lines}\n\nTotal: R ${total}\n\nPlease send through the download link and invoice.`;
-      window.location.href = `mailto:lionbarton@gmail.com?subject=${encodeURIComponent('Digital Media Order')}&body=${encodeURIComponent(body)}`;
+      if (cart.length === 0) { showNotification('Your cart is empty'); return; }
+      openInvoice();
+    }
+
+    function openInvoice() {
+      toggleCart(false);
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      invoiceNo = `CS-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+      document.getElementById('invNo').textContent = invoiceNo;
+      document.getElementById('invDate').textContent = now.toLocaleDateString('en-ZA');
+      document.getElementById('invSeller').innerHTML = [SELLER.name, SELLER.address, SELLER.regNumber && 'Reg: ' + SELLER.regNumber, SELLER.vatNumber && 'VAT: ' + SELLER.vatNumber, SELLER.email]
+        .filter(Boolean).map(escapeHtml).join('<br>');
+      document.getElementById('invBank').textContent = SELLER.bank || '';
+      const total = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      document.getElementById('invItems').innerHTML = cart.map(item =>
+        `<tr><td>${escapeHtml(item.title)}</td><td>R ${Number(item.price).toLocaleString()}</td></tr>`).join('');
+      document.getElementById('invTotal').textContent = 'R ' + total.toLocaleString();
+      setInvoiceStatus('');
+      const btn = document.getElementById('invPaidBtn');
+      btn.disabled = false;
+      btn.textContent = 'Mark as paid';
+      btn.style.display = '';
+      document.getElementById('invSheet').classList.remove('is-paid');
+      const overlay = document.getElementById('invOverlay');
+      overlay.hidden = false;
+      document.getElementById('invBuyerName').focus();
+    }
+
+    // THANK YOU: the stamp dances and a crew of ants dances on screen for 10 seconds
+    const THANKS_ANT_SVG = '<svg class="ant-crew-legs-walk" viewBox="0 0 28 28">' +
+      '<ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827"/><ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937"/>' +
+      '<ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827"/><path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2"/>' +
+      '<path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8"/>' +
+      '<polygon points="12,5 16,5 14,1" fill="#8fc9a3"/></svg>';
+    function thankYouDance() {
+      const stamp = document.querySelector('#invSheet .inv-stamp');
+      if (stamp) {
+        stamp.classList.remove('dance');
+        void stamp.offsetWidth;
+        stamp.classList.add('dance');
+      }
+      if (document.getElementById('thankYouCrew')) return;
+      const crew = document.createElement('div');
+      crew.id = 'thankYouCrew';
+      crew.className = 'thanks-crew';
+      const ants = [0, 1, 2, 3, 4, 5].map(i => `<div class="thanks-ant" style="animation-delay:${i * 0.08}s">${THANKS_ANT_SVG}</div>`).join('');
+      crew.innerHTML = `<div class="thanks-row">${ants}</div><div class="thanks-bubble">Thank you for your purchase! I will get back to you soon.</div>`;
+      document.body.appendChild(crew);
+      setTimeout(() => {
+        crew.classList.add('leaving');
+        setTimeout(() => crew.remove(), 650);
+      }, 10000);
+    }
+
+    function closeInvoice() {
+      document.getElementById('invOverlay').hidden = true;
+    }
+
+    function setInvoiceStatus(message, isError) {
+      const el = document.getElementById('invStatus');
+      el.textContent = message;
+      el.classList.toggle('error', !!isError);
+    }
+
+    function invoicePayload() {
+      const total = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      return {
+        type: 'paid-invoice',
+        invoiceNo,
+        date: new Date().toISOString(),
+        buyer: {
+          name: document.getElementById('invBuyerName').value.trim(),
+          email: document.getElementById('invBuyerEmail').value.trim()
+        },
+        seller: SELLER,
+        items: cart.map(item => ({ title: item.title, price: Number(item.price) })),
+        total,
+        currency: 'ZAR',
+        status: 'PAID'
+      };
+    }
+
+    async function markPaid() {
+      const name = document.getElementById('invBuyerName').value.trim();
+      const email = document.getElementById('invBuyerEmail').value.trim();
+      if (!name || !email) { setInvoiceStatus('Please add your name and email first.', true); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setInvoiceStatus('That email address does not look right.', true); return; }
+
+      const sheet = document.getElementById('invSheet');
+      const btn = document.getElementById('invPaidBtn');
+      sheet.classList.add('is-paid');
+      btn.disabled = true;
+      btn.style.display = 'none'; // no retry: the customer just sees the thank you
+      setInvoiceStatus('Thank you, ' + name + '! Your payment has been recorded.');
+
+      if (!INVOICE_ENDPOINT) {
+        console.warn('Invoice email is not connected yet: set INVOICE_ENDPOINT.');
+        return;
+      }
+      try {
+        const res = await fetch(INVOICE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(invoicePayload())
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        cart.length = 0;
+        renderCart();
+      } catch (err) {
+        setInvoiceStatus('We could not send your invoice. Please email Corestall125@gmail.com with invoice ' + invoiceNo + '.', true);
+      }
     }
 
     // =========================================================================
@@ -14807,7 +15342,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       // '2026-11-07',
       // ['2026-11-20', '2026-11-22'],
     ];
-    const BOOKING_EMAIL = 'lionbarton@gmail.com';
+    const BOOKING_EMAIL = 'Corestall125@gmail.com';
     const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const MONTHS_AHEAD = 18;
@@ -15484,6 +16019,356 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       }
       requestAnimationFrame(flight);
     };
+  })();
+  </script>
+<script>
+  // Hero drift: the stars in the lower fade move down the page as you scroll (slower than the page, so it reads as depth).
+  (function initHeroDrift() {
+    var layer = document.getElementById('heroDrift');
+    if (!layer) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ticking = false;
+    function apply() {
+      ticking = false;
+      layer.style.backgroundPositionY = (window.scrollY * 0.45) + 'px';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+    }, { passive: true });
+    apply();
+  })();
+  </script>
+  <script>
+  // Click the gem: an extra pulse, drawn in ember orange, that runs the same way as the timed pulse.
+  // The pulse is CSS keyframes (classes), the same method as the timed pulse.
+  (function initGemClick() {
+    var svg = document.querySelector('.pd-fx');
+    var hit = svg && svg.querySelector('.pd-hit');
+    var gem = svg && svg.querySelector('.pd-gem');
+    if (!hit || !gem) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    function make(tag, attrs) {
+      var el = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+      svg.insertBefore(el, gem);
+      return el;
+    }
+    function fire() {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var made = [];
+      ['M360 70 H720', 'M360 70 H0'].forEach(function (d, i) {
+        var cls = i ? ' pd-ember-run-l' : '';
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-haze' + cls, filter: 'url(#pdGlow)' }));
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-body' + cls, filter: 'url(#pdBloom)' }));
+        made.push(make('path', { d: d, class: 'pd-ember-run pd-ember-core' + cls }));
+      });
+      made.push(make('line', { x1: 0, y1: 70, x2: 720, y2: 70, class: 'pd-ember-line', stroke: 'url(#pdLineEmber)', 'stroke-width': 2.5, filter: 'url(#pdBloom)' }));
+      made.push(make('circle', { cx: 360, cy: 70, r: 30, class: 'pd-ember-halo', fill: 'url(#pdHaloEmber)' }));
+      setTimeout(function () { made.forEach(function (el) { el.remove(); }); }, 2900);
+    }
+    hit.addEventListener('click', fire);
+  })();
+  </script>
+  <script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
+
+  // The photos wrap around the viewer. The viewer stands on the axis of a half cylinder.
+  (function initHyperCylinder() {
+    var grid = document.getElementById('mediaGrid');
+    if (!grid) return;
+    var desktop = window.matchMedia('(min-width: 900px)');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    var R = 10;                        // radius of the cylinder
+    var ROW_H = 0.5 * R;               // height of one row of photos (fitted in rebuild)
+    var ROW_GAP = 0.05 * R;
+    var FIT = 0.84;                    // share of the visible height the wall may use
+    var COL_COUNT = 9;                 // nine columns make a full ring, so the wall never ends
+    var COL_STEP = Math.PI * 2 / COL_COUNT;
+    var COL_ARC = COL_STEP - 0.12;     // arc covered by one photo, with a gap
+    var FLIP_U = -1;                   // the photos face inward, so the image is mirrored once
+    var VFOV = 77;
+
+    var stage = document.createElement('div');
+    stage.className = 'vr-stage';
+    stage.hidden = true;
+    stage.setAttribute('role', 'region');
+    stage.setAttribute('aria-label', 'Photo gallery. Drag to look around, click a photo for details.');
+    stage.innerHTML = '<div class="vr-hint">Drag to look around &middot; click a photo</div>';
+    grid.parentNode.insertBefore(stage, grid);
+
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (err) {
+      stage.remove();
+      return;                          // no WebGL: the normal grid stays
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0);
+    var el = renderer.domElement;
+    el.style.cursor = 'grab';
+    stage.insertBefore(el, stage.firstChild);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(VFOV, 1, 0.5, 500);
+    camera.position.set(0, 0, 0);
+    var world = new THREE.Group();
+    scene.add(world);
+
+    // hyperspace: stars streak outward past the cylinder
+    var N = 900;
+    var dirs = [], sArr = new Float32Array(N), spArr = new Float32Array(N), isEmber = new Array(N);
+    var starPos = new Float32Array(N * 6), starCol = new Float32Array(N * 6);
+    for (var i = 0; i < N; i++) {
+      var uz = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, k = Math.sqrt(1 - uz * uz);
+      dirs.push(new THREE.Vector3(k * Math.cos(th), uz, k * Math.sin(th)));
+      sArr[i] = 16 + Math.random() * 56;
+      spArr[i] = 6 + Math.random() * 18;
+      isEmber[i] = Math.random() < 0.12;
+    }
+    var starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+    var stars = new THREE.LineSegments(starGeo, new THREE.LineBasicMaterial({
+      vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false
+    }));
+    scene.add(stars);
+
+    function updateStars(dt) {
+      for (var i = 0; i < N; i++) {
+        sArr[i] += spArr[i] * dt;
+        if (sArr[i] > 72) sArr[i] = 15 + Math.random() * 5;
+        var s = sArr[i], d = dirs[i], tl = 0.6 + spArr[i] * 0.16, b = i * 6;
+        var s2 = Math.max(s - tl, 0.5);
+        var fade = Math.min(1, (s - 15) / 8) * Math.min(1, (72 - s) / 10);
+        starPos[b] = d.x * s; starPos[b + 1] = d.y * s; starPos[b + 2] = d.z * s;
+        starPos[b + 3] = d.x * s2; starPos[b + 4] = d.y * s2; starPos[b + 5] = d.z * s2;
+        var hr = isEmber[i] ? 1 : 0.7, hg = isEmber[i] ? 0.6 : 1, hb = isEmber[i] ? 0.3 : 1;
+        fade *= 1.6;
+        starCol[b] = hr * fade; starCol[b + 1] = hg * fade; starCol[b + 2] = hb * fade;
+        starCol[b + 3] = 0; starCol[b + 4] = 0; starCol[b + 5] = 0;
+      }
+      starGeo.attributes.position.needsUpdate = true;
+      starGeo.attributes.color.needsUpdate = true;
+    }
+
+    // photo textures: loaded once per source, fitted to each photo (cover, no stretching)
+    var loader = new THREE.TextureLoader();
+    loader.setCrossOrigin('anonymous');
+    var texCache = {};
+    function fitTexture(src, mat, slotAspect) {
+      function apply(base) {
+        var t = base.clone();
+        t.needsUpdate = true;
+        t.wrapS = THREE.ClampToEdgeWrapping;
+        t.wrapT = THREE.ClampToEdgeWrapping;
+        t.colorSpace = THREE.SRGBColorSpace;
+        var a = base.image.width / base.image.height, m = slotAspect;
+        if (a > m) {
+          var s = m / a;
+          t.repeat.set(FLIP_U * s, 1);
+          t.offset.set(FLIP_U < 0 ? (1 + s) / 2 : (1 - s) / 2, 0);
+        } else {
+          var s2 = a / m;
+          t.repeat.set(FLIP_U, s2);
+          t.offset.set(FLIP_U < 0 ? 1 : 0, (1 - s2) / 2);
+        }
+        mat.map = t;
+        mat.color.set(0xffffff);
+        mat.needsUpdate = true;
+      }
+      if (texCache[src]) { if (texCache[src].image) apply(texCache[src]); else texCache[src].wait.push(apply); return; }
+      var entry = { wait: [] };
+      texCache[src] = entry;
+      loader.load(src, function (tex) {
+        texCache[src] = tex;
+        apply(tex);
+        entry.wait.forEach(function (fn) { fn(tex); });
+      }, undefined, function () { /* keep the plain colour if a photo fails */ });
+    }
+
+    function visibleCards() {
+      return Array.prototype.slice.call(grid.querySelectorAll('.product-card'))
+        .filter(function (c) { return !c.classList.contains('hidden'); });
+    }
+    function clearWorld() {
+      while (world.children.length) {
+        var m = world.children.pop();
+        m.geometry.dispose();
+        m.material.dispose();
+      }
+    }
+    function rebuild() {
+      clearWorld();
+      var cards = visibleCards();
+      var n = cards.length;
+      if (!n) return;
+      var rows = Math.max(1, Math.ceil(n / 3));
+      // fit the whole wall inside the visible height, so no row is cut off
+      var visibleHalf = R * Math.tan(VFOV * Math.PI / 360);
+      ROW_H = Math.min(0.5 * R, (2 * FIT * visibleHalf - (rows - 1) * ROW_GAP) / rows);
+      var totalH = rows * ROW_H + (rows - 1) * ROW_GAP;
+      var slotAspect = (R * COL_ARC) / ROW_H;
+      for (var c = 0; c < COL_COUNT; c++) {
+        var phi = c * COL_STEP;                          // around the full ring
+        for (var r = 0; r < rows; r++) {
+          var card = cards[(c * rows + r) % n];          // the same photos repeat around the ring
+          var y = totalH / 2 - ROW_H / 2 - r * (ROW_H + ROW_GAP);
+          var geo = new THREE.CylinderGeometry(R, R, ROW_H, 40, 1, true, (Math.PI - phi) - COL_ARC / 2, COL_ARC);
+          var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.DoubleSide });
+          var mesh = new THREE.Mesh(geo, mat);
+          mesh.position.y = y;
+          mesh.userData.card = card;
+          world.add(mesh);
+          var img = card.querySelector('.product-image-wrap img');
+          if (img && img.src) fitTexture(img.src, mat, slotAspect);
+        }
+      }
+      scene.updateMatrixWorld(true);
+    }
+
+    function resize() {
+      var w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    // look around by dragging; click a photo for its details
+    var yaw = 0, yawTarget = 0, dragging = false, lastX = 0, downX = 0, downY = 0;
+    var raycaster = new THREE.Raycaster();
+    function pickAt(clientX, clientY) {
+      var rect = el.getBoundingClientRect();
+      var ndc = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
+      raycaster.setFromCamera(ndc, camera);
+      var hits = raycaster.intersectObjects(world.children, false);
+      return hits.length ? hits[0].object : null;
+    }
+    el.addEventListener('pointerdown', function (e) {
+      dragging = true;
+      lastX = downX = e.clientX;
+      downY = e.clientY;
+      el.setPointerCapture(e.pointerId);
+      el.style.cursor = 'grabbing';
+    });
+    el.addEventListener('pointermove', function (e) {
+      if (dragging) {
+        var dx = e.clientX - lastX;
+        lastX = e.clientX;
+        yawTarget -= dx * 0.0035;                       // no limit: drag round forever
+      } else {
+        el.style.cursor = pickAt(e.clientX, e.clientY) ? 'pointer' : 'grab';
+      }
+    });
+    el.addEventListener('pointerup', function (e) {
+      dragging = false;
+      el.style.cursor = 'grab';
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) < 6) {
+        var mesh = pickAt(e.clientX, e.clientY);
+        if (mesh) openDetail(mesh.userData.card);
+      }
+    });
+
+    // detail panel: uses the card's own buttons, so cart and like stay in one place
+    var detail = null;
+    function text(tag, cls, value) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      n.textContent = value;
+      return n;
+    }
+    function openDetail(card) {
+      if (!detail) {
+        detail = document.createElement('div');
+        detail.className = 'vr-detail';
+        detail.hidden = true;
+        stage.appendChild(detail);
+      }
+      var img = card.querySelector('.product-image-wrap img');
+      var title = card.querySelector('.typewriter-title');
+      var price = card.querySelector('.product-price');
+      var desc = card.querySelector('.typewriter-desc');
+      var box = document.createElement('div');
+      box.className = 'vr-detail-card';
+      if (img) { var pic = document.createElement('img'); pic.src = img.src; pic.alt = img.alt || ''; box.appendChild(pic); }
+      box.appendChild(text('h3', '', title ? (title.getAttribute('data-text') || title.textContent) : ''));
+      box.appendChild(text('p', 'vr-price', price ? price.textContent : ''));
+      box.appendChild(text('p', 'vr-desc', desc ? (desc.getAttribute('data-text') || desc.textContent) : ''));
+      var actions = document.createElement('div');
+      actions.className = 'vr-actions';
+      var add = text('button', 'vr-add', '+ Add to Cart');
+      add.type = 'button';
+      add.addEventListener('click', function () { var b = card.querySelector('.add-to-cart-btn'); if (b) b.click(); });
+      var like = text('button', 'vr-like', 'Like');
+      like.type = 'button';
+      like.addEventListener('click', function () { var b = card.querySelector('.like-btn'); if (b) b.click(); });
+      var close = text('button', 'vr-close', 'Close');
+      close.type = 'button';
+      close.addEventListener('click', function () { detail.hidden = true; });
+      actions.appendChild(add); actions.appendChild(like); actions.appendChild(close);
+      box.appendChild(actions);
+      detail.innerHTML = '';
+      detail.appendChild(box);
+      detail.hidden = false;
+    }
+
+    // animation: the cylinder rushes in on entry, the stars stream, the view eases
+    var running = false, last = 0, diveStart = null, DIVE_MS = 2400;
+    function frame(now) {
+      if (!running) return;
+      var dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (diveStart === null) diveStart = now;
+      var p = Math.min(1, (now - diveStart) / DIVE_MS);
+      var ease = 1 - Math.pow(1 - p, 3);
+      world.scale.setScalar(3 - 2 * ease);
+      var sway = reduce.matches ? 0 : Math.sin(now / 1000 * 0.25) * 0.05;
+      yaw += (yawTarget + sway - yaw) * Math.min(1, dt * 6);
+      world.rotation.y = yaw;
+      if (!reduce.matches) updateStars(dt);
+      renderer.render(scene, camera);
+      requestAnimationFrame(frame);
+    }
+    function setRunning(on) {
+      if (on && !running) {
+        running = true;
+        last = performance.now();
+        requestAnimationFrame(frame);
+      } else if (!on) {
+        running = false;
+      }
+    }
+
+    function applyMode() {
+      var on = desktop.matches;
+      stage.hidden = !on;
+      grid.classList.toggle('vr-on', on);
+      if (on) { resize(); rebuild(); }
+    }
+
+    applyMode();
+    if (desktop.matches) {
+      grid.classList.add('vr-on');
+      stage.hidden = false;
+      resize();
+      rebuild();
+    }
+    desktop.addEventListener('change', applyMode);
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
+    if (window.MutationObserver) {
+      new MutationObserver(function () { if (desktop.matches) rebuild(); })
+        .observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { setRunning(en.isIntersecting && desktop.matches); });
+      }, { threshold: 0.05 }).observe(stage);
+    } else {
+      setRunning(desktop.matches);
+    }
+    if (reduce.matches) { world.scale.setScalar(1); }
   })();
   </script>
 </body>
