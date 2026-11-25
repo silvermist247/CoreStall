@@ -5726,14 +5726,29 @@
        later, then fades over about 20 seconds. The text colour rules use
        !important, so the glow is a filter. */
     @keyframes pdWave {
-      0%   { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
+      0%   { filter: none; }
       1.5% { filter: drop-shadow(0 0 3px rgba(212, 255, 230, 0.95)) drop-shadow(0 0 12px rgba(143, 201, 163, 0.75)); }
-      88%  { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
-      100% { filter: drop-shadow(0 0 0 rgba(143, 201, 163, 0)) drop-shadow(0 0 0 rgba(143, 201, 163, 0)); }
+      88%  { filter: none; }
+      100% { filter: none; }
     }
     #availability .section-tag { animation: pdWave 23s ease-out 3.0s infinite; }
     #availability .section-title { animation: pdWave 23s ease-out 3.4s infinite; }
     #availability .avail-intro { animation: pdWave 23s ease-out 3.8s infinite; }
+
+    /* calendar and select-a-date panel: a glow ring that the wave passes through.
+       It is a pseudo-element, so the content inside stays sharp and the JS can rewrite it. */
+    .avail-panel { position: relative; }
+    .avail-cal::after, .avail-panel::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      opacity: 0; box-shadow: 0 0 0 1px rgba(143, 201, 163, 0.55), 0 0 22px rgba(143, 201, 163, 0.32);
+      animation: pdPanel 23s ease-out 4.2s infinite;
+    }
+    .avail-panel::after { animation-delay: 4.6s; }
+    @keyframes pdPanel {
+      0%      { opacity: 0; }
+      1.5%    { opacity: 1; }
+      88%,100%{ opacity: 0; }
+    }
 
     /* the footer diamond glows slowly */
     .footer-content::before { animation: footDiamond 3.6s ease-in-out infinite; }
@@ -5743,7 +5758,9 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .pd-run, .pd-streak, .pd-pulse, .pd-haze, .pd-tube-glow, .pd-gem, .pd-gem-core, .pd-halo,
-      #availability .section-tag, #availability .section-title, #availability .avail-intro, .footer-content::before { animation: none !important; }
+      #availability .section-tag, #availability .section-title, #availability .avail-intro, .footer-content::before,
+      .avail-cal::after, .avail-panel::after { animation: none !important; }
+      .avail-cal::after, .avail-panel::after { opacity: 0; }
       .pd-run, .pd-streak { display: none; }
       .pd-pulse { opacity: 0.6; }
       .pd-tube-glow { opacity: 0.6; }
