@@ -15076,9 +15076,34 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
   </script>
   <script>
   /* HERO DROP: the clicked hero button falls onto the matching filter button, breaks it, and the pieces fall
-     to the bottom of the screen. The page scrolls smoothly to follow the falling pieces. Own code. */
+     off the bottom of the screen. The camera follows only until the impact. Own code. */
   (function () {
     var busy = false;
+    // Copy the exact computed look onto a clone, so it does not change when it leaves its section.
+    function freeze(src, dst) {
+      var cs = getComputedStyle(src);
+      for (var i = 0; i < cs.length; i++) {
+        var p = cs[i];
+        dst.style.setProperty(p, cs.getPropertyValue(p), cs.getPropertyPriority(p));
+      }
+      dst.style.transition = 'none';
+      dst.style.animation = 'none';
+      for (var j = 0; j < src.children.length; j++) freeze(src.children[j], dst.children[j]);
+    }
+    function copyOf(el, w, h) {
+      var c = el.cloneNode(true);
+      c.removeAttribute('onclick');
+      c.removeAttribute('id');
+      freeze(el, c);
+      c.style.position = 'fixed';
+      c.style.margin = '0';
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+      c.style.pointerEvents = 'none';
+      c.style.zIndex = '9999';
+      c.style.transformOrigin = 'center';
+      return c;
+    }
     function place(node, x, pageY) {
       node.style.left = x + 'px';
       node.style.top = (pageY - window.scrollY) + 'px';
@@ -15093,30 +15118,25 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
       var from = el.getBoundingClientRect();
       var startX = from.left, startY = from.top + window.scrollY;
-
-      // The falling copy of the clicked button
-      var clone = el.cloneNode(true);
-      clone.removeAttribute('onclick');
-      clone.removeAttribute('id');
-      clone.style.width = from.width + 'px';
-      clone.style.height = from.height + 'px';
-      clone.classList.add('me-frag');
+      var clone = copyOf(el, from.width, from.height);
       document.body.appendChild(clone);
+      place(clone, startX, startY);
 
       target.click(); // applies the filter; no page jump here
       var tr = target.getBoundingClientRect();
       var landX = tr.left, landY = tr.top + window.scrollY;
       var dist = Math.max(40, landY - startY);
-      var T1 = Math.min(1200, Math.max(550, Math.sqrt(dist) * 22));
+      var T1 = Math.min(2600, Math.max(1000, Math.sqrt(dist) * 45)); // slower, longer fall
 
       var camY = window.scrollY;
       function follow(pageY) {
         var want = Math.max(0, pageY - window.innerHeight * 0.4);
-        camY += (want - camY) * 0.15;
+        camY += (want - camY) * 0.08;
         window.scrollTo({ top: camY, behavior: 'instant' });
       }
 
       function impact() {
+        // The camera stops here: it followed the button only until it hit the next one.
         target.classList.add('is-broken');
         setTimeout(function () { target.classList.remove('is-broken'); }, 600);
 
@@ -15135,21 +15155,16 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
           'polygon(58% 52%, 100% 44%, 100% 100%, 52% 100%)'
         ];
         var frags = quads.map(function (q, i) {
-          var f = el.cloneNode(true);
-          f.removeAttribute('onclick');
-          f.removeAttribute('id');
-          f.classList.add('me-frag');
-          f.style.width = from.width + 'px';
-          f.style.height = from.height + 'px';
+          var f = copyOf(el, from.width, from.height);
           f.style.clipPath = q;
           f.style.webkitClipPath = q;
           document.body.appendChild(f);
           var dir = i % 2 ? 1 : -1;
           return {
             el: f, x: landX, y: landY, dead: false,
-            vx: dir * (90 + Math.random() * 140),
-            vy: -(120 + Math.random() * 140),
-            rot: 0, vr: dir * (180 + Math.random() * 260)
+            vx: dir * (40 + Math.random() * 60),
+            vy: -(40 + Math.random() * 60),
+            rot: 0, vr: dir * (90 + Math.random() * 120)
           };
         });
         clone.remove();
@@ -15158,10 +15173,10 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
         function phase2(now) {
           var dt = Math.min(0.033, (now - last) / 1000);
           last = now;
-          var alive = 0, maxY = 0;
+          var alive = 0;
           frags.forEach(function (f) {
             if (f.dead) return;
-            f.vy += 2600 * dt;
+            f.vy += 1400 * dt;
             f.x += f.vx * dt;
             f.y += f.vy * dt;
             f.rot += f.vr * dt;
@@ -15172,11 +15187,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
               f.dead = true;
             } else {
               alive++;
-              maxY = Math.max(maxY, f.y);
             }
           });
-          if (alive) follow(maxY);
-          if (alive && now - started < 5000) {
+          if (alive && now - started < 8000) {
             requestAnimationFrame(phase2);
           } else {
             frags.forEach(function (f) { if (!f.dead) f.el.remove(); });
