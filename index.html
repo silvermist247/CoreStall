@@ -5510,6 +5510,27 @@
     @media (prefers-reduced-motion: reduce) {
       .wp-stack-btn-wrap, .wp-stack-layer-1, .wp-stack-layer-2, .wp-group-master-btn { transform: none !important; transition: none; }
     }
+
+    /* HERO DROP: the clicked hero button falls onto its filter button, breaks it, and the pieces fall off the screen. */
+    .primary-filters .filter-btn.is-broken { animation: me-shake 0.5s ease-out 1; }
+    @keyframes me-shake {
+      0% { transform: translate(0, 0); }
+      15% { transform: translate(-4px, 2px) rotate(-1deg); }
+      30% { transform: translate(4px, -2px) rotate(1deg); }
+      45% { transform: translate(-3px, 1px); }
+      60% { transform: translate(2px, 0); }
+      100% { transform: none; }
+    }
+    .me-crack {
+      position: fixed; pointer-events: none; z-index: 9998;
+      background:
+        linear-gradient(115deg, transparent 47%, rgba(255, 122, 42, 0.95) 48%, transparent 50%),
+        linear-gradient(62deg, transparent 44%, rgba(255, 122, 42, 0.85) 45%, transparent 47%),
+        linear-gradient(20deg, transparent 52%, rgba(255, 226, 180, 0.8) 53%, transparent 55%);
+      animation: me-crack-flash 0.8s ease-out forwards;
+    }
+    @keyframes me-crack-flash { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+    .me-frag { position: fixed; margin: 0; pointer-events: none; z-index: 9999; transform-origin: center; }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5678,9 +5699,9 @@
           <a href="#contact" class="hero-link">Licence enquiry</a>
         </div>
         <div class="hero-cats" role="group" aria-label="Jump to a category">
-          <button type="button" class="hero-cat" onclick="heroFilter('action')">Action</button>
-          <button type="button" class="hero-cat" onclick="heroFilter('wildlife')">Wildlife</button>
-          <button type="button" class="hero-cat" onclick="heroFilter('drone')">Drone</button>
+          <button type="button" class="hero-cat" onclick="heroDrop(this, 'action')">Action</button>
+          <button type="button" class="hero-cat" onclick="heroDrop(this, 'wildlife')">Wildlife</button>
+          <button type="button" class="hero-cat" onclick="heroDrop(this, 'drone')">Drone</button>
         </div>
       </div>
       <a href="#media" class="hero-scroll-cue" aria-label="Scroll to the library"><span>Scroll</span><i aria-hidden="true"></i></a>
@@ -15051,6 +15072,131 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();
+  })();
+  </script>
+  <script>
+  /* HERO DROP: the clicked hero button falls onto the matching filter button, breaks it, and the pieces fall
+     to the bottom of the screen. The page scrolls smoothly to follow the falling pieces. Own code. */
+  (function () {
+    var busy = false;
+    function place(node, x, pageY) {
+      node.style.left = x + 'px';
+      node.style.top = (pageY - window.scrollY) + 'px';
+    }
+    window.heroDrop = function (el, cat) {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var target = [].slice.call(document.querySelectorAll('.primary-filters .filter-btn'))
+        .find(function (b) { return (b.getAttribute('onclick') || '').indexOf("'" + cat + "'") !== -1; });
+      if (busy) return;
+      if (!target || reduce) { heroFilter(cat); return; }
+      busy = true;
+
+      var from = el.getBoundingClientRect();
+      var startX = from.left, startY = from.top + window.scrollY;
+
+      // The falling copy of the clicked button
+      var clone = el.cloneNode(true);
+      clone.removeAttribute('onclick');
+      clone.removeAttribute('id');
+      clone.style.width = from.width + 'px';
+      clone.style.height = from.height + 'px';
+      clone.classList.add('me-frag');
+      document.body.appendChild(clone);
+
+      target.click(); // applies the filter; no page jump here
+      var tr = target.getBoundingClientRect();
+      var landX = tr.left, landY = tr.top + window.scrollY;
+      var dist = Math.max(40, landY - startY);
+      var T1 = Math.min(1200, Math.max(550, Math.sqrt(dist) * 22));
+
+      var camY = window.scrollY;
+      function follow(pageY) {
+        var want = Math.max(0, pageY - window.innerHeight * 0.4);
+        camY += (want - camY) * 0.15;
+        window.scrollTo({ top: camY, behavior: 'instant' });
+      }
+
+      function impact() {
+        target.classList.add('is-broken');
+        setTimeout(function () { target.classList.remove('is-broken'); }, 600);
+
+        var crack = document.createElement('div');
+        crack.className = 'me-crack';
+        crack.style.width = tr.width + 'px';
+        crack.style.height = tr.height + 'px';
+        document.body.appendChild(crack);
+        place(crack, landX, landY);
+        setTimeout(function () { crack.remove(); }, 800);
+
+        var quads = [
+          'polygon(0 0, 50% 0, 42% 50%, 0 46%)',
+          'polygon(50% 0, 100% 0, 100% 44%, 58% 52%)',
+          'polygon(0 46%, 42% 50%, 52% 100%, 0 100%)',
+          'polygon(58% 52%, 100% 44%, 100% 100%, 52% 100%)'
+        ];
+        var frags = quads.map(function (q, i) {
+          var f = el.cloneNode(true);
+          f.removeAttribute('onclick');
+          f.removeAttribute('id');
+          f.classList.add('me-frag');
+          f.style.width = from.width + 'px';
+          f.style.height = from.height + 'px';
+          f.style.clipPath = q;
+          f.style.webkitClipPath = q;
+          document.body.appendChild(f);
+          var dir = i % 2 ? 1 : -1;
+          return {
+            el: f, x: landX, y: landY, dead: false,
+            vx: dir * (90 + Math.random() * 140),
+            vy: -(120 + Math.random() * 140),
+            rot: 0, vr: dir * (180 + Math.random() * 260)
+          };
+        });
+        clone.remove();
+
+        var last = performance.now(), started = last;
+        function phase2(now) {
+          var dt = Math.min(0.033, (now - last) / 1000);
+          last = now;
+          var alive = 0, maxY = 0;
+          frags.forEach(function (f) {
+            if (f.dead) return;
+            f.vy += 2600 * dt;
+            f.x += f.vx * dt;
+            f.y += f.vy * dt;
+            f.rot += f.vr * dt;
+            place(f.el, f.x, f.y);
+            f.el.style.transform = 'rotate(' + f.rot + 'deg)';
+            if (f.y > window.scrollY + window.innerHeight + 120) {
+              f.el.remove();
+              f.dead = true;
+            } else {
+              alive++;
+              maxY = Math.max(maxY, f.y);
+            }
+          });
+          if (alive) follow(maxY);
+          if (alive && now - started < 5000) {
+            requestAnimationFrame(phase2);
+          } else {
+            frags.forEach(function (f) { if (!f.dead) f.el.remove(); });
+            busy = false;
+          }
+        }
+        requestAnimationFrame(phase2);
+      }
+
+      var t0 = performance.now();
+      function phase1(now) {
+        var t = Math.min(1, (now - t0) / T1);
+        var y = startY + (landY - startY) * t * t; // accelerates like gravity
+        place(clone, startX, y);
+        follow(y);
+        if (t < 1) { requestAnimationFrame(phase1); return; }
+        impact();
+      }
+      requestAnimationFrame(phase1);
+    };
   })();
   </script>
 </body>
