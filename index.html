@@ -5615,6 +5615,10 @@
       .inv-stamp.dance, .thanks-ant { animation: none; }
     }
 
+    /* the availability section has no background of its own, so it needs no edge mask.
+       The mask makes its text render soft. */
+    #availability { -webkit-mask-image: none; mask-image: none; }
+
     /* BLEND: no straight page lines. Section edges fade into the page; the divider is a soft glow. */
     section:not(.hero) {
       -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0,0,0,0.35) 60px, #000 160px, #000 calc(100% - 160px), rgba(0,0,0,0.35) calc(100% - 60px), transparent 100%);
@@ -5642,6 +5646,7 @@
     }
     .pd-fx * { transform-box: view-box; transform-origin: 360px 70px; }
     .pd-fx line, .pd-fx path, .pd-fx circle, .pd-fx ellipse { stroke-linecap: round; stroke-linejoin: round; }
+    .pd-hit { pointer-events: all; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
     /* ambient haze and neon tube */
     .pd-haze { animation: pdHaze 23s ease-in-out infinite; }
@@ -6348,6 +6353,16 @@
             <stop offset="0.5" stop-color="#d4ffe6" stop-opacity="1"/>
             <stop offset="1" stop-color="#8fc9a3" stop-opacity="0"/>
           </linearGradient>
+          <linearGradient id="pdLineEmber" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="720" y2="0">
+            <stop offset="0" stop-color="#ff7a2a" stop-opacity="0"/>
+            <stop offset="0.5" stop-color="#ffd2a6" stop-opacity="1"/>
+            <stop offset="1" stop-color="#ff7a2a" stop-opacity="0"/>
+          </linearGradient>
+          <radialGradient id="pdHaloEmber">
+            <stop offset="0" stop-color="#ffd2a6" stop-opacity="0.95"/>
+            <stop offset="0.35" stop-color="#ff7a2a" stop-opacity="0.45"/>
+            <stop offset="1" stop-color="#ff7a2a" stop-opacity="0"/>
+          </radialGradient>
           <radialGradient id="pdHalo">
             <stop offset="0" stop-color="#d4ffe6" stop-opacity="0.9"/>
             <stop offset="0.35" stop-color="#8fc9a3" stop-opacity="0.35"/>
@@ -6373,6 +6388,8 @@
         <circle class="pd-halo" cx="360" cy="70" r="30" fill="url(#pdHalo)" />
         <rect class="pd-gem" x="355.5" y="65.5" width="9" height="9" fill="#8fc9a3" filter="url(#pdBloom)" />
         <rect class="pd-gem-core" x="358" y="68" width="4" height="4" fill="#ffffff" />
+        <!-- click target for the gem: an invisible circle that catches the pointer -->
+        <circle class="pd-hit" cx="360" cy="70" r="18" fill="transparent" />
       </svg>
     </div>
     <section id="availability" class="availability-section">
@@ -15941,6 +15958,56 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       if (!ticking) { ticking = true; requestAnimationFrame(apply); }
     }, { passive: true });
     apply();
+  })();
+  <script>
+  // Click the gem: an extra pulse, drawn in ember orange, that runs the same way as the timed pulse.
+  (function initGemClick() {
+    var svg = document.querySelector('.pd-fx');
+    var hit = svg && svg.querySelector('.pd-hit');
+    var gem = svg && svg.querySelector('.pd-gem');
+    if (!hit || !gem) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var DUR = 2600;
+    function make(tag, attrs, before) {
+      var el = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+      svg.insertBefore(el, before || gem);
+      return el;
+    }
+    function fire() {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var made = [];
+      ['M360 70 H720', 'M360 70 H0'].forEach(function (d) {
+        var base = { d: d, fill: 'none', 'stroke-linecap': 'round', 'stroke-dasharray': '160 2000' };
+        var haze = make('path', Object.assign({ stroke: '#ff7a2a', 'stroke-width': 14, filter: 'url(#pdGlow)' }, base));
+        var body = make('path', Object.assign({ stroke: '#ff8a1f', 'stroke-width': 4.5, filter: 'url(#pdBloom)' }, base));
+        var core = make('path', Object.assign({ stroke: '#ffe3c4', 'stroke-width': 1.5 }, base));
+        [haze, body, core].forEach(function (el) {
+          made.push(el);
+          el.animate([
+            { strokeDashoffset: 160, opacity: 0, offset: 0 },
+            { strokeDashoffset: 160, opacity: 1, offset: 0.02 },
+            { strokeDashoffset: -360, opacity: 1, offset: 0.7 },
+            { strokeDashoffset: -360, opacity: 0, offset: 0.72 },
+            { strokeDashoffset: -360, opacity: 0, offset: 1 }
+          ], { duration: DUR, easing: 'linear', fill: 'forwards' });
+        });
+      });
+      var line = make('line', { x1: 0, y1: 70, x2: 720, y2: 70, stroke: 'url(#pdLineEmber)', 'stroke-width': 2.5, filter: 'url(#pdBloom)' });
+      made.push(line);
+      line.animate([
+        { opacity: 0, offset: 0 }, { opacity: 0, offset: 0.7 }, { opacity: 1, offset: 0.8 }, { opacity: 0, offset: 1 }
+      ], { duration: DUR, fill: 'forwards' });
+      var halo = make('circle', { cx: 360, cy: 70, r: 30, fill: 'url(#pdHaloEmber)' });
+      halo.style.transformBox = 'view-box';
+      halo.style.transformOrigin = '360px 70px';
+      made.push(halo);
+      halo.animate([
+        { opacity: 1, transform: 'scale(0.6)' }, { opacity: 0, transform: 'scale(1.8)' }
+      ], { duration: 1400, easing: 'ease-out', fill: 'forwards' });
+      setTimeout(function () { made.forEach(function (el) { el.remove(); }); }, DUR + 200);
+    }
+    hit.addEventListener('click', fire);
   })();
   </script>
 </body>
