@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seth Barton / Action & Digital Media Vault</title>
   <meta name="description" content="Seth Barton (CoreStall): full-resolution digital action, wildlife, landscape and drone media. File licensing for mountain biking and outdoor content.">
-  <meta name="theme-color" content="#ff6a00">
+  <meta name="theme-color" content="#ff7a2a">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Seth Barton / CoreStall: Action & Digital Media Vault">
   <meta property="og:description" content="Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.">
@@ -31,16 +31,16 @@
       --panel-border-hover: rgba(200, 215, 235, 0.45);
 
       /* Refined Steel Blue / Electric Ice Accents */
-      --neon-cyan: #52c2df;
-      --cyan-glow: rgba(82, 194, 223, 0.3);
+      --neon-cyan: #8fc9a3;
+      --cyan-glow: rgba(143, 201, 163, 0.3);
 
       /* Hazard Orange & Amber Sparks */
-      --hazard-orange: #ff6a00;
-      --hazard-glow: rgba(255, 106, 0, 0.4);
+      --hazard-orange: #ff7a2a;
+      --hazard-glow: rgba(255, 122, 42, 0.4);
 
       /* Gold rune accents */
-      --hex-gold: #d4aa5d;
-      --hex-gold-dim: #947238;
+      --hex-gold: #ff7a2a;
+      --hex-gold-dim: #b8521a;
 
       /* Undertale Soul Crimson */
       --soul-red: #ff0033;
@@ -186,7 +186,7 @@
       height: 13px;
       border-radius: 2px;
       background: var(--hazard-orange);
-      box-shadow: 0 0 12px var(--hazard-orange), 0 0 20px #ffaa00;
+      box-shadow: 0 0 12px var(--hazard-orange), 0 0 20px #ffb070;
       transform: translate(-50%, -50%) rotate(45deg);
       transition: none;
       will-change: top, left, transform;
@@ -239,8 +239,8 @@
     }
 
     .secret-letter.keyed {
-      color: #00f0ff !important;
-      text-shadow: 0 0 14px #00f0ff, 0 0 25px rgba(0, 240, 255, 0.8) !important;
+      color: #8fc9a3 !important;
+      text-shadow: 0 0 14px #8fc9a3, 0 0 25px rgba(143, 201, 163, 0.8) !important;
       transform: scale(1.18);
     }
 
@@ -282,7 +282,7 @@
     .studio-tab-btn.active {
       color: var(--neon-cyan);
       border-bottom-color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.04);
+      background: rgba(143, 201, 163, 0.04);
     }
 
     .studio-tab-badge {
@@ -294,7 +294,7 @@
     }
 
     .studio-tab-btn.active .studio-tab-badge {
-      background: rgba(0, 240, 255, 0.25);
+      background: rgba(143, 201, 163, 0.25);
       color: var(--neon-cyan);
     }
 
@@ -353,20 +353,20 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: rgba(0, 240, 255, 0.08);
+      background: rgba(143, 201, 163, 0.08);
       border: 1.5px solid var(--neon-cyan);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.8rem;
       color: var(--neon-cyan);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 25px rgba(143, 201, 163, 0.25);
       animation: lockPulse 2.5s infinite ease-in-out;
     }
 
     @keyframes lockPulse {
-      0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
-      50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
+      0%, 100% { box-shadow: 0 0 15px rgba(143, 201, 163, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(143, 201, 163, 0.5); }
     }
 
     .studio-lock-title {
@@ -414,7 +414,7 @@
 
     .studio-passcode-input:focus {
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 18px rgba(143, 201, 163, 0.25);
     }
 
     .studio-passcode-input.error {
@@ -501,7 +501,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(0, 240, 255, 0.04);
+      background: rgba(143, 201, 163, 0.04);
     }
 
     .studio-header-title {
@@ -517,7 +517,7 @@
     }
 
     .studio-status-pill {
-      background: rgba(255, 106, 0, 0.2);
+      background: rgba(255, 122, 42, 0.2);
       border: 1px solid var(--hazard-orange);
       color: var(--hazard-orange);
       font-size: 0.7rem;
@@ -550,11 +550,11 @@
 
     /* Drag & Drop Zone */
     .studio-dropzone {
-      border: 2px dashed rgba(0, 240, 255, 0.4);
+      border: 2px dashed rgba(143, 201, 163, 0.4);
       border-radius: 12px;
       padding: 2.5rem 1.5rem;
       text-align: center;
-      background: rgba(0, 240, 255, 0.02);
+      background: rgba(143, 201, 163, 0.02);
       cursor: pointer;
       transition: all 0.25s ease;
       position: relative;
@@ -562,8 +562,8 @@
 
     .studio-dropzone:hover, .studio-dropzone.dragover {
       border-color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.08);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+      background: rgba(143, 201, 163, 0.08);
+      box-shadow: 0 0 25px rgba(143, 201, 163, 0.2);
     }
 
     .studio-dropzone input[type="file"] {
@@ -636,8 +636,8 @@
       border-radius: 8px;
       object-fit: cover;
       background: #111822;
-      border: 1px solid rgba(0, 240, 255, 0.4);
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+      border: 1px solid rgba(143, 201, 163, 0.4);
+      box-shadow: 0 0 10px rgba(143, 201, 163, 0.15);
       flex-shrink: 0;
     }
 
@@ -697,10 +697,10 @@
       font-family: var(--font-mono);
       font-size: 0.7rem;
       color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.1);
+      background: rgba(143, 201, 163, 0.1);
       padding: 0.15rem 0.45rem;
       border-radius: 4px;
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      border: 1px solid rgba(143, 201, 163, 0.3);
     }
 
     .studio-remove-item {
@@ -729,7 +729,7 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       margin-top: 2px;
-      text-shadow: 0 0 8px rgba(255, 106, 0, 0.4);
+      text-shadow: 0 0 8px rgba(255, 122, 42, 0.4);
     }
 
     .nav-right {
@@ -863,7 +863,7 @@
       position: absolute;
       inset: 0;
       background: 
-        radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.09) 0%, transparent 50%),
+        radial-gradient(circle at 20% 30%, rgba(143, 201, 163, 0.09) 0%, transparent 50%),
         radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
         radial-gradient(circle at 50% 85%, rgba(255, 107, 0, 0.06) 0%, transparent 45%);
       pointer-events: none;
@@ -887,7 +887,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--panel-border);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 240, 255, 0.06);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(143, 201, 163, 0.06);
       border-radius: 18px;
       transform-style: preserve-3d;
       transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
@@ -897,10 +897,10 @@
 
     /* Subtle, refined hover elevation */
     .hero-hud-frame:hover {
-      border-color: rgba(0, 240, 255, 0.35);
+      border-color: rgba(143, 201, 163, 0.35);
       box-shadow: 
         0 25px 50px rgba(0, 0, 0, 0.85), 
-        0 8px 25px rgba(0, 240, 255, 0.12), 
+        0 8px 25px rgba(143, 201, 163, 0.12), 
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
@@ -934,7 +934,7 @@
       color: var(--text-bright);
       line-height: 1.15;
       margin-bottom: 1rem;
-      text-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+      text-shadow: 0 0 20px rgba(143, 201, 163, 0.25);
     }
 
     .hero p {
@@ -1227,16 +1227,16 @@
     .wp-stack-layer-1 {
       top: 6px;
       width: 90%;
-      background: rgba(255, 106, 0, 0.2);
-      border: 1px solid rgba(255, 106, 0, 0.4);
+      background: rgba(255, 122, 42, 0.2);
+      border: 1px solid rgba(255, 122, 42, 0.4);
       z-index: 1;
     }
 
     .wp-stack-layer-2 {
       top: 12px;
       width: 80%;
-      background: rgba(0, 240, 255, 0.15);
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      background: rgba(143, 201, 163, 0.15);
+      border: 1px solid rgba(143, 201, 163, 0.3);
       z-index: 0;
     }
 
@@ -1253,7 +1253,7 @@
       text-transform: uppercase;
       padding: 0.85rem 2.2rem;
       border-radius: 24px;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
+      box-shadow: 0 0 20px rgba(143, 201, 163, 0.3), inset 0 0 15px rgba(143, 201, 163, 0.1);
       display: flex;
       align-items: center;
       gap: 0.75rem;
@@ -1278,16 +1278,16 @@
     }
 
     .wp-hub-container.expanded .wp-group-master-btn {
-      background: linear-gradient(135deg, #ff6a00 0%, #e05300 100%);
-      border-color: #ffaa00;
+      background: linear-gradient(135deg, #ff7a2a 0%, #e05300 100%);
+      border-color: #ffb070;
       color: #000;
-      box-shadow: 0 0 30px rgba(255, 106, 0, 0.7), 0 0 60px rgba(255, 170, 0, 0.4);
+      box-shadow: 0 0 30px rgba(255, 122, 42, 0.7), 0 0 60px rgba(255, 176, 112, 0.4);
       transform: translateY(-2px);
     }
 
     .wp-hub-container.expanded .wp-group-master-btn .badge {
       background: #000;
-      color: #ffaa00;
+      color: #ffb070;
     }
 
     .wp-hub-container.expanded .wp-group-master-btn .arrow-indicator {
@@ -1533,7 +1533,7 @@
       font-size: 1.1rem;
       color: var(--hazard-orange);
       font-weight: 800;
-      text-shadow: 0 0 10px rgba(255, 106, 0, 0.4);
+      text-shadow: 0 0 10px rgba(255, 122, 42, 0.4);
       white-space: nowrap;
     }
 
@@ -1716,7 +1716,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(0, 240, 255, 0.03);
+      background: rgba(143, 201, 163, 0.03);
     }
 
     .cart-header h3 {
@@ -1868,7 +1868,7 @@
     .about-glare {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.35) 0%, rgba(0, 240, 255, 0.15) 45%, transparent 80%);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.35) 0%, rgba(143, 201, 163, 0.15) 45%, transparent 80%);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
@@ -1928,7 +1928,7 @@
 
     .contact-card:hover {
       border-color: var(--neon-cyan);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 15px rgba(143, 201, 163, 0.15);
     }
 
     .contact-card span {
@@ -2203,12 +2203,12 @@
     }
 
     .ants-happy-msg.revived {
-      color: #00f0ff !important;
+      color: #8fc9a3 !important;
       font-weight: 700;
       font-size: 0.86rem;
       letter-spacing: 0.22em;
       text-transform: uppercase !important;
-      text-shadow: 0 0 14px rgba(0, 240, 255, 0.8), 0 0 25px rgba(0, 240, 255, 0.4) !important;
+      text-shadow: 0 0 14px rgba(143, 201, 163, 0.8), 0 0 25px rgba(143, 201, 163, 0.4) !important;
       animation: revivedPulse 1.5s ease-in-out infinite alternate;
     }
 
@@ -2454,7 +2454,7 @@
       border-radius: 14px;
       overflow: hidden;
       border: 1.5px solid var(--neon-cyan);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 25px rgba(143, 201, 163, 0.35), inset 0 0 15px rgba(143, 201, 163, 0.2);
       z-index: 5;
       background: #090e15;
       opacity: 0;
@@ -2472,8 +2472,8 @@
     }
 
     .about-secret-underlayer.thrown-revealed:hover {
-      border-color: #00f0ff;
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.3);
+      border-color: #8fc9a3;
+      box-shadow: 0 0 35px rgba(143, 201, 163, 0.6), inset 0 0 20px rgba(143, 201, 163, 0.3);
     }
 
     .about-secret-badge {
@@ -2664,13 +2664,13 @@
       font-family: var(--font-mono);
       font-size: 0.72rem;
       font-weight: 800;
-      color: #00f0ff;
+      color: #8fc9a3;
       background: rgba(8, 14, 22, 0.95);
       border: 1px solid var(--neon-cyan);
       border-radius: 8px;
       padding: 0.25rem 0.6rem;
       margin-bottom: 6px;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 15px rgba(143, 201, 163, 0.4);
       white-space: nowrap;
       animation: crewSpeechBounce 1.2s ease-in-out infinite alternate;
     }
@@ -2704,9 +2704,9 @@
     }
 
     .ant-carried-trashcan.dragover {
-      border-color: #00f0ff;
-      background: rgba(0, 240, 255, 0.2);
-      box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
+      border-color: #8fc9a3;
+      background: rgba(143, 201, 163, 0.2);
+      box-shadow: 0 0 35px rgba(143, 201, 163, 0.8);
       transform: scale(1.18);
     }
 
@@ -2749,8 +2749,8 @@
     }
 
     .about-secret-underlayer:hover {
-      border-color: #00f0ff;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.25);
+      border-color: #8fc9a3;
+      box-shadow: 0 0 30px rgba(143, 201, 163, 0.5), inset 0 0 20px rgba(143, 201, 163, 0.25);
     }
 
     .about-secret-badge {
@@ -2777,9 +2777,9 @@
     }
 
     .about-secret-underlayer:hover .about-secret-badge {
-      background: rgba(0, 240, 255, 0.15);
+      background: rgba(143, 201, 163, 0.15);
       color: #ffffff;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 15px rgba(143, 201, 163, 0.4);
     }
 
     .favorites-chevron {
@@ -2828,7 +2828,7 @@
       font-weight: 800;
       letter-spacing: 0.12em;
       color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.05);
+      background: rgba(143, 201, 163, 0.05);
     }
 
     .favorites-list {
@@ -2853,13 +2853,13 @@
     }
 
     .favorite-item-row:hover {
-      background: rgba(0, 240, 255, 0.1);
-      border-color: rgba(0, 240, 255, 0.4);
+      background: rgba(143, 201, 163, 0.1);
+      border-color: rgba(143, 201, 163, 0.4);
       transform: translateX(2px);
     }
 
     .favorite-item-row.active {
-      background: rgba(255, 106, 0, 0.15);
+      background: rgba(255, 122, 42, 0.15);
       border-color: var(--hazard-orange);
     }
 
@@ -2911,7 +2911,7 @@
                   opacity 0.6s ease, 
                   margin 0.5s ease, 
                   padding 0.6s ease;
-      background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%);
+      background: radial-gradient(circle at 50% 0%, rgba(143, 201, 163, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%);
       border-top: 1.5px solid transparent;
       border-bottom: 1.5px solid transparent;
       pointer-events: none;
@@ -2924,9 +2924,9 @@
       padding-bottom: 6rem !important;
       margin-top: 2rem;
       margin-bottom: 3rem;
-      border-top-color: rgba(0, 240, 255, 0.3);
-      border-bottom-color: rgba(0, 240, 255, 0.3);
-      box-shadow: 0 0 50px rgba(0, 240, 255, 0.1), inset 0 0 40px rgba(0, 240, 255, 0.05);
+      border-top-color: rgba(143, 201, 163, 0.3);
+      border-bottom-color: rgba(143, 201, 163, 0.3);
+      box-shadow: 0 0 50px rgba(143, 201, 163, 0.1), inset 0 0 40px rgba(143, 201, 163, 0.05);
       pointer-events: auto;
     }
 
@@ -2941,8 +2941,8 @@
       font-size: 0.82rem;
       font-weight: 800;
       letter-spacing: 0.24em;
-      color: #00f0ff;
-      text-shadow: 0 0 14px rgba(0, 240, 255, 0.8);
+      color: #8fc9a3;
+      text-shadow: 0 0 14px rgba(143, 201, 163, 0.8);
       margin-bottom: 0.75rem;
       display: inline-block;
       animation: vaultTagPulse 2s infinite alternate;
@@ -2950,7 +2950,7 @@
 
     @keyframes vaultTagPulse {
       0% { transform: scale(1); opacity: 0.9; }
-      100% { transform: scale(1.04); opacity: 1; text-shadow: 0 0 22px rgba(0, 240, 255, 1); }
+      100% { transform: scale(1.04); opacity: 1; text-shadow: 0 0 22px rgba(143, 201, 163, 1); }
     }
 
     .secret-vault-title {
@@ -3006,20 +3006,20 @@
 
     .secret-card {
       background: linear-gradient(145deg, #181d26 0%, #10141c 100%);
-      border: 1.5px solid rgba(0, 240, 255, 0.35);
+      border: 1.5px solid rgba(143, 201, 163, 0.35);
       border-radius: 18px;
       overflow: hidden;
       aspect-ratio: 4 / 5;
       position: relative;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(143, 201, 163, 0.15);
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
     }
 
     .secret-card:hover {
       transform: translateY(-8px) scale(1.02);
-      border-color: #00f0ff;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 240, 255, 0.4);
+      border-color: #8fc9a3;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 35px rgba(143, 201, 163, 0.4);
     }
 
     .secret-card img {
@@ -3049,7 +3049,7 @@
       font-family: var(--font-mono);
       font-size: 0.72rem;
       font-weight: 800;
-      color: #00f0ff;
+      color: #8fc9a3;
       letter-spacing: 0.12em;
       margin-bottom: 0.35rem;
     }
@@ -3070,7 +3070,7 @@
     }
 
     .secret-card-btn {
-      background: linear-gradient(135deg, #00f0ff 0%, #0099ff 100%);
+      background: linear-gradient(135deg, #8fc9a3 0%, #0099ff 100%);
       color: #040910;
       font-family: var(--font-mono);
       font-size: 0.76rem;
@@ -3085,7 +3085,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
-      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 4px 15px rgba(143, 201, 163, 0.4);
       transition: all 0.2s ease;
     }
 
@@ -3257,7 +3257,7 @@
       height: 18px;
       background: radial-gradient(circle at 35% 25%, #55efc4 0%, #00cec9 50%, #0984e3 100%);
       border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
-      box-shadow: 0 0 20px #00f0ff, 0 0 6px #ffffff;
+      box-shadow: 0 0 20px #8fc9a3, 0 0 6px #ffffff;
       z-index: 99999999;
       opacity: 0;
       pointer-events: none;
@@ -3291,13 +3291,13 @@
       position: fixed;
       width: 48px;
       height: 20px;
-      border: 2px solid #00f0ff;
+      border: 2px solid #8fc9a3;
       border-radius: 50%;
       opacity: 0;
       transform: scale(0.1);
       pointer-events: none;
       z-index: 99999998;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+      box-shadow: 0 0 15px rgba(143, 201, 163, 0.8);
     }
 
     .seed-impact-ripple.pulse {
@@ -3311,7 +3311,7 @@
       left: 126px;
       width: 28px;
       height: 12px;
-      border: 1.5px solid #00f0ff;
+      border: 1.5px solid #8fc9a3;
       border-radius: 50%;
       opacity: 0;
       transform: scale(0.2);
@@ -3351,7 +3351,7 @@
           51% 99%, 50% 99%, 49% 99%, 49% 99%
         );
         transform: scale(0.92) translateY(10px);
-        filter: drop-shadow(0 0 35px #00f0ff) brightness(2.2);
+        filter: drop-shadow(0 0 35px #8fc9a3) brightness(2.2);
       }
       12% {
         opacity: 1;
@@ -3363,7 +3363,7 @@
           44% 99%, 44% 99%, 43% 98%, 43% 97%
         );
         transform: scale(1) translateY(4px);
-        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.7)) brightness(1.5);
+        filter: drop-shadow(0 0 25px rgba(143, 201, 163, 0.7)) brightness(1.5);
       }
       38% {
         /* Stage 3: THE ICONIC SJV TREE OUTLINE
@@ -3375,7 +3375,7 @@
           62% 99%, 55% 99%, 45% 99%, 38% 99%
         );
         transform: scale(1.04) translateY(-4px);
-        filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.85)) contrast(1.15) brightness(1.2);
+        filter: drop-shadow(0 0 30px rgba(143, 201, 163, 0.85)) contrast(1.15) brightness(1.2);
       }
       55% {
         /* Stage 4: SJV Tree branches & foliage actively stretching out wide into the open sky */
@@ -3386,7 +3386,7 @@
           70% 100%, 55% 100%, 45% 100%, 30% 100%
         );
         transform: scale(1.02) translateY(-2px);
-        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.6)) brightness(1.1);
+        filter: drop-shadow(0 0 25px rgba(143, 201, 163, 0.6)) brightness(1.1);
       }
       74% {
         /* Stage 5: Gaps filling in — outer lobes expand outward toward the square boundaries */
@@ -3397,7 +3397,7 @@
           85% 100%, 65% 100%, 35% 100%, 15% 100%
         );
         transform: scale(1.01) translateY(0);
-        filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)) brightness(1.05);
+        filter: drop-shadow(0 0 20px rgba(143, 201, 163, 0.4)) brightness(1.05);
       }
       88% {
         /* Stage 6: Corner gaps nearly sealed into full box */
@@ -3408,7 +3408,7 @@
           85% 100%, 55% 100%, 45% 100%, 15% 100%
         );
         transform: scale(1);
-        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
+        filter: drop-shadow(0 0 15px rgba(143, 201, 163, 0.3));
       }
       100% {
         /* Stage 7: Fully flush square box */
@@ -3495,51 +3495,51 @@
         /* Sub-atomic microscopic singularity point */
         border-radius: 50%;
         transform: scale(0.005) translateY(0);
-        filter: blur(0px) drop-shadow(0 0 40px #00f0ff);
+        filter: blur(0px) drop-shadow(0 0 40px #8fc9a3);
       }
       10% {
         /* Atom quantum ignition burst - tiny pulsing particle */
         opacity: 1;
         border-radius: 50%;
         transform: scale(0.05) translateY(0);
-        filter: drop-shadow(0 0 30px #00f0ff) brightness(2.5);
+        filter: drop-shadow(0 0 30px #8fc9a3) brightness(2.5);
       }
       25% {
         /* Liquid tree trunk surge upward - stretched vertical sap surge */
         border-radius: 40% 60% 70% 30% / 45% 45% 55% 55%;
         transform: scale(0.55, 1.25) translateY(-25px);
-        filter: drop-shadow(0 0 35px rgba(0, 240, 255, 0.8)) brightness(1.3);
+        filter: drop-shadow(0 0 35px rgba(143, 201, 163, 0.8)) brightness(1.3);
       }
       42% {
         /* Canopy blossom - bulbous organic liquid crown flowing outward */
         border-radius: 65% 35% 30% 70% / 60% 30% 70% 40%;
         transform: scale(1.12, 0.92) translateY(-28px) rotate(-4deg);
-        filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.6)) brightness(1.1);
+        filter: drop-shadow(0 0 30px rgba(143, 201, 163, 0.6)) brightness(1.1);
       }
       60% {
         /* Fluid bike rolling wave - fluid wheels & aerodynamic leap */
         border-radius: 35% 65% 55% 45% / 40% 68% 32% 60%;
         transform: scale(1.1, 0.95) translateY(-10px) rotate(5deg);
-        filter: drop-shadow(0 10px 25px rgba(0, 240, 255, 0.5));
+        filter: drop-shadow(0 10px 25px rgba(143, 201, 163, 0.5));
       }
       78% {
         /* Bike suspension rebound - smooth circular undulating ripple */
         border-radius: 52% 48% 44% 56% / 50% 55% 45% 50%;
         transform: scale(0.97, 1.04) translateY(-3px) rotate(-1.5deg);
-        filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.4));
+        filter: drop-shadow(0 0 22px rgba(143, 201, 163, 0.4));
       }
       90% {
         /* Viscous liquid tension settling into rounded square */
         border-radius: 22px;
         transform: scale(1.02, 0.99) translateY(0) rotate(0deg);
-        filter: drop-shadow(0 0 18px rgba(0, 240, 255, 0.3));
+        filter: drop-shadow(0 0 18px rgba(143, 201, 163, 0.3));
       }
       100% {
         /* Locked solid photographic frame */
         opacity: 1;
         border-radius: 14px;
         transform: scale(1, 1) translateY(0) rotate(0deg);
-        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.25));
+        filter: drop-shadow(0 0 15px rgba(143, 201, 163, 0.25));
       }
     }
 
@@ -3597,8 +3597,8 @@
       pointer-events: none;
       background: repeating-linear-gradient(
         90deg,
-        rgba(0, 240, 255, 0.6) 0px,
-        rgba(0, 240, 255, 0.6) 2px,
+        rgba(143, 201, 163, 0.6) 0px,
+        rgba(143, 201, 163, 0.6) 2px,
         rgba(187, 247, 208, 0.25) 2px,
         rgba(187, 247, 208, 0.25) 4px
       );
@@ -3614,7 +3614,7 @@
       position: absolute;
       inset: -10px;
       border-radius: 36px;
-      border: 1px solid rgba(0, 240, 255, 0.14);
+      border: 1px solid rgba(143, 201, 163, 0.14);
       pointer-events: none;
       transition: border-color 1s ease-in-out;
     }
@@ -3622,7 +3622,7 @@
     .location-pill:hover {
       color: #ffffff;
       border-color: rgba(255, 255, 255, 0.28);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 12px rgba(143, 201, 163, 0.15), 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .location-pill:hover::before {
@@ -3632,8 +3632,8 @@
     .location-pill.active {
       background: radial-gradient(circle at center, #1a2432 0%, #0b1119 100%);
       color: #ffffff;
-      border-color: rgba(0, 240, 255, 0.7);
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.25), 0 6px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      border-color: rgba(143, 201, 163, 0.7);
+      box-shadow: 0 0 18px rgba(143, 201, 163, 0.25), 0 6px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.14);
     }
 
     .location-pill.active::before {
@@ -3641,7 +3641,7 @@
     }
 
     .location-pill.active::after {
-      border-color: rgba(0, 240, 255, 0.4);
+      border-color: rgba(143, 201, 163, 0.4);
     }
 
     .location-pill.active span.date-tag {
@@ -3697,13 +3697,13 @@
     }
 
     .location-pill.active {
-      border-color: rgba(0, 240, 255, 0.9);
+      border-color: rgba(143, 201, 163, 0.9);
       box-shadow:
         0 1px 0 rgba(0, 0, 0, 0.7),
         inset 0 2px 6px rgba(0, 0, 0, 0.5),
-        0 0 8px rgba(0, 240, 255, 0.75),
-        0 0 18px rgba(0, 240, 255, 0.45),
-        0 0 36px rgba(0, 240, 255, 0.25);
+        0 0 8px rgba(143, 201, 163, 0.75),
+        0 0 18px rgba(143, 201, 163, 0.45),
+        0 0 36px rgba(143, 201, 163, 0.25);
     }
 
     /* Casing rings glow with the outline */
@@ -3712,7 +3712,7 @@
     }
 
     .location-pill.active::before {
-      filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.8)) drop-shadow(0 0 10px rgba(0, 240, 255, 0.45));
+      filter: drop-shadow(0 0 4px rgba(143, 201, 163, 0.8)) drop-shadow(0 0 10px rgba(143, 201, 163, 0.45));
     }
 
     .primary-filters .filter-btn.active::after {
@@ -3720,7 +3720,7 @@
     }
 
     .location-pill.active::after {
-      border-color: rgba(0, 240, 255, 0.6);
+      border-color: rgba(143, 201, 163, 0.6);
     }
 
     /* =========================================================================
@@ -3772,7 +3772,7 @@
     }
 
     .location-pill:active .btn-core {
-      box-shadow: 0 16px 18px -8px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 240, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 18px -8px rgba(0, 0, 0, 0.85), 0 0 14px rgba(143, 201, 163, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
 
     /* =========================================================================
@@ -3840,10 +3840,10 @@
       box-sizing: border-box;
       border-radius: inherit;
       background:
-        repeating-linear-gradient(45deg, rgba(0, 240, 255, 0.07) 0px, rgba(0, 240, 255, 0.07) 2px, transparent 2px, transparent 7px),
-        repeating-linear-gradient(-45deg, rgba(255, 106, 0, 0.07) 0px, rgba(255, 106, 0, 0.07) 2px, transparent 2px, transparent 7px),
+        repeating-linear-gradient(45deg, rgba(143, 201, 163, 0.07) 0px, rgba(143, 201, 163, 0.07) 2px, transparent 2px, transparent 7px),
+        repeating-linear-gradient(-45deg, rgba(255, 122, 42, 0.07) 0px, rgba(255, 122, 42, 0.07) 2px, transparent 2px, transparent 7px),
         linear-gradient(135deg, #0d1a24 0%, #060d14 100%);
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 240, 255, 0.12);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(143, 201, 163, 0.12);
       transform: translate3d(0, 0, 0);
       transform-style: preserve-3d;
       transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
@@ -3852,14 +3852,14 @@
     /* Small snap-out on press: the dark plate lifts slightly toward the user */
     .wp-group-master-btn:active .btn-core {
       transform: translate3d(0, -2px, 14px) scale(1.02);
-      box-shadow: 0 9px 10px -5px rgba(0, 0, 0, 0.85), 0 0 10px rgba(0, 240, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 9px 10px -5px rgba(0, 0, 0, 0.85), 0 0 10px rgba(143, 201, 163, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     /* Expanded state keeps the orange, with a matching weave */
     .wp-hub-container.expanded .wp-group-master-btn .btn-core {
       background:
         repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.12) 0px, rgba(0, 0, 0, 0.12) 2px, transparent 2px, transparent 7px),
-        linear-gradient(135deg, #ff6a00 0%, #e05300 100%);
+        linear-gradient(135deg, #ff7a2a 0%, #e05300 100%);
       color: #000;
       box-shadow: inset 0 2px 5px rgba(120, 30, 0, 0.5);
     }
@@ -3883,19 +3883,19 @@
       background: linear-gradient(135deg, #34200f 0%, #22140a 100%);
       border-color: rgba(255, 140, 50, 0.55);
       color: #ffb070;
-      box-shadow: 0 0 14px rgba(255, 106, 0, 0.22), inset 0 0 10px rgba(255, 106, 0, 0.08);
+      box-shadow: 0 0 14px rgba(255, 122, 42, 0.22), inset 0 0 10px rgba(255, 122, 42, 0.08);
     }
 
     .wp-hub-container.expanded .wp-group-master-btn .btn-core {
       background:
-        repeating-linear-gradient(45deg, rgba(255, 106, 0, 0.07) 0px, rgba(255, 106, 0, 0.07) 2px, transparent 2px, transparent 7px),
+        repeating-linear-gradient(45deg, rgba(255, 122, 42, 0.07) 0px, rgba(255, 122, 42, 0.07) 2px, transparent 2px, transparent 7px),
         linear-gradient(135deg, #1f140e 0%, #120b07 100%);
       color: #ffb070;
       box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 140, 50, 0.18);
     }
 
     .wp-hub-container.expanded .wp-group-master-btn .badge {
-      background: #ff6a00;
+      background: #ff7a2a;
       color: #000;
     }
 
@@ -4752,7 +4752,7 @@
     }
     @keyframes favTargetPulse {
       0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); }
-      50% { box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.85), 0 0 26px rgba(0, 240, 255, 0.45); }
+      50% { box-shadow: 0 0 0 2px rgba(143, 201, 163, 0.85), 0 0 26px rgba(143, 201, 163, 0.45); }
     }
     /* ADD TO CART, PREMIUM CASED BUTTON
        Dark core, thin seam, striped pastel casing band and a light sweep on hover.
@@ -4777,7 +4777,7 @@
       text-shadow: 0 1px 0 #000, 0 0 12px rgba(165, 216, 255, 0.35);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        inset 0 -1px 0 rgba(0, 240, 255, 0.28),
+        inset 0 -1px 0 rgba(143, 201, 163, 0.28),
         0 2px 0 #05070a,
         0 4px 8px rgba(0, 0, 0, 0.55);
       transform: none;
@@ -4816,14 +4816,14 @@
     .product-card .add-to-cart-btn:hover {
       transform: none;
       color: #ffffff;
-      border-color: rgba(0, 240, 255, 0.55);
+      border-color: rgba(143, 201, 163, 0.55);
       background: radial-gradient(circle at 50% 0%, #2c3443 0%, #171d27 58%, #0d1118 100%);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -1px 0 rgba(0, 240, 255, 0.6),
+        inset 0 -1px 0 rgba(143, 201, 163, 0.6),
         0 2px 0 #05070a,
         0 4px 8px rgba(0, 0, 0, 0.55),
-        0 0 16px rgba(0, 240, 255, 0.2);
+        0 0 16px rgba(143, 201, 163, 0.2);
     }
 
     .product-card .add-to-cart-btn:hover::after {
@@ -4836,13 +4836,13 @@
       transition-duration: 0.06s;
       box-shadow:
         inset 0 3px 8px rgba(0, 0, 0, 0.75),
-        inset 0 -1px 0 rgba(0, 240, 255, 0.35),
+        inset 0 -1px 0 rgba(143, 201, 163, 0.35),
         0 0 0 #05070a,
         0 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .product-card .add-to-cart-btn:focus-visible {
-      outline: 2px solid rgba(0, 240, 255, 0.75);
+      outline: 2px solid rgba(143, 201, 163, 0.75);
       outline-offset: 3px;
     }
 
@@ -4870,13 +4870,13 @@
         inset 0 1px 0 rgba(255, 240, 220, 0.55),
         inset 0 -1px 0 rgba(120, 40, 0, 0.6),
         0 2px 0 #5a2200,
-        0 4px 10px rgba(255, 106, 0, 0.35);
+        0 4px 10px rgba(255, 122, 42, 0.35);
     }
     .product-card .add-to-cart-btn.in-cart::before {
       border-color: rgba(255, 230, 200, 0.28);
       background: repeating-linear-gradient(90deg,
         rgba(255, 240, 220, 0.22) 0px, rgba(255, 240, 220, 0.22) 2px,
-        rgba(255, 106, 0, 0.0) 2px, rgba(255, 106, 0, 0.0) 6px);
+        rgba(255, 122, 42, 0.0) 2px, rgba(255, 122, 42, 0.0) 6px);
     }
     .product-card .add-to-cart-btn.in-cart:active {
       box-shadow:
@@ -4890,9 +4890,9 @@
       animation: atcInCartPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     @keyframes atcInCartPop {
-      0%   { transform: scale(0.97); box-shadow: 0 0 0 rgba(255, 106, 0, 0); }
-      45%  { transform: scale(1.02); box-shadow: 0 0 22px rgba(255, 106, 0, 0.6); }
-      100% { transform: scale(1);    box-shadow: 0 0 0 rgba(255, 106, 0, 0); }
+      0%   { transform: scale(0.97); box-shadow: 0 0 0 rgba(255, 122, 42, 0); }
+      45%  { transform: scale(1.02); box-shadow: 0 0 22px rgba(255, 122, 42, 0.6); }
+      100% { transform: scale(1);    box-shadow: 0 0 0 rgba(255, 122, 42, 0); }
     }
     /* Favourite photos: the image is gone, the button stays and sits centred on the dark card */
     .about-secret-underlayer .about-secret-badge {
@@ -4983,14 +4983,14 @@
     .hidden-world .fx-credits-roll h3 { font-size: 2.4rem; color: #ffd966; letter-spacing: 0.1em; }
     .hidden-world .fx-credits-roll p { font-size: 1.1rem; margin: 1.2rem 0; }
     /* ---- SITE FEEL PASS (batch 2) ---- */
-    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 10000; padding: 8px 12px; background: #15181f; color: #e8f4ff; border: 1px solid #52c2df; font-family: var(--font-mono, monospace); font-size: 12px; text-decoration: none; }
+    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 10000; padding: 8px 12px; background: #15181f; color: #e8f4ff; border: 1px solid #8fc9a3; font-family: var(--font-mono, monospace); font-size: 12px; text-decoration: none; }
     .skip-link:focus { top: 12px; }
-    .site-progress { position: fixed; left: 0; top: 0; height: 2px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, #52c2df, #ff8a1f); z-index: 9000; pointer-events: none; }
+    .site-progress { position: fixed; left: 0; top: 0; height: 2px; width: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, #8fc9a3, #ff8a1f); z-index: 9000; pointer-events: none; }
     header.is-scrolled { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45); }
     header .logo { transition: transform 0.25s ease; transform-origin: left center; }
     header.is-scrolled .logo { transform: scale(0.85); }
-    .nav-links a[aria-current="true"] { color: #52c2df; }
-    .back-to-top { position: fixed; right: 18px; bottom: 18px; z-index: 8000; width: 44px; height: 44px; font-family: var(--font-mono, monospace); font-size: 12px; background: #15181f; color: #e8f4ff; border: 1px solid #52c2df; cursor: pointer; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s; }
+    .nav-links a[aria-current="true"] { color: #8fc9a3; }
+    .back-to-top { position: fixed; right: 18px; bottom: 18px; z-index: 8000; width: 44px; height: 44px; font-family: var(--font-mono, monospace); font-size: 12px; background: #15181f; color: #e8f4ff; border: 1px solid #8fc9a3; cursor: pointer; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s; }
     .back-to-top.show { opacity: 1; visibility: visible; }
     .product-price, #cartCount, .cart-count-badge { font-variant-numeric: tabular-nums; }
     #about p { max-width: 68ch; }
@@ -5011,7 +5011,7 @@
     .hero .hero-sub {
       font-family: var(--font-mono); color: var(--hazard-orange); font-size: 1.1rem; font-weight: 800;
       letter-spacing: 0.28em; text-transform: uppercase; margin-top: -0.5rem; margin-bottom: 1.25rem;
-      text-shadow: 0 0 12px rgba(255, 106, 0, 0.5);
+      text-shadow: 0 0 12px rgba(255, 122, 42, 0.5);
     }
     @media (min-width: 1440px) {
       .hero .hero-hud-frame { max-width: 1040px; }
@@ -5075,13 +5075,13 @@
     .avail-blank { display: block; }
     .avail-day {
       aspect-ratio: 1 / 1; min-height: 40px; border-radius: 10px; border: 1px solid var(--steel-border);
-      background: rgba(82, 194, 223, 0.08); color: var(--text-bright); font-family: var(--font-mono); font-size: 0.9rem; cursor: pointer;
+      background: rgba(143, 201, 163, 0.08); color: var(--text-bright); font-family: var(--font-mono); font-size: 0.9rem; cursor: pointer;
     }
     .avail-day:hover:not(:disabled) { border-color: var(--neon-cyan); }
     .avail-day:focus-visible { outline: 2px solid var(--hazard-orange); outline-offset: 2px; }
     .avail-day.av-today { box-shadow: inset 0 0 0 1px var(--neon-cyan); }
     .avail-day.av-booked {
-      background: rgba(255, 106, 0, 0.14); border-color: rgba(255, 106, 0, 0.45); color: #ffb27a;
+      background: rgba(255, 122, 42, 0.14); border-color: rgba(255, 122, 42, 0.45); color: #ffb27a;
       text-decoration: line-through; cursor: not-allowed;
     }
     .avail-day.av-past { background: transparent; color: #4b5563; cursor: default; }
@@ -5091,8 +5091,8 @@
       font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
     }
     .av-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 0.4rem; vertical-align: middle; }
-    .av-free { background: rgba(82, 194, 223, 0.5); }
-    .av-booked { background: rgba(255, 106, 0, 0.5); }
+    .av-free { background: rgba(143, 201, 163, 0.5); }
+    .av-booked { background: rgba(255, 122, 42, 0.5); }
     .av-past { background: #2a2f3a; }
     .avail-panel p { color: var(--text-muted); line-height: 1.6; margin: 0 0 0.8rem; }
     .avail-status {
@@ -5148,7 +5148,7 @@
         --bg-void: #151920;
         --bg-surface: #1b2029;
         --bg-card: #1f252f;
-        --hazard-orange: #2ec4b6;
+        --hazard-orange: #8fc9a3;
         --text-industrial: #8e98a8;
       }
       body { font-size: 16px; line-height: 1.5; }
@@ -5195,7 +5195,7 @@
        ========================================================================= */
     :root {
       --bg-void: #151920; --bg-surface: #1b2029; --bg-card: #1f252f;
-      --hazard-orange: #2ec4b6; --text-industrial: #8e98a8;
+      --hazard-orange: #8fc9a3; --text-industrial: #8e98a8;
     }
     /* q04 filters: teal fill when active, plain outline otherwise */
     .filter-btn { background: transparent; border: 1px solid #5b6372; box-shadow: none; }
@@ -5230,7 +5230,7 @@
     /* q20 scroll cue: teal chevron */
     .hero-scroll-cue i { color: var(--hazard-orange); }
     /* q21 hero background: soft teal glow top right */
-    .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 92% 0%, rgba(46, 196, 182, 0.22), transparent 55%); }
+    .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 92% 0%, rgba(143, 201, 163, 0.22), transparent 55%); }
     /* q17 booked tag and legend pills */
     .avail-legend span { border: 1px solid #2e3442; border-radius: 999px; padding: 0.3rem 0.7rem; }
     .av-free { background: transparent; border: 1.5px solid var(--hazard-orange); }
@@ -5255,40 +5255,40 @@
     body::before { display: none !important; }
     /* q02 header: white name, teal tracked CORESTALL */
     .logo-name { color: #ffffff !important; }
-    .logo-sub { color: #2ec4b6 !important; }
+    .logo-sub { color: #8fc9a3 !important; }
     /* q03 section heading: teal bracket label above the white heading */
-    .section-tag { color: #2ec4b6 !important; text-shadow: none !important; }
+    .section-tag { color: #8fc9a3 !important; text-shadow: none !important; }
     /* q01 product card: dark card, teal panel edge, white title, teal price, teal button */
     .product-card { background: #1f252f !important; border-color: #2e3442 !important; }
-    .product-info-slideup { background: #1f252f !important; border-top: 3px solid #2ec4b6 !important; }
+    .product-info-slideup { background: #1f252f !important; border-top: 3px solid #8fc9a3 !important; }
     .product-card .typewriter-title { color: #ffffff !important; }
-    .product-card .product-price { color: #2ec4b6 !important; text-shadow: none !important; }
+    .product-card .product-price { color: #8fc9a3 !important; text-shadow: none !important; }
     .product-card .add-to-cart-btn { background: #0f7f75 !important; background-image: none !important; border: 1px solid #0f7f75 !important; color: #ffffff !important; box-shadow: none !important; text-shadow: none !important; }
     .product-card .add-to-cart-btn:hover { background: #13968a !important; color: #ffffff !important; }
     .product-card .add-to-cart-btn::before, .product-card .add-to-cart-btn::after { display: none !important; }
     /* q13 section divider */
-    .pick-divider::after { background: #2ec4b6 !important; }
+    .pick-divider::after { background: #8fc9a3 !important; }
     /* q20 scroll cue */
-    .hero-scroll-cue i { color: #2ec4b6 !important; }
+    .hero-scroll-cue i { color: #8fc9a3 !important; }
     /* q12 contact tiles */
-    .contact-card span { color: #2ec4b6 !important; }
+    .contact-card span { color: #8fc9a3 !important; }
     /* q19 toast */
-    .site-toast::before { color: #2ec4b6 !important; }
+    .site-toast::before { color: #8fc9a3 !important; }
     /* q17 available pill outline */
-    .av-free { background: transparent !important; border: 1.5px solid #2ec4b6 !important; }
+    .av-free { background: transparent !important; border: 1.5px solid #8fc9a3 !important; }
     /* q10 upload zone */
-    .studio-dropzone:hover, .studio-dropzone.dragover { border-color: #2ec4b6 !important; }
-    .dropzone-icon { color: #2ec4b6; }
+    .studio-dropzone:hover, .studio-dropzone.dragover { border-color: #8fc9a3 !important; }
+    .dropzone-icon { color: #8fc9a3; }
     /* q07 footer: centred teal diamond, name line, grey copyright */
     footer { background: #151920 !important; border-top: none !important; }
-    .footer-content::before { content: ""; display: block; width: 10px; height: 10px; margin: 0 auto 1rem; background: #2ec4b6; transform: rotate(45deg); }
+    .footer-content::before { content: ""; display: block; width: 10px; height: 10px; margin: 0 auto 1rem; background: #8fc9a3; transform: rotate(45deg); }
     .copyright { color: #959fae !important; }
     .copyright::before { content: "SETH BARTON"; display: block; font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.2em; color: #ffffff; margin-bottom: 0.5rem; }
     /* q09 floating cart: dark grey pill, white CART label, teal count badge top-right.
        Phones keep the bottom-left float from phone pass 2; desktop floats bottom-left too,
        clear of the back-to-top button at bottom-right. */
     .cart-trigger-btn { background: #2a2f3a !important; border: 1px solid #3a404e !important; color: #ffffff !important; border-radius: 999px !important; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55) !important; }
-    .cart-trigger-btn .cart-count-badge { position: relative; top: -10px; right: -6px; margin-left: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #2ec4b6; color: #0b0d10; box-shadow: none; font-size: 0.7rem; }
+    .cart-trigger-btn .cart-count-badge { position: relative; top: -10px; right: -6px; margin-left: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: #8fc9a3; color: #0b0d10; box-shadow: none; font-size: 0.7rem; }
     @media (min-width: 551px) {
       .nav-right .cart-trigger-btn { position: static; min-height: 44px; padding: 0.6rem 1.1rem; }
     }
@@ -5417,14 +5417,14 @@
     .secret-favorites-section.unlocked-open {
       margin-bottom: 0 !important;
       border-bottom-color: transparent !important;
-      box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.05) !important;
+      box-shadow: inset 0 0 40px rgba(143, 201, 163, 0.05) !important;
       background:
         linear-gradient(to bottom, rgba(21, 25, 32, 0) 0%, #151920 100%) bottom / 100% 180px no-repeat,
-        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%) !important;
+        radial-gradient(circle at 50% 0%, rgba(143, 201, 163, 0.08) 0%, rgba(12, 14, 18, 0.98) 70%) !important;
     }
     .pick-divider {
       position: relative; display: block; height: 1px; width: min(70%, 720px); margin: 0 auto;
-      background: linear-gradient(90deg, transparent, #2ec4b6, transparent) !important;
+      background: linear-gradient(90deg, transparent, #8fc9a3, transparent) !important;
     }
     .pick-divider::before { content: none; }
     .pick-divider::after { top: 50% !important; }
@@ -5498,7 +5498,7 @@
     }
     .wp-group-master-btn {
       transform: translate3d(calc(var(--px, 0) * -6px), calc(var(--py, 0) * -4px), 42px);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), 0 26px 26px -12px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(0, 240, 255, 0.1);
+      box-shadow: 0 0 20px rgba(143, 201, 163, 0.3), 0 26px 26px -12px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(143, 201, 163, 0.1);
     }
     .wp-hub-container.expanded .wp-group-master-btn {
       transform: translate3d(0, -2px, 42px);
@@ -5546,9 +5546,9 @@
         <ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827" />
         <ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937" />
         <ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827" />
-        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffaa00" stroke-width="1.2" />
+        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2" />
         <path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8" />
-        <polygon points="12,5 16,5 14,1" fill="#00f0ff" />
+        <polygon points="12,5 16,5 14,1" fill="#8fc9a3" />
       </svg>
 
       <!-- Center Carried Trashcan -->
@@ -5567,7 +5567,7 @@
         <ellipse cx="14" cy="18" rx="5" ry="4" fill="#111827" />
         <ellipse cx="14" cy="12" rx="3.5" ry="3" fill="#1f2937" />
         <ellipse cx="14" cy="7" rx="3" ry="3" fill="#111827" />
-        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffaa00" stroke-width="1.2" />
+        <path d="M12,4 L9,1 M16,4 L19,1" stroke="#ffb070" stroke-width="1.2" />
         <path d="M9,18 L4,22 M19,18 L24,22 M9,13 L5,11 M19,13 L23,11" stroke="#4b5563" stroke-width="1.8" />
         <polygon points="12,5 16,5 14,1" fill="#ff0055" />
       </svg>
@@ -6242,7 +6242,7 @@
         <div id="studioTabFavorites" style="display: none; flex-direction: column; flex: 1; min-height: 0;">
           <div class="studio-body">
             <!-- Dedicated Drag & Drop Uploader for Favorites -->
-            <div class="studio-dropzone" id="studioFavDropzone" style="border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.03);">
+            <div class="studio-dropzone" id="studioFavDropzone" style="border-color: var(--neon-cyan); background: rgba(143, 201, 163, 0.03);">
               <input type="file" id="studioFavFileInput" aria-label="Upload favorite photos" multiple accept="image/*" onchange="handleStudioFavUpload(this.files)">
               <div class="dropzone-icon" style="color: var(--neon-cyan);">&#9733;</div>
               <div class="dropzone-text" style="color: #ffffff;">Drop Photos to Add Directly to Curated Favorites</div>
@@ -6400,7 +6400,7 @@
       if (workspace) workspace.style.display = 'none';
       if (statusPill) {
         statusPill.textContent = 'SECURITY LOCK ENGAGED';
-        statusPill.style.background = 'rgba(255, 106, 0, 0.2)';
+        statusPill.style.background = 'rgba(255, 122, 42, 0.2)';
         statusPill.style.borderColor = 'var(--hazard-orange)';
         statusPill.style.color = 'var(--hazard-orange)';
       }
@@ -6421,7 +6421,7 @@
       if (workspace) workspace.style.display = 'flex';
       if (statusPill) {
         statusPill.textContent = 'AUTHENTICATED OPERATOR';
-        statusPill.style.background = 'rgba(0, 240, 255, 0.15)';
+        statusPill.style.background = 'rgba(143, 201, 163, 0.15)';
         statusPill.style.borderColor = 'var(--neon-cyan)';
         statusPill.style.color = 'var(--neon-cyan)';
       }
@@ -6774,7 +6774,7 @@
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 0.4rem; justify-content: center; flex-shrink: 0;">
-            <button class="studio-remove-btn" onclick="setAsPrimaryUnderlayer(${idx})" title="Set as bio underlayer primary cover" style="color: var(--neon-cyan); font-size: 0.68rem; padding: 0.35rem 0.65rem; border: 1px solid var(--neon-cyan); background: rgba(0, 240, 255, 0.08); border-radius: 4px; cursor: pointer; white-space: nowrap;">
+            <button class="studio-remove-btn" onclick="setAsPrimaryUnderlayer(${idx})" title="Set as bio underlayer primary cover" style="color: var(--neon-cyan); font-size: 0.68rem; padding: 0.35rem 0.65rem; border: 1px solid var(--neon-cyan); background: rgba(143, 201, 163, 0.08); border-radius: 4px; cursor: pointer; white-space: nowrap;">
               &#9733; Set Cover
             </button>
             <button class="studio-remove-btn" onclick="removeFavoritePhoto(${idx})" title="Remove from favorites" style="color: #ff5252; font-size: 0.68rem; padding: 0.35rem 0.65rem; border: 1px solid rgba(255, 82, 82, 0.3); background: rgba(255, 82, 82, 0.08); border-radius: 4px; cursor: pointer; white-space: nowrap;">
@@ -6863,7 +6863,7 @@
           e.preventDefault();
           e.stopPropagation();
           favDropzone.style.borderColor = '#ffffff';
-          favDropzone.style.background = 'rgba(0, 240, 255, 0.08)';
+          favDropzone.style.background = 'rgba(143, 201, 163, 0.08)';
         });
       });
       ['dragleave', 'drop'].forEach(evt => {
@@ -6871,7 +6871,7 @@
           e.preventDefault();
           e.stopPropagation();
           favDropzone.style.borderColor = 'var(--neon-cyan)';
-          favDropzone.style.background = 'rgba(0, 240, 255, 0.03)';
+          favDropzone.style.background = 'rgba(143, 201, 163, 0.03)';
         });
       });
       favDropzone.addEventListener('drop', (e) => {
@@ -7345,7 +7345,7 @@
           tiltGlare.style.opacity = '1';
           const glareX = (x / rect.width) * 100;
           const glareY = (y / rect.height) * 100;
-          tiltGlare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(0, 240, 255, 0.2) 40%, transparent 75%)`;
+          tiltGlare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.45) 0%, rgba(143, 201, 163, 0.2) 40%, transparent 75%)`;
         }
       });
 
@@ -7491,21 +7491,21 @@
     // =========================================================================
     const COLOR_THEMES = {
       orange: [
-        { head: '#ffffff', tail: '#ffeedd', glow: '#ffaa00' },
-        { head: '#fff3aa', tail: '#ffaa00', glow: '#ff6600' },
+        { head: '#ffffff', tail: '#ffeedd', glow: '#ffb070' },
+        { head: '#fff3aa', tail: '#ffb070', glow: '#ff6600' },
         { head: '#ffbb33', tail: '#ff5500', glow: '#ff3300' },
         { head: '#ff7700', tail: '#cc2200', glow: '#ff4400' }
       ],
       gold: [
         { head: '#ffffff', tail: '#fff9cc', glow: '#ffd700' },
-        { head: '#fff388', tail: '#ffc400', glow: '#ffaa00' },
+        { head: '#fff388', tail: '#ffc400', glow: '#ffb070' },
         { head: '#ffd000', tail: '#e69500', glow: '#ffb700' },
         { head: '#ffea70', tail: '#cc8800', glow: '#ffbb00' }
       ],
       cyan: [
-        { head: '#ffffff', tail: '#d4ffff', glow: '#00f0ff' },
+        { head: '#ffffff', tail: '#d4ffff', glow: '#8fc9a3' },
         { head: '#a6faff', tail: '#00e1ff', glow: '#00a6ff' },
-        { head: '#00f0ff', tail: '#0088ff', glow: '#0066ff' },
+        { head: '#8fc9a3', tail: '#0088ff', glow: '#0066ff' },
         { head: '#52e5ff', tail: '#0055ff', glow: '#0099ff' }
       ],
       emerald: [
@@ -8198,7 +8198,7 @@
             <!-- Head -->
             <ellipse cx="23" cy="11" rx="3.8" ry="3.8" fill="#111827" />
             <!-- Antennae -->
-            <path d="M25,9 L28,4 M24,9 L27,3" stroke="#ffaa00" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M25,9 L28,4 M24,9 L27,3" stroke="#ffb070" stroke-width="1.2" stroke-linecap="round" />
             <!-- Tiny Cone Hat -->
             <polygon points="21,9 25,9 23,2" fill="#ff0055" />
             <circle cx="23" cy="1.5" r="1" fill="#ffffff" />
@@ -8215,12 +8215,12 @@
             <circle cx="45" cy="27" r="8" fill="#111827" stroke="#9ca3af" stroke-width="2.5" />
             <circle cx="45" cy="27" r="3.5" fill="#d1d5db" />
             <!-- Frame & Exhaust -->
-            <path d="M11,27 L25,27 L33,21 L45,27 M25,27 L27,18 L38,18 L43,24" stroke="#ff6a00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <path d="M11,27 L25,27 L33,21 L45,27 M25,27 L27,18 L38,18 L43,24" stroke="#ff7a2a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
             <path d="M14,28 L28,29" stroke="#9ca3af" stroke-width="2" />
-            <circle cx="8" cy="29" r="2" fill="rgba(255,106,0,0.8)" />
+            <circle cx="8" cy="29" r="2" fill="rgba(255, 122, 42,0.8)" />
             <!-- Handlebars & Headlight -->
             <path d="M38,18 L42,12 L39,11" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" />
-            <circle cx="46" cy="19" r="2.5" fill="#00f0ff" filter="drop-shadow(0 0 4px #00f0ff)" />
+            <circle cx="46" cy="19" r="2.5" fill="#8fc9a3" filter="drop-shadow(0 0 4px #8fc9a3)" />
             <!-- Ant Rider on top -->
             <!-- Abdomen -->
             <ellipse cx="21" cy="15" rx="5" ry="3.5" fill="#111827" />
@@ -8825,7 +8825,7 @@
           isAnchor: false,
           anchorPulse: 1.0,
           color: Math.random() > 0.75 
-            ? 'rgba(0, 240, 255,' 
+            ? 'rgba(143, 201, 163,' 
             : (Math.random() > 0.5 ? 'rgba(255, 215, 0,' : 'rgba(255, 255, 255,')
         });
       }
@@ -8983,7 +8983,7 @@
             currentSize = s.size * 2.2;
             currentAlpha = 1.0;
             sCtx.shadowBlur = 15;
-            sCtx.shadowColor = '#00f0ff';
+            sCtx.shadowColor = '#8fc9a3';
           } else {
             sCtx.shadowBlur = 0;
           }
@@ -9016,8 +9016,8 @@
 
           const grad = sCtx.createLinearGradient(ss.x, ss.y, tailX, tailY);
           grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
-          grad.addColorStop(0.3, `rgba(0, 240, 255, ${ss.alpha * 0.8})`);
-          grad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+          grad.addColorStop(0.3, `rgba(143, 201, 163, ${ss.alpha * 0.8})`);
+          grad.addColorStop(1, 'rgba(143, 201, 163, 0)');
 
           sCtx.strokeStyle = grad;
           sCtx.lineWidth = 1.6;
@@ -15076,9 +15076,34 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
   </script>
   <script>
   /* HERO DROP: the clicked hero button falls onto the matching filter button, breaks it, and the pieces fall
-     to the bottom of the screen. The page scrolls smoothly to follow the falling pieces. Own code. */
+     off the bottom of the screen. The camera follows only until the impact. Own code. */
   (function () {
     var busy = false;
+    // Copy the exact computed look onto a clone, so it does not change when it leaves its section.
+    function freeze(src, dst) {
+      var cs = getComputedStyle(src);
+      for (var i = 0; i < cs.length; i++) {
+        var p = cs[i];
+        dst.style.setProperty(p, cs.getPropertyValue(p), cs.getPropertyPriority(p));
+      }
+      dst.style.transition = 'none';
+      dst.style.animation = 'none';
+      for (var j = 0; j < src.children.length; j++) freeze(src.children[j], dst.children[j]);
+    }
+    function copyOf(el, w, h) {
+      var c = el.cloneNode(true);
+      c.removeAttribute('onclick');
+      c.removeAttribute('id');
+      freeze(el, c);
+      c.style.position = 'fixed';
+      c.style.margin = '0';
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+      c.style.pointerEvents = 'none';
+      c.style.zIndex = '9999';
+      c.style.transformOrigin = 'center';
+      return c;
+    }
     function place(node, x, pageY) {
       node.style.left = x + 'px';
       node.style.top = (pageY - window.scrollY) + 'px';
@@ -15093,30 +15118,25 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
       var from = el.getBoundingClientRect();
       var startX = from.left, startY = from.top + window.scrollY;
-
-      // The falling copy of the clicked button
-      var clone = el.cloneNode(true);
-      clone.removeAttribute('onclick');
-      clone.removeAttribute('id');
-      clone.style.width = from.width + 'px';
-      clone.style.height = from.height + 'px';
-      clone.classList.add('me-frag');
+      var clone = copyOf(el, from.width, from.height);
       document.body.appendChild(clone);
+      place(clone, startX, startY);
 
       target.click(); // applies the filter; no page jump here
       var tr = target.getBoundingClientRect();
       var landX = tr.left, landY = tr.top + window.scrollY;
       var dist = Math.max(40, landY - startY);
-      var T1 = Math.min(1200, Math.max(550, Math.sqrt(dist) * 22));
+      var T1 = Math.min(2600, Math.max(1000, Math.sqrt(dist) * 45)); // slower, longer fall
 
       var camY = window.scrollY;
       function follow(pageY) {
         var want = Math.max(0, pageY - window.innerHeight * 0.4);
-        camY += (want - camY) * 0.15;
+        camY += (want - camY) * 0.08;
         window.scrollTo({ top: camY, behavior: 'instant' });
       }
 
       function impact() {
+        // The camera stops here: it followed the button only until it hit the next one.
         target.classList.add('is-broken');
         setTimeout(function () { target.classList.remove('is-broken'); }, 600);
 
@@ -15135,21 +15155,16 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
           'polygon(58% 52%, 100% 44%, 100% 100%, 52% 100%)'
         ];
         var frags = quads.map(function (q, i) {
-          var f = el.cloneNode(true);
-          f.removeAttribute('onclick');
-          f.removeAttribute('id');
-          f.classList.add('me-frag');
-          f.style.width = from.width + 'px';
-          f.style.height = from.height + 'px';
+          var f = copyOf(el, from.width, from.height);
           f.style.clipPath = q;
           f.style.webkitClipPath = q;
           document.body.appendChild(f);
           var dir = i % 2 ? 1 : -1;
           return {
             el: f, x: landX, y: landY, dead: false,
-            vx: dir * (90 + Math.random() * 140),
-            vy: -(120 + Math.random() * 140),
-            rot: 0, vr: dir * (180 + Math.random() * 260)
+            vx: dir * (40 + Math.random() * 60),
+            vy: -(40 + Math.random() * 60),
+            rot: 0, vr: dir * (90 + Math.random() * 120)
           };
         });
         clone.remove();
@@ -15158,10 +15173,10 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
         function phase2(now) {
           var dt = Math.min(0.033, (now - last) / 1000);
           last = now;
-          var alive = 0, maxY = 0;
+          var alive = 0;
           frags.forEach(function (f) {
             if (f.dead) return;
-            f.vy += 2600 * dt;
+            f.vy += 1400 * dt;
             f.x += f.vx * dt;
             f.y += f.vy * dt;
             f.rot += f.vr * dt;
@@ -15172,11 +15187,9 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
               f.dead = true;
             } else {
               alive++;
-              maxY = Math.max(maxY, f.y);
             }
           });
-          if (alive) follow(maxY);
-          if (alive && now - started < 5000) {
+          if (alive && now - started < 8000) {
             requestAnimationFrame(phase2);
           } else {
             frags.forEach(function (f) { if (!f.dead) f.el.remove(); });
