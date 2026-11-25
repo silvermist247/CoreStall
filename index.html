@@ -5522,6 +5522,38 @@
       100% { transform: none; }
     }
     .me-frag { position: fixed; margin: 0; pointer-events: none; z-index: 9999; transform-origin: center; }
+
+    /* IN-PAGE INVOICE: opens over the page from the cart; nothing leaves the site until "Mark as paid" */
+    .inv-overlay { position: fixed; inset: 0; z-index: 10050; background: rgba(8, 10, 14, 0.74);
+      display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .inv-overlay[hidden] { display: none; }
+    .inv-sheet { position: relative; width: min(580px, 100%); max-height: 92vh; overflow: auto; padding: 22px;
+      background: #1c2430; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.35); border-radius: 12px;
+      font-family: var(--font-main); }
+    .inv-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .inv-head h2 { margin: 0; font-family: var(--font-mono); font-size: 1.1rem; letter-spacing: 0.2em; color: #8fc9a3; }
+    .inv-close { background: none; border: 0; color: #e6edf3; font-size: 1.6rem; line-height: 1; cursor: pointer; min-width: 44px; min-height: 44px; }
+    .inv-meta, .inv-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .inv-meta span, .inv-parties h3 { display: block; font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: #9aa6b4; margin: 0 0 4px; font-weight: 600; }
+    .inv-meta strong { font-family: var(--font-mono); font-size: 0.95rem; }
+    .inv-parties > div { font-size: 0.9rem; line-height: 1.5; }
+    .inv-parties label { display: block; font-size: 0.8rem; color: #9aa6b4; margin-bottom: 8px; }
+    .inv-parties input { display: block; width: 100%; margin-top: 4px; padding: 10px 12px; font-size: 16px;
+      background: #141a22; color: #e6edf3; border: 1px solid rgba(143, 201, 163, 0.3); border-radius: 8px; box-sizing: border-box; }
+    .inv-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-bottom: 14px; }
+    .inv-table th, .inv-table td { padding: 10px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left; }
+    .inv-table th:last-child, .inv-table td:last-child { text-align: right; white-space: nowrap; }
+    .inv-table tfoot th { border-bottom: 0; font-family: var(--font-mono); letter-spacing: 0.1em; }
+    .inv-bank { font-size: 0.82rem; color: #9aa6b4; line-height: 1.5; margin-bottom: 14px; white-space: pre-line; }
+    .inv-status { min-height: 1.4em; font-size: 0.9rem; margin-bottom: 12px; color: #e6edf3; }
+    .inv-status.error { color: #ff7a2a; }
+    .inv-stamp { position: absolute; top: 74px; right: 22px; font-family: var(--font-mono); font-weight: 800;
+      letter-spacing: 0.2em; color: #8fc9a3; border: 3px solid #8fc9a3; padding: 4px 12px; border-radius: 6px;
+      transform: rotate(-8deg); display: none; }
+    .inv-sheet.is-paid .inv-stamp { display: block; }
+    .inv-actions .btn { width: 100%; }
+    @media (max-width: 560px) { .inv-meta, .inv-parties { grid-template-columns: 1fr; } }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CoreStall","alternateName":"Seth Barton / CoreStall","description":"Digital action, wildlife, landscape and drone media. Full-resolution downloads and licensing.","author":{"@type":"Person","name":"Seth Barton"}}</script>
 </head>
@@ -5995,6 +6027,33 @@
         <button class="btn" style="width: 100%;" onclick="checkout()">Proceed to Checkout</button>
       </div>
     </aside>
+
+    <div class="inv-overlay" id="invOverlay" hidden>
+      <div class="inv-sheet" id="invSheet" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+        <div class="inv-stamp">PAID</div>
+        <div class="inv-head"><h2 id="invTitle">INVOICE</h2><button class="inv-close" type="button" onclick="closeInvoice()" aria-label="Close invoice">&times;</button></div>
+        <div class="inv-meta">
+          <div><span>Invoice no.</span><strong id="invNo"></strong></div>
+          <div><span>Date</span><strong id="invDate"></strong></div>
+        </div>
+        <div class="inv-parties">
+          <div><h3>From</h3><div id="invSeller"></div></div>
+          <div>
+            <h3>Bill to</h3>
+            <label>Name<input id="invBuyerName" type="text" autocomplete="name" required></label>
+            <label>Email<input id="invBuyerEmail" type="email" autocomplete="email" required></label>
+          </div>
+        </div>
+        <table class="inv-table">
+          <thead><tr><th>Item</th><th>Price</th></tr></thead>
+          <tbody id="invItems"></tbody>
+          <tfoot><tr><th>TOTAL</th><th id="invTotal"></th></tr></tfoot>
+        </table>
+        <div class="inv-bank" id="invBank"></div>
+        <div class="inv-status" id="invStatus" role="status" aria-live="polite"></div>
+        <div class="inv-actions"><button class="btn" id="invPaidBtn" type="button" onclick="markPaid()">Mark as paid</button></div>
+      </div>
+    </div>
 
     <!-- About Section with 3D Holographic Tilt Portrait -->
     <section id="about">
@@ -7928,12 +7987,112 @@
       `).join('');
     }
 
+    // ----- Invoice -----
+    // Where the paid invoice is sent. Set this once the email service is connected (see the notes on the PR).
+    const INVOICE_ENDPOINT = '';
+    // Seller details printed on every invoice. Fill in the blanks before going live.
+    const SELLER = {
+      name: 'Seth Barton / CoreStall',
+      email: 'lionbarton@gmail.com',
+      address: '',
+      regNumber: '',
+      vatNumber: '',
+      bank: ''
+    };
+    let invoiceNo = '';
+
     function checkout() {
-      if (cart.length === 0) return alert('Your cart is empty.');
-      const lines = cart.map(i => `- ${i.title} (R ${i.price})`).join('\n');
-      const total = cart.reduce((s, i) => s + Number(i.price || 0), 0);
-      const body = `Hi Seth,\n\nI would like to purchase and download the following digital files:\n${lines}\n\nTotal: R ${total}\n\nPlease send through the download link and invoice.`;
-      window.location.href = `mailto:lionbarton@gmail.com?subject=${encodeURIComponent('Digital Media Order')}&body=${encodeURIComponent(body)}`;
+      if (cart.length === 0) { showNotification('Your cart is empty'); return; }
+      openInvoice();
+    }
+
+    function openInvoice() {
+      toggleCart(false);
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      invoiceNo = `CS-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+      document.getElementById('invNo').textContent = invoiceNo;
+      document.getElementById('invDate').textContent = now.toLocaleDateString('en-ZA');
+      document.getElementById('invSeller').innerHTML = [SELLER.name, SELLER.address, SELLER.regNumber && 'Reg: ' + SELLER.regNumber, SELLER.vatNumber && 'VAT: ' + SELLER.vatNumber, SELLER.email]
+        .filter(Boolean).map(escapeHtml).join('<br>');
+      document.getElementById('invBank').textContent = SELLER.bank || '';
+      const total = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      document.getElementById('invItems').innerHTML = cart.map(item =>
+        `<tr><td>${escapeHtml(item.title)}</td><td>R ${Number(item.price).toLocaleString()}</td></tr>`).join('');
+      document.getElementById('invTotal').textContent = 'R ' + total.toLocaleString();
+      setInvoiceStatus('');
+      const btn = document.getElementById('invPaidBtn');
+      btn.disabled = false;
+      btn.textContent = 'Mark as paid';
+      document.getElementById('invSheet').classList.remove('is-paid');
+      const overlay = document.getElementById('invOverlay');
+      overlay.hidden = false;
+      document.getElementById('invBuyerName').focus();
+    }
+
+    function closeInvoice() {
+      document.getElementById('invOverlay').hidden = true;
+    }
+
+    function setInvoiceStatus(message, isError) {
+      const el = document.getElementById('invStatus');
+      el.textContent = message;
+      el.classList.toggle('error', !!isError);
+    }
+
+    function invoicePayload() {
+      const total = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      return {
+        type: 'paid-invoice',
+        invoiceNo,
+        date: new Date().toISOString(),
+        buyer: {
+          name: document.getElementById('invBuyerName').value.trim(),
+          email: document.getElementById('invBuyerEmail').value.trim()
+        },
+        seller: SELLER,
+        items: cart.map(item => ({ title: item.title, price: Number(item.price) })),
+        total,
+        currency: 'ZAR',
+        status: 'PAID'
+      };
+    }
+
+    async function markPaid() {
+      const name = document.getElementById('invBuyerName').value.trim();
+      const email = document.getElementById('invBuyerEmail').value.trim();
+      if (!name || !email) { setInvoiceStatus('Please add your name and email first.', true); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setInvoiceStatus('That email address does not look right.', true); return; }
+
+      const sheet = document.getElementById('invSheet');
+      const btn = document.getElementById('invPaidBtn');
+      sheet.classList.add('is-paid');
+      btn.disabled = true;
+
+      if (!INVOICE_ENDPOINT) {
+        btn.disabled = false;
+        btn.textContent = 'Retry sending';
+        setInvoiceStatus('Marked as paid. Sending is not connected yet, so the invoice has not been emailed.', true);
+        return;
+      }
+
+      setInvoiceStatus('Sending the paid invoice to Seth...');
+      try {
+        const res = await fetch(INVOICE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(invoicePayload())
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        setInvoiceStatus('Paid invoice sent. Thank you!');
+        btn.textContent = 'Sent';
+        cart.length = 0;
+        renderCart();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Retry sending';
+        setInvoiceStatus('Could not send the invoice. Please try again.', true);
+      }
     }
 
     // =========================================================================
