@@ -5791,6 +5791,13 @@
        ========================================================================= */
     @media (min-width: 900px) {
       .shop-grid.vr-on { display: none !important; }
+      .deck-count {
+        position: fixed; left: 24px; bottom: 24px; z-index: 60; pointer-events: none;
+        padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(143, 201, 163, 0.55);
+        background: rgba(5, 9, 12, 0.85); color: #8fc9a3; font-family: var(--font-mono);
+        letter-spacing: 0.1em; opacity: 0; transition: opacity 0.3s ease;
+      }
+      .deck-count.on { opacity: 1; }
       .vr-track { position: relative; margin-top: 2.5rem; }
       .vr-track[hidden] { display: none; }
       .vr-stage {
@@ -8386,6 +8393,7 @@
         }
       });
       if (window.vrFocus) window.vrFocus(category);
+      if (window.vrRebuild) window.vrRebuild();
     }
 
     // Undertale Soul Like Interaction (3 Quick Little Hops)
@@ -16389,9 +16397,11 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
 
     // every card stays on the wall; filters turn the cylinder instead of removing photos
+    // only the cards the filter shows are dealt
     function allCards() {
-      return Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
+      return Array.prototype.slice.call(grid.querySelectorAll('.product-card:not(.hidden)'));
     }
+    window.vrRebuild = function () { if (desktop.matches) rebuild(); };
     // A filter turns the wall so the first matching photo faces the viewer. Nothing is removed.
     function focusCategory(category) {
       if (!category || category === 'all') return;
@@ -16425,6 +16435,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
     function rebuild() {
       clearWorld();
+      deal = [];
       var cards = allCards();
       if (!cards.length) return;
       buildDeal(cards);
@@ -16553,7 +16564,18 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
 
     // ---- The deal: scroll the stage and the photos leave the wall, flatten, and land as a numbered deck ----
-    var STICKY_TOP = 96, DEAL_Z = -6, DEAL_LEN = 0.2, DEAL_COLS = 3, viewAspect = 1.8;
+    var STICKY_TOP = 96, DEAL_Z = -6, DEAL_LEN = 0.2, DEAL_COLS = 6, viewAspect = 1.8;
+    var DECK_X = -0.72, GRID_X0 = -0.52, GRID_X1 = 0.92, GRID_GAP = 0.3;   // fractions of the half-width
+    var deckCount = document.createElement('div');
+    deckCount.className = 'deck-count';
+    document.body.appendChild(deckCount);
+    var lastLeft = -1;
+    function setDeckCount(n) {
+      if (n === lastLeft) return;
+      lastLeft = n;
+      deckCount.textContent = n + ' LEFT';
+      deckCount.classList.toggle('on', n > 0 && desktop.matches);
+    }
     var deal = [];
     function sizeTrack() {
       track.style.height = (stage.offsetHeight + Math.round(window.innerHeight * 2.4)) + 'px';
@@ -16614,33 +16636,38 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var img0 = card.querySelector('.product-image-wrap img');
       if (img0 && img0.src) baseTex(img0.src, function (t) { draw(t.image); }); else draw(null);
     }
-    // Three columns of large cards. A rail runs across the top; the stack hangs from it, and each card is
-    // drawn down from the rail into its place. The view pans down as the rows fill.
-    function dealLayout() {
+    // Layout: the face-down deck sits on the left, a 6 x 3 grid fills the right. Nothing moves upward.
+    function dealLayout(n) {
       var halfH = Math.abs(DEAL_Z) * Math.tan(VFOV * Math.PI / 360);
       var halfW = halfH * viewAspect;
-      var cw = (2 * halfW * 0.86) / DEAL_COLS - 0.4;
+      var rows = Math.max(1, Math.ceil(n / DEAL_COLS));
+      var cellW = (halfW * (GRID_X1 - GRID_X0)) / DEAL_COLS;
+      var cw = cellW - GRID_GAP;
       var ch = cw / 0.8;
+      var avail = 2 * halfH - 0.8;                       // keep clear of the top and bottom edges
+      if (rows * ch + (rows - 1) * GRID_GAP > avail) {
+        ch = (avail - (rows - 1) * GRID_GAP) / rows;
+        cw = ch * 0.8;
+      }
+      var totalH = rows * ch + (rows - 1) * GRID_GAP;
       return {
-        halfH: halfH, halfW: halfW, cw: cw, ch: ch,
-        dw: cw * 0.5, dh: ch * 0.5,
-        pitch: ch + 0.5, colGap: cw + 0.4, rail: halfH - 0.5
+        halfH: halfH, halfW: halfW, cw: cw, ch: ch, cellW: cellW, totalH: totalH,
+        gridX0: halfW * GRID_X0, deckX: halfW * DECK_X
       };
     }
-    // the stack hangs from the rail: each card sits a little further along, so the numbers cascade down the pile
+    // the deck: the first card is on top, and each card in the deal is drawn from the top of the pile
     function buildDeal(cards) {
       deal = [];
       var n = cards.length;
       cards.forEach(function (card, k) {
-        // cards are never hidden by depth: later cards in the deal sit over earlier ones
+        // cards never hide behind one another by depth; the deck order is set with renderOrder
         var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.FrontSide, depthTest: false, depthWrite: false });
         var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
-        mesh.renderOrder = k + 1;
+        mesh.renderOrder = n - k;
         mesh.userData.card = card;
         world.add(mesh);
-        var off = k - (n - 1) / 2;
         deal.push({
-          k: k, off: off, mesh: mesh,
+          k: k, mesh: mesh,
           a: (k / n) * (1 - DEAL_LEN), L: DEAL_LEN,
           spin: k % 2 ? 1 : -1
         });
@@ -16649,30 +16676,31 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       applyDeal(sShown);
       sizeTrack();
     }
-    // s = 0..1 over the scroll: each card leaves the stack in turn, is drawn down into its grid place,
-    // and the view follows the rows downward
+    // s = 0..1 over the scroll: the top card leaves the deck, dips into hyperspace and lands in its grid cell
     function applyDeal(s) {
-      var lay = dealLayout();
-      // the shelf and the stack stay put; the grid rises beneath them as the rows fill
-      var pan = Math.max(0, s * deal.length / DEAL_COLS - 1.2) * lay.pitch;
-      world.position.y = 0;
+      var n = deal.length;
+      var lay = dealLayout(n);
+      var left = 0;
       deal.forEach(function (it) {
         var d = band(it.a, it.a + it.L, s);
         var arc = Math.sin(Math.PI * d);
-        var z0 = DEAL_Z + it.k * 0.02;
-        var sx = it.off * 0.12;
-        var sy = lay.halfH - 0.4 - lay.dh / 2;             // the stack hangs from the top of the view
+        if (d < 1) left++;
+        var sx = lay.deckX, sy = 0;
         var c = it.k % DEAL_COLS, r = Math.floor(it.k / DEAL_COLS);
-        var gx = (c - (DEAL_COLS - 1) / 2) * lay.colGap;
-        var gy = 0.2 - r * lay.pitch - lay.ch / 2 + pan;
+        var gx = lay.gridX0 + (c + 0.5) * lay.cellW;
+        var gy = lay.totalH / 2 - lay.ch / 2 - r * (lay.ch + GRID_GAP);
+        var z0 = DEAL_Z + 0.5 - it.k * 0.01;
         it.mesh.position.set(
           sx + (gx - sx) * d,
           sy + (gy - sy) * d,
           z0 + (DEAL_Z - z0) * d - 8 * arc          // dips away into hyperspace, then returns
         );
-        it.mesh.scale.set(lay.dw + (lay.cw - lay.dw) * d, lay.dh + (lay.ch - lay.dh) * d, 1);
+        it.mesh.scale.set(lay.cw, lay.ch, 1);
         it.mesh.rotation.z = arc * 0.25 * it.spin;
+        // in the air a card draws over the pile and the grid; at rest it keeps its place in the order
+        it.mesh.renderOrder = d <= 0 ? n - it.k : (d >= 1 ? it.k + 1 : 100 + it.k);
       });
+      setDeckCount(left);
     }
     function setRunning(on) {
       if (on && !running) {
@@ -16689,6 +16717,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       stage.hidden = !on;
       track.hidden = !on;
       grid.classList.toggle('vr-on', on);
+      if (!on) deckCount.classList.remove('on');
       if (on) { resize(); rebuild(); }
     }
 
