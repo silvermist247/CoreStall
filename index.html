@@ -5811,8 +5811,6 @@
         font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
         color: rgba(143, 201, 163, 0.85); text-shadow: 0 0 8px rgba(143, 201, 163, 0.35);
       }
-      .vr-hint { padding: 6px 10px; border-radius: 8px; background: rgba(5, 9, 12, 0.6); }
-      .vr-hint { top: 16px; left: 20px; }
       .vr-frame {
         position: absolute; inset: 10px; border-radius: 12px; pointer-events: none; z-index: 2;
         box-shadow: inset 0 0 0 1px rgba(143, 201, 163, 0.14), inset 0 0 40px rgba(143, 201, 163, 0.06);
@@ -16292,8 +16290,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     stage.hidden = true;
     stage.setAttribute('role', 'region');
     stage.setAttribute('aria-label', 'Photo gallery. Drag to look around, click a photo for details.');
-    stage.innerHTML = '<div class="vr-frame"></div>' +
-      '<div class="vr-hint">Scroll to deal &middot; drag to look around</div>';
+    stage.innerHTML = '<div class="vr-frame"></div>';
     var track = document.createElement('div');
     track.className = 'vr-track';
     track.hidden = true;
@@ -16302,12 +16299,12 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
     var renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
     } catch (err) {
       stage.remove();
       return;                          // no WebGL: the normal grid stays
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setClearColor(0x000000, 0);
     var el = renderer.domElement;
     el.style.cursor = 'grab';
@@ -16320,7 +16317,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     scene.add(world);
 
     // hyperspace: stars streak outward past the cylinder
-    var N = 900;
+    var N = 600;
     var dirs = [], sArr = new Float32Array(N), spArr = new Float32Array(N), isEmber = new Array(N);
     var starPos = new Float32Array(N * 6), starCol = new Float32Array(N * 6);
     for (var i = 0; i < N; i++) {
@@ -16543,6 +16540,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
 
     // animation: the cylinder rushes in on entry, the stars stream, the view eases
     var running = false, last = 0, diveStart = null, DIVE_MS = 2400;
+    var frameCount = 0, lastRawT = null;
     function frame(now) {
       if (!running) return;
       var dt = Math.min(0.05, (now - last) / 1000);
@@ -16553,9 +16551,16 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       world.scale.setScalar(3 - 2 * ease);
       var sway = reduce.matches ? 0 : Math.sin(now / 1000 * 0.25) * 0.05;
       yaw += (yawTarget + sway - yaw) * Math.min(1, dt * 6);
-      var sProg = dealProgress();
+      measureTrack();
+      var target = dealTarget();
+      // real elapsed time, so the deal keeps its pace even when frames are slow
+      var realDt = lastRawT === null ? 0 : Math.min(0.25, (now - lastRawT) / 1000);
+      lastRawT = now;
+      sShown += (target - sShown) * (1 - Math.exp(-realDt * 7));
+      if (Math.abs(target - sShown) < 0.0005) sShown = target;
+      var sProg = sShown;
       world.rotation.y = yaw * (1 - smooth01(sProg / 0.1));
-      if (deal.length) applyDeal(sProg);
+      if (deal.length && Math.abs(sProg - lastDealS) > 0.00001) { applyDeal(sProg); lastDealS = sProg; }
       if (!reduce.matches) updateStars(dt);
       renderer.render(scene, camera);
       requestAnimationFrame(frame);
@@ -16572,15 +16577,20 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     var deal = [];
     function sizeTrack() {
       track.style.height = (stage.offsetHeight + Math.round(window.innerHeight * 2.4)) + 'px';
+      measureTrack();
     }
     function smooth01(x) { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); }
     function band(a, b, x) { return smooth01((x - a) / (b - a)); }
+    // the track's place in the page is measured on resize, never every frame (a layout read per frame is costly)
+    var trackDocTop = 0, trackRange = 1, sShown = 0, lastDealS = -1;
+    function measureTrack() {
+      trackDocTop = track.getBoundingClientRect().top + window.scrollY;
+      trackRange = Math.max(1, track.offsetHeight - stage.offsetHeight);
+    }
     // 0 before the stage sticks, 1 when the deal has finished
-    function dealProgress() {
-      var range = track.offsetHeight - stage.offsetHeight;
-      if (range <= 0) return 0;
-      var top = track.getBoundingClientRect().top + window.scrollY;
-      return Math.min(1, Math.max(0, (window.scrollY - (top - STICKY_TOP)) / range));
+    function dealTarget() {
+      if (track.hidden) return 0;
+      return Math.min(1, Math.max(0, (window.scrollY - (trackDocTop - STICKY_TOP)) / trackRange));
     }
     // a shared, cached texture for the source photo
     function baseTex(src, cb) {
