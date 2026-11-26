@@ -16419,33 +16419,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function rebuild() {
       clearWorld();
       var cards = allCards();
-      var n = cards.length;
-      if (!n) return;
-      var rows = 3;                                      // always three rows
-      // fit the whole wall inside the visible height, so no row is cut off
-      var visibleHalf = R * Math.tan(VFOV * Math.PI / 360);
-      ROW_H = Math.min(0.5 * R, (2 * FIT * visibleHalf - (rows - 1) * ROW_GAP) / rows);
-      var totalH = rows * ROW_H + (rows - 1) * ROW_GAP;
-      var slotAspect = (R * COL_ARC) / ROW_H;
-      for (var c = 0; c < COL_COUNT; c++) {
-        var phi = c * COL_STEP;                          // around the full ring
-        for (var r = 0; r < rows; r++) {
-          var card = cards[(c * rows + r) % n];          // the same photos repeat around the ring
-          var y = totalH / 2 - ROW_H / 2 - r * (ROW_H + ROW_GAP);
-          var geo = new THREE.CylinderGeometry(R, R, ROW_H, 40, 1, true, (Math.PI - phi) - COL_ARC / 2, COL_ARC);
-          var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.DoubleSide, transparent: true });
-          var mesh = new THREE.Mesh(geo, mat);
-          mesh.position.y = y;
-          mesh.userData.card = card;
-          mesh.userData.slice = true;
-          mesh.userData.t0 = (Math.PI - phi) - COL_ARC / 2;
-          mesh.userData.arc = COL_ARC;
-          mesh.userData.yc = y;
-          world.add(mesh);
-          var img = card.querySelector('.product-image-wrap img');
-          if (img && img.src) fitTexture(img.src, mat, slotAspect);
-        }
-      }
+      if (!cards.length) return;
       buildDeal(cards);
       scene.updateMatrixWorld(true);
     }
@@ -16453,6 +16427,8 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function resize() {
       var w = stage.clientWidth, h = stage.clientHeight;
       if (!w || !h) return;
+      viewAspect = w / h;
+      lastDealS = -1;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -16546,9 +16522,6 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       if (diveStart === null) diveStart = now;
-      var p = Math.min(1, (now - diveStart) / DIVE_MS);
-      var ease = 1 - Math.pow(1 - p, 3);
-      world.scale.setScalar(3 - 2 * ease);
       var sway = reduce.matches ? 0 : Math.sin(now / 1000 * 0.25) * 0.05;
       yaw += (yawTarget + sway - yaw) * Math.min(1, dt * 6);
       measureTrack();
@@ -16559,7 +16532,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       sShown += (target - sShown) * (1 - Math.exp(-realDt * 7));
       if (Math.abs(target - sShown) < 0.0005) sShown = target;
       var sProg = sShown;
-      world.rotation.y = yaw * (1 - smooth01(sProg / 0.1));
+      world.rotation.y = 0;
       if (deal.length && Math.abs(sProg - lastDealS) > 0.00001) { applyDeal(sProg); lastDealS = sProg; }
       if (!reduce.matches) updateStars(dt);
       renderer.render(scene, camera);
@@ -16573,7 +16546,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
 
     // ---- The deal: scroll the stage and the photos leave the wall, flatten, and land as a numbered deck ----
-    var STICKY_TOP = 96, DEAL_W = 3.6, DEAL_H = 4.5, DEAL_Z = -6, DEAL_LEN = 0.2;
+    var STICKY_TOP = 96, DEAL_Z = -6, DEAL_LEN = 0.2, DEAL_COLS = 3, viewAspect = 1.8;
     var deal = [];
     function sizeTrack() {
       track.style.height = (stage.offsetHeight + Math.round(window.innerHeight * 2.4)) + 'px';
@@ -16634,71 +16607,71 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var img0 = card.querySelector('.product-image-wrap img');
       if (img0 && img0.src) baseTex(img0.src, function (t) { draw(t.image); }); else draw(null);
     }
-    // one card per photo: its first wall slice flattens into the deck; other copies fade out
+    // Three columns of large cards. A rail runs across the top; the stack hangs from it, and each card is
+    // drawn down from the rail into its place. The view pans down as the rows fill.
+    var railMesh = null, railGlow = null;
+    function dealLayout() {
+      var halfH = Math.abs(DEAL_Z) * Math.tan(VFOV * Math.PI / 360);
+      var halfW = halfH * viewAspect;
+      var cw = (2 * halfW * 0.86) / DEAL_COLS - 0.4;
+      var ch = cw / 0.8;
+      return {
+        halfH: halfH, halfW: halfW, cw: cw, ch: ch,
+        dw: cw * 0.5, dh: ch * 0.5,
+        pitch: ch + 0.5, colGap: cw + 0.4, rail: halfH - 0.5
+      };
+    }
+    // the stack hangs from the rail: each card sits a little further along, so the numbers cascade down the pile
     function buildDeal(cards) {
       deal = [];
       var n = cards.length;
-      var slices = world.children.filter(function (m) { return m.userData.slice; });
-      var homes = cards.map(function (card) {
-        for (var i = 0; i < slices.length; i++) if (slices[i].userData.card === card) return slices[i];
-        return null;
-      });
-      slices.forEach(function (m) { m.userData.dup = homes.indexOf(m) < 0; });
+      railMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x8fc9a3, transparent: true, opacity: 0.75, depthWrite: false }));
+      railGlow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x8fc9a3, transparent: true, opacity: 0.14, depthWrite: false }));
+      world.add(railMesh);
+      world.add(railGlow);
       cards.forEach(function (card, k) {
-        var home = homes[k];
-        if (!home) return;
-        var mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, side: THREE.FrontSide });
-        var flat = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 40, 1), mat);
-        flat.visible = false;
-        flat.userData.card = card;
-        flat.userData.flat = true;
-        world.add(flat);
-        var P = { x: (k - (n - 1) / 2) * 0.12, y: -(k - (n - 1) / 2) * 0.08, z: DEAL_Z + k * 0.02 };
+        var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.FrontSide });
+        var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
+        mesh.userData.card = card;
+        world.add(mesh);
+        var off = k - (n - 1) / 2;
         deal.push({
-          card: card, slice: home, flat: flat, P: P,
-          t0: home.userData.t0, arc: home.userData.arc, yc: home.userData.yc,
-          a: (k / n) * (1 - DEAL_LEN), L: DEAL_LEN
+          k: k, off: off, mesh: mesh,
+          a: (k / n) * (1 - DEAL_LEN), L: DEAL_LEN,
+          spin: k % 2 ? 1 : -1
         });
-        makeCardTexture(card, k, function (tex) { mat.map = tex; mat.needsUpdate = true; });
+        makeCardTexture(card, k, function (tex) { mat.map = tex; mat.color.set(0xffffff); mat.needsUpdate = true; });
       });
+      applyDeal(sShown);
       sizeTrack();
     }
-    // s = 0..1 over the scroll range; each card's flight starts in turn, so the cards are dealt one at a time
+    // s = 0..1 over the scroll: each card leaves the stack in turn, is drawn down into its grid place,
+    // and the view follows the rows downward
     function applyDeal(s) {
-      world.children.forEach(function (m) {
-        if (m.userData.dup) {
-          var o = 1 - band(0, 0.06, s);
-          m.material.opacity = o;
-          m.visible = o > 0.01;
-        }
-      });
+      var lay = dealLayout();
+      if (railMesh) {
+        railMesh.position.set(0, lay.rail, DEAL_Z + 0.5);
+        railMesh.scale.set(lay.halfW * 2, 0.04, 1);
+        railGlow.position.set(0, lay.rail, DEAL_Z + 0.4);
+        railGlow.scale.set(lay.halfW * 2, 0.4, 1);
+      }
+      world.position.y = Math.max(0, s * deal.length / DEAL_COLS - 1.2) * lay.pitch;   // the view moves down with the rows
       deal.forEach(function (it) {
         var d = band(it.a, it.a + it.L, s);
-        var sp = it.slice.geometry.attributes.position;
-        var fp = it.flat.geometry.attributes.position;
-        var P = it.P;
-        for (var idx = 0; idx < 82; idx++) {
-          var ix = idx % 41, iy = (idx - ix) / 41;
-          var u = ix / 40;
-          var th = it.t0 + u * it.arc;
-          var ax = R * Math.sin(th), az = R * Math.cos(th);
-          var ay = iy === 0 ? ROW_H / 2 : -ROW_H / 2;
-          var fx = P.x + (u - 0.5) * DEAL_W;
-          var fy = P.y + (iy === 0 ? DEAL_H / 2 : -DEAL_H / 2);
-          var fz = P.z;
-          var wx = ax + (fx - ax) * d;
-          var wz = az + (fz - az) * d;
-          var wy = it.yc + ay + (fy - it.yc - ay) * d;
-          sp.setXYZ(idx, wx, wy - it.yc, wz);
-          fp.setXYZ(idx, wx, wy, wz);
-        }
-        sp.needsUpdate = true;
-        fp.needsUpdate = true;
-        var sliceOp = 1 - band(0.3, 0.6, d);
-        it.slice.material.opacity = sliceOp;
-        it.slice.visible = sliceOp > 0.01;
-        it.flat.material.opacity = band(0.15, 0.5, d);
-        it.flat.visible = d > 0.001;
+        var arc = Math.sin(Math.PI * d);
+        var z0 = DEAL_Z + it.k * 0.02;
+        var sx = it.off * 0.12;
+        var sy = lay.rail - lay.dh / 2 - it.off * 0.06;
+        var c = it.k % DEAL_COLS, r = Math.floor(it.k / DEAL_COLS);
+        var gx = (c - (DEAL_COLS - 1) / 2) * lay.colGap;
+        var gy = 0.2 - r * lay.pitch - lay.ch / 2;
+        it.mesh.position.set(
+          sx + (gx - sx) * d,
+          sy + (gy - sy) * d,
+          z0 + (DEAL_Z - z0) * d - 8 * arc          // dips away into hyperspace, then returns
+        );
+        it.mesh.scale.set(lay.dw + (lay.cw - lay.dw) * d, lay.dh + (lay.ch - lay.dh) * d, 1);
+        it.mesh.rotation.z = arc * 0.25 * it.spin;
       });
     }
     function setRunning(on) {
