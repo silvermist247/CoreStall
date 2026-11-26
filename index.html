@@ -5736,9 +5736,7 @@
       88%  { filter: none; }
       100% { filter: none; }
     }
-    #availability .section-tag { animation: pdWave 23s ease-out 3.0s infinite; }
-    #availability .section-title { animation: pdWave 23s ease-out 3.4s infinite; }
-    #availability .avail-intro { animation: pdWave 23s ease-out 3.8s infinite; }
+    /* the availability text stays static: no glow animation, so the letters stay sharp */
 
     /* calendar and select-a-date panel: a glow ring that the wave passes through.
        It is a pseudo-element, so the content inside stays sharp and the JS can rewrite it. */
@@ -6028,11 +6026,6 @@
         <div class="hero-links">
           <a href="#availability" class="hero-link">Check my dates</a>
           <a href="#contact" class="hero-link">Licence enquiry</a>
-        </div>
-        <div class="hero-cats" role="group" aria-label="Jump to a category">
-          <button type="button" class="hero-cat" onclick="heroDrop(this, 'action')">Action</button>
-          <button type="button" class="hero-cat" onclick="heroDrop(this, 'wildlife')">Wildlife</button>
-          <button type="button" class="hero-cat" onclick="heroDrop(this, 'drone')">Drone</button>
         </div>
       </div>
       <a href="#media" class="hero-scroll-cue" aria-label="Scroll to the library"><span>Scroll</span><i aria-hidden="true"></i></a>
@@ -9581,14 +9574,13 @@
           const mouseX = e.clientX - frameCenterX;
           const mouseY = e.clientY - frameCenterY;
 
-          const distToCenter = Math.hypot(mouseX, mouseY);
-          if (distToCenter < 600) {
-            const tiltX = (mouseY / (rect.height / 2)) * -3.2; 
-            const tiltY = (mouseX / (rect.width / 2)) * 3.2;
-            hudFrame.style.transform = `perspective(1000px) translateY(-5px) translateZ(14px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
-          } else {
-            hudFrame.style.transform = 'perspective(1000px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg)';
-          }
+          // a smooth falloff with distance, so the card never snaps as the cursor moves
+          const f = Math.max(0, 1 - Math.hypot(mouseX, mouseY) / 900);
+          const nx = Math.max(-1, Math.min(1, mouseX / (rect.width / 2)));
+          const ny = Math.max(-1, Math.min(1, mouseY / (rect.height / 2)));
+          const tiltX = ny * -3.2 * f;
+          const tiltY = nx * 3.2 * f;
+          hudFrame.style.transform = `perspective(1000px) translateY(${(-5 * f).toFixed(2)}px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
         });
 
         heroEl.addEventListener('mouseleave', () => {
