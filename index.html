@@ -16564,8 +16564,8 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
 
     // ---- The deal: scroll the stage and the photos leave the wall, flatten, and land as a numbered deck ----
-    var STICKY_TOP = 96, DEAL_Z = -6, DEAL_LEN = 0.2, DEAL_COLS = 6, viewAspect = 1.8;
-    var DECK_X = -0.72, GRID_X0 = -0.52, GRID_X1 = 0.92, GRID_GAP = 0.3;   // fractions of the half-width
+    var STICKY_TOP = 96, DEAL_Z = -6, DEAL_LEN = 0.2, DEAL_COLS = 3, viewAspect = 1.8;
+    var DECK_X = -0.76, DECK_SCALE = 0.5, DECK_BOTTOM = 0.9, GRID_X0 = -0.5, GRID_X1 = 0.92, GRID_GAP = 0.3;   // fractions of the half-width; the deck sits in the left gutter
     var deckCount = document.createElement('div');
     deckCount.className = 'deck-count';
     document.body.appendChild(deckCount);
@@ -16636,23 +16636,28 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       var img0 = card.querySelector('.product-image-wrap img');
       if (img0 && img0.src) baseTex(img0.src, function (t) { draw(t.image); }); else draw(null);
     }
-    // Layout: the face-down deck sits on the left, a 6 x 3 grid fills the right. Nothing moves upward.
+    // Layout: a small deck sits in the bottom-left gutter. Three columns of large cards fill the rest of the frame,
+    // and the grid scrolls inside the frame as the rows fill. The deck never moves.
     function dealLayout(n) {
       var halfH = Math.abs(DEAL_Z) * Math.tan(VFOV * Math.PI / 360);
       var halfW = halfH * viewAspect;
-      var rows = Math.max(1, Math.ceil(n / DEAL_COLS));
       var cellW = (halfW * (GRID_X1 - GRID_X0)) / DEAL_COLS;
       var cw = cellW - GRID_GAP;
       var ch = cw / 0.8;
-      var avail = 2 * halfH - 0.8;                       // keep clear of the top and bottom edges
-      if (rows * ch + (rows - 1) * GRID_GAP > avail) {
-        ch = (avail - (rows - 1) * GRID_GAP) / rows;
-        cw = ch * 0.8;
-      }
+      var dw = cw * DECK_SCALE, dh = ch * DECK_SCALE;
+      var rows = Math.max(1, Math.ceil(n / DEAL_COLS));
+      var pitch = ch + GRID_GAP;
+      var avail = 2 * halfH - 0.8;
       var totalH = rows * ch + (rows - 1) * GRID_GAP;
+      // a short grid is centred; a tall one starts at the top and scrolls
+      var gridTop = halfH - 0.4 - Math.max(0, (avail - totalH) / 2);
+      // the grid scrolls until its last row sits fully inside the frame, and no further
+      var panFinal = Math.max(0, (-halfH + 0.3) - (gridTop - ch - (rows - 1) * pitch));
       return {
-        halfH: halfH, halfW: halfW, cw: cw, ch: ch, cellW: cellW, totalH: totalH,
-        gridX0: halfW * GRID_X0, deckX: halfW * DECK_X
+        halfH: halfH, halfW: halfW, cw: cw, ch: ch, cellW: cellW, pitch: pitch, rows: rows, panFinal: panFinal,
+        gridX0: halfW * GRID_X0, gridTop: gridTop,
+        dw: dw, dh: dh,
+        deckX: halfW * DECK_X, deckY: -halfH + DECK_BOTTOM + dh / 2
       };
     }
     // the deck: the first card is on top, and each card in the deal is drawn from the top of the pile
@@ -16660,10 +16665,10 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       deal = [];
       var n = cards.length;
       cards.forEach(function (card, k) {
-        // cards never hide behind one another by depth; the deck order is set with renderOrder
+        // cards never hide behind one another by depth; the order is set with renderOrder
         var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.FrontSide, depthTest: false, depthWrite: false });
         var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
-        mesh.renderOrder = n - k;
+        mesh.renderOrder = 200 + (n - k);
         mesh.userData.card = card;
         world.add(mesh);
         deal.push({
@@ -16676,29 +16681,34 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
       applyDeal(sShown);
       sizeTrack();
     }
-    // s = 0..1 over the scroll: the top card leaves the deck, dips into hyperspace and lands in its grid cell
+    // s = 0..1 over the scroll: the top card leaves the deck, dips into hyperspace and lands in its grid cell.
+    // Once the rows pass the frame, the grid scrolls up inside it.
     function applyDeal(s) {
       var n = deal.length;
       var lay = dealLayout(n);
+      // the rows scroll up once the third row is being dealt, reaching the end with the last row
+      var s0 = Math.min(0.9, 2 / lay.rows);                 // the deal fraction at which the scroll starts
+      var prog = Math.min(1, Math.max(0, (s - s0) / (1 - s0)));
+      var pan = lay.panFinal * prog;
       var left = 0;
       deal.forEach(function (it) {
         var d = band(it.a, it.a + it.L, s);
         var arc = Math.sin(Math.PI * d);
         if (d < 1) left++;
-        var sx = lay.deckX, sy = 0;
+        var sx = lay.deckX, sy = lay.deckY;
         var c = it.k % DEAL_COLS, r = Math.floor(it.k / DEAL_COLS);
         var gx = lay.gridX0 + (c + 0.5) * lay.cellW;
-        var gy = lay.totalH / 2 - lay.ch / 2 - r * (lay.ch + GRID_GAP);
+        var gy = lay.gridTop - lay.ch / 2 - r * lay.pitch + pan;
         var z0 = DEAL_Z + 0.5 - it.k * 0.01;
         it.mesh.position.set(
           sx + (gx - sx) * d,
           sy + (gy - sy) * d,
           z0 + (DEAL_Z - z0) * d - 8 * arc          // dips away into hyperspace, then returns
         );
-        it.mesh.scale.set(lay.cw, lay.ch, 1);
+        it.mesh.scale.set(lay.dw + (lay.cw - lay.dw) * d, lay.dh + (lay.ch - lay.dh) * d, 1);
         it.mesh.rotation.z = arc * 0.25 * it.spin;
-        // in the air a card draws over the pile and the grid; at rest it keeps its place in the order
-        it.mesh.renderOrder = d <= 0 ? n - it.k : (d >= 1 ? it.k + 1 : 100 + it.k);
+        // in the air a card draws over everything; at rest the pile keeps its own order
+        it.mesh.renderOrder = d <= 0 ? 200 + (n - it.k) : (d >= 1 ? it.k + 1 : 300 + it.k);
       });
       setDeckCount(left);
     }
