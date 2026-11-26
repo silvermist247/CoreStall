@@ -16412,8 +16412,15 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function clearWorld() {
       while (world.children.length) {
         var m = world.children.pop();
-        m.geometry.dispose();
-        m.material.dispose();
+        m.traverse(function (o) {
+          if (o.geometry) o.geometry.dispose();
+          if (o.material) {
+            [].concat(o.material).forEach(function (mt) {
+              if (mt.map) mt.map.dispose();
+              mt.dispose();
+            });
+          }
+        });
       }
     }
     function rebuild() {
@@ -16609,7 +16616,80 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     }
     // Three columns of large cards. A rail runs across the top; the stack hangs from it, and each card is
     // drawn down from the rail into its place. The view pans down as the rows fill.
-    var railMesh = null, railGlow = null;
+    // The shelf is a solid plank seen from slightly above: a lit top face, a dark front, a sage lip along the
+    // front edge and a soft glow below. The stack stands on its top face.
+    var SHELF_Y = 1.1, SHELF_TILT = 0.28, SHELF_Z = DEAL_Z + 0.6, SHELF_T = 0.42, SHELF_D = 1.6;
+    var shelfG = null;
+    // height of the shelf top at depth z (the plank is tilted so its top faces the camera)
+    function shelfTopY(z) { return SHELF_Y - (z - SHELF_Z) * Math.sin(SHELF_TILT); }
+    function canvasTex(w, h, draw) {
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      draw(c.getContext('2d'), w, h);
+      var t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    }
+    function buildShelf(lay) {
+      var W = lay.halfW * 1.6;
+      var g = new THREE.Group();
+      g.position.set(0, SHELF_Y, SHELF_Z);
+      g.rotation.x = SHELF_TILT;
+      // top face: lit from the back, darker toward the lip
+      var topTex = canvasTex(256, 256, function (x, w, h) {
+        var gr = x.createLinearGradient(0, 0, 0, h);
+        gr.addColorStop(0, '#3d525a'); gr.addColorStop(1, '#1e2c32');
+        x.fillStyle = gr; x.fillRect(0, 0, w, h);
+        x.fillStyle = 'rgba(143,201,163,0.35)'; x.fillRect(0, h - 10, w, 4);
+      });
+      var frontTex = canvasTex(64, 256, function (x, w, h) {
+        var gr = x.createLinearGradient(0, 0, 0, h);
+        gr.addColorStop(0, '#22303a'); gr.addColorStop(0.5, '#141d23'); gr.addColorStop(1, '#0a1014');
+        x.fillStyle = gr; x.fillRect(0, 0, w, h);
+      });
+      var dark = new THREE.MeshBasicMaterial({ color: 0x0b1014 });
+      var mats = [
+        dark,                                                                 // +x end
+        dark,                                                                 // -x end
+        new THREE.MeshBasicMaterial({ map: topTex }),                         // top
+        dark,                                                                 // bottom
+        new THREE.MeshBasicMaterial({ map: frontTex }),                       // front
+        dark                                                                  // back
+      ];
+      var box = new THREE.BoxGeometry(W, SHELF_T, SHELF_D);
+      box.translate(0, -SHELF_T / 2, 0);             // the group origin sits on the top face
+      var body = new THREE.Mesh(box, mats);
+      g.add(body);
+      var edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(box),
+        new THREE.LineBasicMaterial({ color: 0x8fc9a3, transparent: true, opacity: 0.55 })
+      );
+      g.add(edges);
+      // the bright lip along the front top edge
+      var lip = new THREE.Mesh(new THREE.BoxGeometry(W, 0.05, 0.05),
+        new THREE.MeshBasicMaterial({ color: 0x9fdcb5, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false }));
+      lip.position.set(0, 0, SHELF_D / 2);
+      g.add(lip);
+      // soft glow spilling down the front face
+      var glowTex = canvasTex(4, 128, function (x, w, h) {
+        var gr = x.createLinearGradient(0, 0, 0, h);
+        gr.addColorStop(0, 'rgba(143,201,163,0.32)'); gr.addColorStop(1, 'rgba(143,201,163,0)');
+        x.fillStyle = gr; x.fillRect(0, 0, w, h);
+      });
+      var glow = new THREE.Mesh(new THREE.PlaneGeometry(W * 1.02, 1.1),
+        new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }));
+      glow.position.set(0, -SHELF_T / 2 - 0.5, SHELF_D / 2 + 0.01);
+      g.add(glow);
+      // the shelf is a solid object: rows scrolling up past it pass behind its front edge
+      g.traverse(function (o) {
+        [].concat(o.material || []).forEach(function (m) {
+          m.transparent = true;
+          m.userData.base = m.opacity;
+        });
+      });
+      shelfG = g;
+      world.add(g);
+    }
     function dealLayout() {
       var halfH = Math.abs(DEAL_Z) * Math.tan(VFOV * Math.PI / 360);
       var halfW = halfH * viewAspect;
@@ -16625,10 +16705,7 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     function buildDeal(cards) {
       deal = [];
       var n = cards.length;
-      railMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x8fc9a3, transparent: true, opacity: 0.75, depthWrite: false }));
-      railGlow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x8fc9a3, transparent: true, opacity: 0.14, depthWrite: false }));
-      world.add(railMesh);
-      world.add(railGlow);
+      buildShelf(dealLayout());
       cards.forEach(function (card, k) {
         var mat = new THREE.MeshBasicMaterial({ color: 0x1b222c, side: THREE.FrontSide });
         var mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
@@ -16649,22 +16726,26 @@ const HW_BAT_UP = ['..bbbbb..', 'wwbbbbbww', '..bebeb..'];
     // and the view follows the rows downward
     function applyDeal(s) {
       var lay = dealLayout();
-      if (railMesh) {
-        railMesh.position.set(0, lay.rail, DEAL_Z + 0.5);
-        railMesh.scale.set(lay.halfW * 2, 0.04, 1);
-        railGlow.position.set(0, lay.rail, DEAL_Z + 0.4);
-        railGlow.scale.set(lay.halfW * 2, 0.4, 1);
+      // the shelf and the stack stay put; the grid rises beneath them as the rows fill
+      var pan = Math.max(0, s * deal.length / DEAL_COLS - 1.2) * lay.pitch;
+      world.position.y = 0;
+      // once the rows have risen past it, the shelf fades out so it never cuts across the finished grid
+      var shelfA = 1 - band(0.6, 0.85, s);
+      if (shelfG) {
+        shelfG.visible = shelfA > 0.01;
+        shelfG.traverse(function (o) {
+          [].concat(o.material || []).forEach(function (m) { m.opacity = m.userData.base * shelfA; });
+        });
       }
-      world.position.y = Math.max(0, s * deal.length / DEAL_COLS - 1.2) * lay.pitch;   // the view moves down with the rows
       deal.forEach(function (it) {
         var d = band(it.a, it.a + it.L, s);
         var arc = Math.sin(Math.PI * d);
         var z0 = DEAL_Z + it.k * 0.02;
         var sx = it.off * 0.12;
-        var sy = lay.rail - lay.dh / 2 - it.off * 0.06;
+        var sy = shelfTopY(z0) + 0.02 + lay.dh / 2;        // the stack stands on the shelf top
         var c = it.k % DEAL_COLS, r = Math.floor(it.k / DEAL_COLS);
         var gx = (c - (DEAL_COLS - 1) / 2) * lay.colGap;
-        var gy = 0.2 - r * lay.pitch - lay.ch / 2;
+        var gy = 0.2 - r * lay.pitch - lay.ch / 2 + pan;
         it.mesh.position.set(
           sx + (gx - sx) * d,
           sy + (gy - sy) * d,
